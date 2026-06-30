@@ -1,0 +1,213 @@
+.inscription-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 2rem 1rem;
+}
+
+.inscription-card {
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  width: 100%;
+  max-width: 560px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+}
+
+.card-header {
+  margin-bottom: 1.5rem;
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    span { font-size: 2rem; }
+    h1 { font-size: 1.1rem; font-weight: 700; color: #1a237e; margin: 0; }
+    p  { font-size: 0.75rem; color: #00bcd4; margin: 0; font-weight: 500; }
+  }
+}
+
+.succes-state {
+  text-align: center;
+  padding: 2rem 0;
+  .succes-icon { font-size: 4rem; display: block; margin-bottom: 1rem; }
+  h2 { font-size: 1.5rem; font-weight: 700; color: #1a1a2e; margin: 0 0 0.75rem; }
+  p  { color: #6b7280; margin: 0 0 1.5rem; }
+}
+
+.btn-login {
+  display: inline-block;
+  background: #1a237e;
+  color: white;
+  padding: 0.75rem 2rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  &:hover { background: #283593; }
+}
+
+.etapes {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  margin-bottom: 2rem;
+}
+
+.etape {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+
+  .etape-num {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #e5e7eb;
+    color: #9ca3af;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.875rem;
+    transition: all 0.2s;
+  }
+
+  span { font-size: 0.75rem; color: #9ca3af; }
+
+  &.active .etape-num { background: #1a237e; color: white; }
+  &.active span { color: #1a237e; font-weight: 600; }
+  &.done .etape-num { background: #16a34a; color: white; }
+}
+
+.etape-line {
+  width: 80px;
+  height: 2px;
+  background: #e5e7eb;
+  margin-bottom: 1.2rem;
+  transition: background 0.2s;
+  &.active { background: #1a237e; }
+}
+
+.form-section {
+  h3 { font-size: 1rem; font-weight: 700; color: #1a1a2e; margin: 0 0 1.25rem; }
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.field {
+  margin-bottom: 0.75rem;
+
+  label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 0.35rem;
+  }
+
+  input, select, textarea {
+    width: 100%;
+    padding: 0.6rem 0.75rem;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    outline: none;
+    box-sizing: border-box;
+    background: white;
+    font-family: inherit;
+    &:focus { border-color: #1a237e; }
+  }
+
+  textarea { resize: vertical; }
+  small { font-size: 0.75rem; color: #6b7280; margin-top: 0.25rem; display: block; }
+}
+
+.thematiques-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.4rem;
+}
+
+.thematique-btn {
+  padding: 0.35rem 0.75rem;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 20px;
+  background: white;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.15s;
+
+  &:hover { border-color: #1a237e; color: #1a237e; }
+  &.selected { background: #1a237e; color: white; border-color: #1a237e; }
+}
+
+.alert-error {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+  padding: 0.65rem 0.75rem;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  margin-bottom: 0.75rem;
+}
+
+.btn-next {
+  width: 100%;
+  padding: 0.75rem;
+  background: #1a237e;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 0.5rem;
+  &:hover { background: #283593; }
+}
+
+.form-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.btn-back {
+  flex: 1;
+  padding: 0.75rem;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 8px;
+  background: white;
+  font-size: 0.875rem;
+  cursor: pointer;
+  &:hover { background: #f3f4f6; }
+}
+
+.btn-submit {
+  flex: 2;
+  padding: 0.75rem;
+  background: #1a237e;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  &:hover:not(:disabled) { background: #283593; }
+  &:disabled { opacity: 0.7; cursor: not-allowed; }
+}
+
+.card-footer {
+  text-align: center;
+  margin-top: 1.5rem;
+  p { color: #6b7280; font-size: 0.875rem; margin: 0; }
+  a { color: #1a237e; font-weight: 600; text-decoration: none;
+    &:hover { text-decoration: underline; }
+  }
+}

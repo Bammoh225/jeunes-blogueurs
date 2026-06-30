@@ -1,0 +1,118 @@
+.page { max-width: 700px; }
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+  h1 { font-size: 1.5rem; font-weight: 700; color: #1a1a2e; margin: 0 0 0.25rem; }
+  p  { color: #6b7280; font-size: 0.875rem; margin: 0; }
+}
+
+.btn-mark-all {
+  background: #eff6ff;
+  color: #1d4ed8;
+  border: 1px solid #bfdbfe;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s;
+  &:hover:not(:disabled) { background: #1d4ed8; color: white; }
+  &:disabled { opacity: 0.6; cursor: not-allowed; }
+}
+
+.alert-error {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.notifications-list {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+
+.notif-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid #f3f4f6;
+  cursor: pointer;
+  transition: background 0.15s;
+  position: relative;
+
+  &:last-child { border-bottom: none; }
+  &:hover { background: #f8f9fa; }
+
+  &.unread {
+    background: #fffbeb;
+    &:hover { background: #fef9c3; }
+  }
+}
+
+.notif-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  background: #f3f4f6;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.notif-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.notif-message {
+  font-size: 0.875rem;
+  color: #1a1a2e;
+  margin: 0 0 0.25rem;
+  line-height: 1.4;
+}
+
+.notif-date {
+  font-size: 0.75rem;
+  color: #9ca3af;
+}
+
+.unread-dot {
+  width: 10px;
+  height: 10px;
+  background: #1a237e;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem;
+  color: #6b7280;
+  span { font-size: 3rem; display: block; margin-bottom: 1rem; }
+}
+
+.loading-list { display: flex; flex-direction: column; gap: 0.5rem; }
+.skeleton-row {
+  height: 72px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.2s infinite;
+  border-radius: 8px;
+}
+
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}

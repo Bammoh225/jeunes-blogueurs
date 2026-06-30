@@ -1,0 +1,111 @@
+<div class="page">
+
+  <button class="btn-retour" (click)="retour()">← Retour</button>
+
+  @if (loading()) {
+    <div class="skeleton-detail"></div>
+  }
+
+  @if (erreur()) {
+    <div class="alert-error">⚠️ {{ erreur() }}</div>
+  }
+
+  @if (!loading() && publication()) {
+    <div class="detail-card">
+
+      <!-- Header -->
+      <div class="detail-header">
+        @if (publication()!.thematique_couleur) {
+          <div class="color-bar" [style.background]="publication()!.thematique_couleur"></div>
+        }
+        <div class="header-content">
+          <div class="header-top">
+            <h1>{{ publication()!.titre }}</h1>
+            @if (peutSupprimer()) {
+              <button class="btn-danger" (click)="supprimer()" [disabled]="deleting()">
+                🗑️ Supprimer
+              </button>
+            }
+          </div>
+          <div class="pub-meta">
+            <span>👤 {{ publication()!.auteur_prenom }} {{ publication()!.auteur_nom }}</span>
+            @if (publication()!.categorie_nom) {
+              <span>📂 {{ publication()!.categorie_nom }}</span>
+            }
+            @if (publication()!.thematique_nom) {
+              <span class="tag">{{ publication()!.thematique_nom }}</span>
+            }
+            @if (publication()!.date_publication) {
+              <span>📅 {{ publication()!.date_publication | date:'dd/MM/yyyy' }}</span>
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- Description -->
+      @if (publication()!.description) {
+        <div class="section">
+          <h3>Description</h3>
+          <p>{{ publication()!.description }}</p>
+        </div>
+      }
+
+      <!-- Lien -->
+      <div class="section">
+        <h3>Lien</h3>
+        <a [href]="publication()!.lien" target="_blank" class="lien-externe">
+          🔗 {{ publication()!.lien }} ↗
+        </a>
+      </div>
+
+      <!-- Détails spécifiques -->
+      <div class="section">
+        <h3>Détails</h3>
+        <div class="details-grid">
+          @if (publication()!.blog_nb_mots) {
+            <div class="detail-item">
+              <span class="detail-label">Nombre de mots</span>
+              <span class="detail-value">{{ publication()!.blog_nb_mots }}</span>
+            </div>
+          }
+          @if (publication()!.vlog_plateforme) {
+            <div class="detail-item">
+              <span class="detail-label">Plateforme vlog</span>
+              <span class="detail-value">{{ publication()!.vlog_plateforme }}</span>
+            </div>
+          }
+          @if (publication()!.vlog_duree_minutes) {
+            <div class="detail-item">
+              <span class="detail-label">Durée (min)</span>
+              <span class="detail-value">{{ publication()!.vlog_duree_minutes }}</span>
+            </div>
+          }
+          @if (publication()!.podcast_plateforme) {
+            <div class="detail-item">
+              <span class="detail-label">Plateforme podcast</span>
+              <span class="detail-value">{{ publication()!.podcast_plateforme }}</span>
+            </div>
+          }
+          @if (publication()!.bd_nb_planches) {
+            <div class="detail-item">
+              <span class="detail-label">Nombre de planches</span>
+              <span class="detail-value">{{ publication()!.bd_nb_planches }}</span>
+            </div>
+          }
+          @if (publication()!.bd_outil) {
+            <div class="detail-item">
+              <span class="detail-label">Outil BD</span>
+              <span class="detail-value">{{ publication()!.bd_outil }}</span>
+            </div>
+          }
+          <div class="detail-item">
+            <span class="detail-label">Évaluations</span>
+            <span class="detail-value">⭐ {{ publication()!.nb_evaluations ?? 0 }}</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  }
+
+</div>

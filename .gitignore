@@ -1,0 +1,23 @@
+# Node backend
+backend/node_modules/
+backend/dist/
+backend/.env
+
+# Angular frontend
+frontend/jbhub/node_modules/
+frontend/jbhub/dist/
+frontend/jbhub/.angular/
+
+# Logs
+*.log
+
+# Env global
+.env
+.env.*
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store

@@ -1,0 +1,133 @@
+<div class="page">
+
+  <div class="page-header">
+    <div>
+      <h1>Utilisateurs Staff</h1>
+      <p>{{ utilisateursFiltres.length }} utilisateur(s)</p>
+    </div>
+    <button class="btn-primary" (click)="showForm.set(!showForm())">
+      @if (showForm()) { ✕ Annuler } @else { ➕ Nouvel utilisateur }
+    </button>
+  </div>
+
+  <!-- Formulaire création -->
+  @if (showForm()) {
+    <div class="form-card">
+      <h3>Créer un utilisateur</h3>
+      <form [formGroup]="form" (ngSubmit)="creer()">
+        <div class="form-grid">
+          <div class="field">
+            <label>Prénom *</label>
+            <input type="text" formControlName="prenom" placeholder="Prénom" />
+          </div>
+          <div class="field">
+            <label>Nom *</label>
+            <input type="text" formControlName="nom" placeholder="Nom" />
+          </div>
+          <div class="field">
+            <label>Email *</label>
+            <input type="email" formControlName="email" placeholder="email@jb.ci" />
+          </div>
+          <div class="field">
+            <label>Mot de passe *</label>
+            <input type="password" formControlName="mot_de_passe" placeholder="••••••" />
+          </div>
+          <div class="field">
+            <label>Rôle *</label>
+            <select formControlName="role">
+              @for (r of roles; track r.value) {
+                <option [value]="r.value">{{ r.label }}</option>
+              }
+            </select>
+          </div>
+          <div class="field">
+            <label>Téléphone</label>
+            <input type="text" formControlName="telephone" placeholder="+225 07 00 00 00" />
+          </div>
+        </div>
+        @if (erreur()) {
+          <div class="alert-error">⚠️ {{ erreur() }}</div>
+        }
+        <div class="form-actions">
+          <button type="submit" class="btn-save" [disabled]="saving()">
+            @if (saving()) { Création... } @else { Créer }
+          </button>
+        </div>
+      </form>
+    </div>
+  }
+
+  <!-- Recherche -->
+  <div class="filtres">
+    <input
+      type="text"
+      [(ngModel)]="recherche"
+      placeholder="🔍 Rechercher..."
+      class="input-search"
+    />
+  </div>
+
+  @if (!showForm() && erreur()) {
+    <div class="alert-error">⚠️ {{ erreur() }}</div>
+  }
+
+  @if (loading()) {
+    <div class="loading-list">
+      @for (i of [1,2,3]; track i) {
+        <div class="skeleton-row"></div>
+      }
+    </div>
+  }
+
+  @if (!loading()) {
+    @if (utilisateursFiltres.length === 0) {
+      <div class="empty-state">
+        <span>👥</span>
+        <p>Aucun utilisateur trouvé</p>
+      </div>
+    } @else {
+      <div class="table-card">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Utilisateur</th>
+              <th>Rôle</th>
+              <th>Contact</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (u of utilisateursFiltres; track u.id) {
+              <tr>
+                <td>
+                  <div class="user-cell">
+                    <div class="avatar">{{ initiales(u) }}</div>
+                    <div>
+                      <div class="user-name">{{ u.prenom }} {{ u.nom }}</div>
+                      <div class="user-email">{{ u.email }}</div>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <span [class]="'role-badge ' + roleClass(u.role)">
+                    {{ roleLabel(u.role) }}
+                  </span>
+                </td>
+                <td class="contact-cell">
+                  @if (u.telephone) { <span>{{ u.telephone }}</span> }
+                  @if (u.ville_nom) { <span>📍 {{ u.ville_nom }}</span> }
+                </td>
+                <td>
+                  <button class="btn-danger-sm" (click)="desactiver(u)">
+                    Désactiver
+                  </button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  }
+
+</div>

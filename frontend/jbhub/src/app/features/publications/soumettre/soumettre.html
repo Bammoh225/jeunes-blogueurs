@@ -1,0 +1,136 @@
+<div class="page">
+
+  <div class="page-header">
+    <button class="btn-retour" routerLink="/publications">← Retour</button>
+    <h1>Soumettre une publication</h1>
+  </div>
+
+  <div class="form-card">
+    <form [formGroup]="form" (ngSubmit)="soumettre()">
+
+      <div class="section">
+        <h3>Type de contenu</h3>
+        <div class="types-grid">
+          @for (t of types; track t.value) {
+            <button
+              type="button"
+              [class]="'type-btn ' + (typeSelectionne() === t.value ? 'selected' : '')"
+              (click)="onTypeChange(t)"
+            >
+              {{ t.label }}
+            </button>
+          }
+        </div>
+      </div>
+
+      <div class="section">
+        <h3>Informations générales</h3>
+
+        <div class="field">
+          <label>Thématique *</label>
+          <select formControlName="thematique_id">
+            <option [value]="null">Choisir une thématique</option>
+            @for (t of thematiques(); track t.id) {
+              <option [value]="t.id">{{ t.nom }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Titre *</label>
+          <input type="text" formControlName="titre" placeholder="Titre de votre publication" />
+        </div>
+
+        <div class="field">
+          <label>Lien *</label>
+          <input type="url" formControlName="lien" placeholder="https://..." />
+        </div>
+
+        <div class="field">
+          <label>Description</label>
+          <textarea formControlName="description" rows="3" placeholder="Décrivez votre publication..."></textarea>
+        </div>
+
+        <div class="field">
+          <label>Date de publication *</label>
+          <input type="date" formControlName="date_publication" />
+        </div>
+      </div>
+
+      @if (typeSelectionne() === 'blog') {
+        <div class="section">
+          <h3>Détails Blog</h3>
+          <div class="field">
+            <label>Nombre de mots</label>
+            <input type="number" formControlName="blog_nb_mots" placeholder="Ex: 800" />
+          </div>
+        </div>
+      }
+
+      @if (typeSelectionne() === 'vlog') {
+        <div class="section">
+          <h3>Détails Vlog</h3>
+          <div class="form-grid">
+            <div class="field">
+              <label>Plateforme</label>
+              <input type="text" formControlName="vlog_plateforme" placeholder="YouTube, TikTok..." />
+            </div>
+            <div class="field">
+              <label>Durée (minutes)</label>
+              <input type="number" formControlName="vlog_duree_minutes" placeholder="Ex: 10" />
+            </div>
+          </div>
+        </div>
+      }
+
+      @if (typeSelectionne() === 'podcast') {
+        <div class="section">
+          <h3>Détails Podcast</h3>
+          <div class="form-grid">
+            <div class="field">
+              <label>Plateforme</label>
+              <input type="text" formControlName="podcast_plateforme" placeholder="Spotify, Anchor..." />
+            </div>
+            <div class="field">
+              <label>Durée (minutes)</label>
+              <input type="number" formControlName="podcast_duree_min" placeholder="Ex: 30" />
+            </div>
+          </div>
+          <div class="field">
+            <label>Invités</label>
+            <input type="text" formControlName="podcast_invites" placeholder="Noms des invités..." />
+          </div>
+        </div>
+      }
+
+      @if (typeSelectionne() === 'bd') {
+        <div class="section">
+          <h3>Détails Bande Dessinée</h3>
+          <div class="form-grid">
+            <div class="field">
+              <label>Nombre de planches</label>
+              <input type="number" formControlName="bd_nb_planches" placeholder="Ex: 8" />
+            </div>
+            <div class="field">
+              <label>Outil utilisé</label>
+              <input type="text" formControlName="bd_outil" placeholder="Procreate, Canva..." />
+            </div>
+          </div>
+        </div>
+      }
+
+      @if (erreur()) {
+        <div class="alert-error">⚠️ {{ erreur() }}</div>
+      }
+
+      <div class="form-actions">
+        <button type="button" class="btn-cancel" routerLink="/publications">Annuler</button>
+        <button type="submit" class="btn-submit" [disabled]="loading()">
+          @if (loading()) { Envoi... } @else { Soumettre }
+        </button>
+      </div>
+
+    </form>
+  </div>
+
+</div>

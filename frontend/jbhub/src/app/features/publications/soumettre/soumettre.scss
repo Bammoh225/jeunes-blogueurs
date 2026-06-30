@@ -1,0 +1,134 @@
+.page { max-width: 700px; }
+
+.page-header {
+  margin-bottom: 1.5rem;
+  h1 { font-size: 1.5rem; font-weight: 700; color: #1a1a2e; margin: 0.5rem 0 0; }
+}
+
+.btn-retour {
+  background: none;
+  border: none;
+  color: #1a237e;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  &:hover { text-decoration: underline; }
+}
+
+.form-card {
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+
+.section {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid #f3f4f6;
+  &:last-child { border-bottom: none; }
+
+  h3 {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0 0 1rem;
+  }
+}
+
+.types-grid {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.type-btn {
+  padding: 0.5rem 1rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  background: white;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.15s;
+  &:hover { border-color: #1a237e; }
+  &.selected { background: #1a237e; color: white; border-color: #1a237e; }
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.field {
+  margin-bottom: 1rem;
+  &:last-child { margin-bottom: 0; }
+
+  label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 0.4rem;
+  }
+
+  input, select, textarea {
+    width: 100%;
+    padding: 0.65rem 0.75rem;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    outline: none;
+    box-sizing: border-box;
+    background: white;
+    font-family: inherit;
+    &:focus { border-color: #1a237e; }
+  }
+
+  textarea { resize: vertical; }
+}
+
+.alert-error {
+  margin: 0 1.5rem 1rem;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+}
+
+.form-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+  padding: 1.25rem 1.5rem;
+  background: #f8f9fa;
+}
+
+.btn-cancel {
+  padding: 0.65rem 1.25rem;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 8px;
+  background: white;
+  font-size: 0.875rem;
+  cursor: pointer;
+  text-decoration: none;
+  color: #374151;
+  &:hover { background: #f3f4f6; }
+}
+
+.btn-submit {
+  padding: 0.65rem 1.5rem;
+  background: #1a237e;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  &:hover:not(:disabled) { background: #283593; }
+  &:disabled { opacity: 0.7; cursor: not-allowed; }
+}

@@ -1,0 +1,149 @@
+<div class="page">
+
+  <div class="page-header">
+    <div>
+      <h1>Publications</h1>
+      <p>{{ publicationsFiltrees.length }} publication(s)</p>
+    </div>
+    <div class="header-actions">
+      @if (isStaff) {
+        <button class="btn-toggle-vue" (click)="vueMois.set(!vueMois())">
+          {{ vueMois() ? 'Vue liste' : 'Vue par mois' }}
+        </button>
+      }
+      @if (isBlogueur) {
+        <a routerLink="/publications/soumettre" class="btn-primary">
+          + Soumettre une publication
+        </a>
+      }
+    </div>
+  </div>
+
+  <div class="filtres-bar">
+    <input
+      type="text"
+      [(ngModel)]="recherche"
+      placeholder="Rechercher par titre, auteur..."
+      class="input-search"
+    />
+
+    <select [(ngModel)]="filtreCategorie" class="select-filtre">
+      <option value="">Toutes les catégories</option>
+      @for (c of categories; track c.id) {
+        <option [value]="c.id">{{ c.nom }}</option>
+      }
+    </select>
+
+    <select [(ngModel)]="filtreThematique" class="select-filtre">
+      <option value="">Toutes les thématiques</option>
+      @for (t of thematiques(); track t.id) {
+        <option [value]="t.nom">{{ t.nom }}</option>
+      }
+    </select>
+
+    @if (!vueMois()) {
+      <select [(ngModel)]="tri" class="select-filtre">
+        <option value="recent">Plus récent</option>
+        <option value="ancien">Plus ancien</option>
+        <option value="evaluations">Plus évalué</option>
+      </select>
+    }
+
+    @if (filtresActifs) {
+      <button class="btn-reset" (click)="reinitialiserFiltres()">Réinitialiser</button>
+    }
+  </div>
+
+  @if (erreur()) {
+    <div class="alert-error">⚠️ {{ erreur() }}</div>
+  }
+
+  @if (loading()) {
+    <div class="loading-list">
+      @for (i of [1,2,3,4]; track i) {
+        <div class="skeleton-row"></div>
+      }
+    </div>
+  }
+
+  <!-- VUE LISTE -->
+  @if (!loading() && !vueMois()) {
+    @if (publicationsFiltrees.length === 0) {
+      <div class="empty-state"><p>Aucune publication trouvée</p></div>
+    } @else {
+      <div class="publications-list">
+        @for (p of publicationsFiltrees; track p.id) {
+          <a [routerLink]="['/publications', p.id]" class="pub-card">
+            <div class="pub-left">
+              @if (p.thematique_couleur) {
+                <div class="pub-color-bar" [style.background]="p.thematique_couleur"></div>
+              }
+              <div class="pub-info">
+                <h3>{{ p.titre }}</h3>
+                <div class="pub-meta">
+                  <span>{{ p.auteur_prenom }} {{ p.auteur_nom }}</span>
+                  @if (p.categorie_nom) { <span>{{ p.categorie_nom }}</span> }
+                  @if (p.thematique_nom) { <span class="tag">{{ p.thematique_nom }}</span> }
+                </div>
+              </div>
+            </div>
+            <div class="pub-right">
+              @if (p.date_publication) {
+                <span class="date">{{ p.date_publication | date:'dd/MM/yyyy' }}</span>
+              }
+              <span class="evals">{{ p.nb_evaluations ?? 0 }} éval.</span>
+              <span class="voir">→</span>
+            </div>
+          </a>
+        }
+      </div>
+    }
+  }
+
+  <!-- VUE PAR MOIS -->
+  @if (!loading() && vueMois()) {
+    @if (groupesParMois.length === 0) {
+      <div class="empty-state"><p>Aucune publication trouvée</p></div>
+    } @else {
+      <div class="mois-groupes">
+        @for (groupe of groupesParMois; track groupe.cle) {
+          <div class="mois-bloc">
+            <button class="mois-header" (click)="toggleMois(groupe.cle)">
+              <div class="mois-header-left">
+                <svg class="chevron" [class.open]="isMoisOuvert(groupe.cle)"
+                  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="9 18 15 12 9 6"/>
+                </svg>
+                <span class="mois-titre">{{ groupe.label }}</span>
+              </div>
+              <span class="mois-count">{{ groupe.publications.length }} publication(s)</span>
+            </button>
+
+            @if (isMoisOuvert(groupe.cle)) {
+              <div class="mois-content">
+                @for (p of groupe.publications; track p.id) {
+                  <a [routerLink]="['/publications', p.id]" class="pub-card-mini">
+                    <div class="pub-mini-left">
+                      @if (p.thematique_couleur) {
+                        <div class="pub-color-bar" [style.background]="p.thematique_couleur"></div>
+                      }
+                      <div class="pub-info">
+                        <h4>{{ p.titre }}</h4>
+                        <div class="pub-meta">
+                          <span>{{ p.auteur_prenom }} {{ p.auteur_nom }}</span>
+                          @if (p.categorie_nom) { <span>{{ p.categorie_nom }}</span> }
+                        </div>
+                      </div>
+                    </div>
+                    <span class="pub-mini-date">{{ p.date_publication | date:'dd/MM' }}</span>
+                  </a>
+                }
+              </div>
+            }
+          </div>
+        }
+      </div>
+    }
+  }
+
+</div>

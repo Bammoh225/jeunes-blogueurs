@@ -1,0 +1,83 @@
+<div class="login-wrapper">
+  <div class="login-card">
+
+    <!-- Logo -->
+    <div class="login-header">
+      <div class="logo">
+        <span class="logo-icon">✍️</span>
+        <div>
+          <h1>Jeunes Blogueurs</h1>
+          <p>UNICEF Côte d'Ivoire</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Titre -->
+    <div class="login-title">
+      <h2>Connexion</h2>
+      <p>Connectez-vous à votre espace</p>
+    </div>
+
+    <!-- Erreur -->
+    @if (erreur) {
+      <div class="alert-error">
+        <span>⚠️</span> {{ erreur }}
+      </div>
+    }
+
+    <!-- Formulaire -->
+    <form [formGroup]="form" (ngSubmit)="submit()">
+
+      <!-- Email -->
+      <div class="field">
+        <label for="email">Adresse email</label>
+        <input
+          id="email"
+          type="email"
+          formControlName="email"
+          placeholder="votre@email.ci"
+          [class.invalid]="email.invalid && email.touched"
+        />
+        @if (email.invalid && email.touched) {
+          <span class="field-error">Email invalide</span>
+        }
+      </div>
+
+      <!-- Mot de passe -->
+      <div class="field">
+        <label for="password">Mot de passe</label>
+        <div class="input-group">
+          <input
+            id="password"
+            [type]="showPass ? 'text' : 'password'"
+            formControlName="mot_de_passe"
+            placeholder="••••••••"
+            [class.invalid]="password.invalid && password.touched"
+          />
+          <button type="button" class="toggle-pass" (click)="showPass = !showPass">
+            {{ showPass ? '🙈' : '👁️' }}
+          </button>
+        </div>
+        @if (password.invalid && password.touched) {
+          <span class="field-error">Minimum 6 caractères</span>
+        }
+      </div>
+
+      <!-- Bouton -->
+      <button type="submit" class="btn-login" [disabled]="loading">
+        @if (loading) {
+          <span class="spinner"></span> Connexion...
+        } @else {
+          Se connecter
+        }
+      </button>
+
+    </form>
+
+    <!-- Lien inscription -->
+    <div class="login-footer">
+      <p>Pas encore inscrit ? <a routerLink="/inscription">Rejoindre le programme</a></p>
+    </div>
+
+  </div>
+</div>

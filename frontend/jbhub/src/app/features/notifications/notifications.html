@@ -1,0 +1,57 @@
+<div class="page">
+
+  <div class="page-header">
+    <div>
+      <h1>Notifications</h1>
+      <p>{{ nonLus }} non lue(s)</p>
+    </div>
+    @if (nonLus > 0) {
+      <button class="btn-mark-all" (click)="marquerTousLus()" [disabled]="markingAll()">
+        @if (markingAll()) { Marquage... } @else { ✓ Tout marquer lu }
+      </button>
+    }
+  </div>
+
+  @if (erreur()) {
+    <div class="alert-error">⚠️ {{ erreur() }}</div>
+  }
+
+  @if (loading()) {
+    <div class="loading-list">
+      @for (i of [1,2,3,4,5]; track i) {
+        <div class="skeleton-row"></div>
+      }
+    </div>
+  }
+
+  @if (!loading()) {
+    @if (notifications().length === 0) {
+      <div class="empty-state">
+        <span>🔔</span>
+        <p>Aucune notification</p>
+      </div>
+    } @else {
+      <div class="notifications-list">
+        @for (n of notifications(); track n.id) {
+          <div
+            class="notif-item"
+            [class.unread]="!n.lu"
+            (click)="marquerLu(n)"
+          >
+            <div class="notif-icon">{{ typeIcon(n.type) }}</div>
+            <div class="notif-content">
+              <p class="notif-message">{{ n.message }}</p>
+              <span class="notif-date">
+                {{ n.created_at | date:'dd/MM/yyyy à HH:mm' }}
+              </span>
+            </div>
+            @if (!n.lu) {
+              <div class="unread-dot"></div>
+            }
+          </div>
+        }
+      </div>
+    }
+  }
+
+</div>

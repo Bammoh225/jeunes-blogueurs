@@ -1,0 +1,40 @@
+import { Router } from 'express';
+import { activitesController } from '../controllers/activites.controller';
+import { authMiddleware } from '../middlewares/auth.middleware';
+import { requireRoles } from '../middlewares/role.middleware';
+
+const router = Router();
+
+router.use(authMiddleware);
+
+const tousLesRoles = requireRoles(
+  'responsable_unicef', 'responsable_technique', 'responsable_national',
+  'responsable_zone', 'responsable_categorie', 'equipe_com', 'jeune_blogueur'
+);
+
+const staffSeulement = requireRoles(
+  'responsable_unicef', 'responsable_technique', 'responsable_national',
+  'responsable_zone', 'responsable_categorie', 'equipe_com'
+);
+
+router.get('/',    tousLesRoles, activitesController.lister);
+router.get('/:id', tousLesRoles, activitesController.trouver);
+router.get('/:id/participants', staffSeulement, activitesController.listerParticipants);
+
+router.post('/', requireRoles(
+  'responsable_unicef','responsable_technique',
+  'responsable_national','responsable_zone'
+), activitesController.creer);
+
+router.patch('/:id', requireRoles(
+  'responsable_unicef','responsable_technique',
+  'responsable_national','responsable_zone'
+), activitesController.modifier);
+
+router.post('/:id/participants', tousLesRoles, activitesController.ajouterParticipant);
+
+router.patch('/:id/participants/presence', requireRoles(
+  'responsable_unicef','responsable_technique','responsable_zone'
+), activitesController.marquerPresence);
+
+export default router;

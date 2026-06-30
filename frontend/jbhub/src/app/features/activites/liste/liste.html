@@ -1,0 +1,129 @@
+<div class="page">
+
+  <div class="page-header">
+    <div>
+      <h1>Activités</h1>
+      <p>{{ activitesFiltrees.length }} activité(s)</p>
+    </div>
+    @if (peutCreer) {
+      <button class="btn-primary" (click)="showForm.set(!showForm())">
+        @if (showForm()) { ✕ Annuler } @else { + Nouvelle activité }
+      </button>
+    }
+  </div>
+
+  <!-- Formulaire création -->
+  @if (showForm() && peutCreer) {
+    <div class="form-card">
+      <h3>Créer une activité</h3>
+      <form [formGroup]="form" (ngSubmit)="creer()">
+        <div class="form-grid">
+          <div class="field">
+            <label>Titre *</label>
+            <input type="text" formControlName="titre" placeholder="Titre de l'activité" />
+          </div>
+          <div class="field">
+            <label>Type *</label>
+            <select formControlName="type">
+              @for (t of types; track t.value) {
+                <option [value]="t.value">{{ t.label }}</option>
+              }
+            </select>
+          </div>
+          <div class="field">
+            <label>Ville *</label>
+            <select formControlName="ville_id">
+              <option [value]="null">Choisir une ville</option>
+              @for (v of villes(); track v.id) {
+                <option [value]="v.id">{{ v.nom }}</option>
+              }
+            </select>
+          </div>
+          <div class="field">
+            <label>Lieu</label>
+            <input type="text" formControlName="lieu" placeholder="Ex: Maison des Jeunes" />
+          </div>
+          <div class="field">
+            <label>Date début *</label>
+            <input type="datetime-local" formControlName="date_debut" />
+          </div>
+          <div class="field">
+            <label>Date fin</label>
+            <input type="datetime-local" formControlName="date_fin" />
+          </div>
+        </div>
+        <div class="field">
+          <label>Description</label>
+          <textarea formControlName="description" rows="3"
+            placeholder="Décrivez l'activité..."></textarea>
+        </div>
+        @if (erreur()) {
+          <div class="alert-error">⚠️ {{ erreur() }}</div>
+        }
+        <div class="form-actions">
+          <button type="submit" class="btn-save" [disabled]="saving()">
+            @if (saving()) { Création... } @else { Créer }
+          </button>
+        </div>
+      </form>
+    </div>
+  }
+
+  <div class="filtres">
+    <input
+      type="text"
+      [(ngModel)]="recherche"
+      placeholder="Rechercher par titre, ville..."
+      class="input-search"
+    />
+  </div>
+
+  @if (!showForm() && erreur()) {
+    <div class="alert-error">⚠️ {{ erreur() }}</div>
+  }
+
+  @if (loading()) {
+    <div class="loading-grid">
+      @for (i of [1,2,3,4,5,6]; track i) {
+        <div class="skeleton-card"></div>
+      }
+    </div>
+  }
+
+  @if (!loading()) {
+    @if (activitesFiltrees.length === 0) {
+      <div class="empty-state">
+        <p>Aucune activité trouvée</p>
+      </div>
+    } @else {
+      <div class="activites-grid">
+        @for (a of activitesFiltrees; track a.id) {
+          <a [routerLink]="['/activites', a.id]" class="activite-card">
+            <div class="card-header">
+              <span class="type-icon">{{ typeIcon(a.type) }}</span>
+              <span [class]="'badge ' + statutClass(a.statut ?? '')">
+                {{ statutLabel(a.statut ?? '') }}
+              </span>
+            </div>
+            <div class="card-body">
+              <h3>{{ a.titre }}</h3>
+              @if (a.description) {
+                <p class="description">{{ a.description }}</p>
+              }
+              <div class="meta">
+                @if (a.ville_nom) { <span>📍 {{ a.ville_nom }}</span> }
+                @if (a.lieu)      { <span>🏢 {{ a.lieu }}</span> }
+                <span>📅 {{ a.date_debut | date:'dd/MM/yyyy' }}</span>
+              </div>
+            </div>
+            <div class="card-footer">
+              <span>{{ a.nb_participants ?? 0 }} participant(s)</span>
+              <span class="voir">Voir →</span>
+            </div>
+          </a>
+        }
+      </div>
+    }
+  }
+
+</div>

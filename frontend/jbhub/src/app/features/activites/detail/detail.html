@@ -1,0 +1,151 @@
+<div class="page">
+
+  <button class="btn-retour" (click)="retour()">← Retour</button>
+
+  @if (loading()) { <div class="skeleton-detail"></div> }
+  @if (erreur()) { <div class="alert-error">⚠️ {{ erreur() }}</div> }
+
+  @if (!loading() && activite()) {
+    <div class="detail-card">
+
+      <div class="detail-header">
+        <div class="header-left">
+          <span class="type-icon">{{ typeIcon(activite()!.type) }}</span>
+          <div>
+            <h1>{{ activite()!.titre }}</h1>
+            <div class="header-meta">
+              @if (activite()!.ville_nom) { <span>📍 {{ activite()!.ville_nom }}</span> }
+              @if (activite()!.lieu)      { <span>🏢 {{ activite()!.lieu }}</span> }
+              <span>📅 {{ activite()!.date_debut | date:'dd/MM/yyyy HH:mm' }}</span>
+              @if (activite()!.date_fin)  { <span>→ {{ activite()!.date_fin | date:'dd/MM/yyyy HH:mm' }}</span> }
+            </div>
+          </div>
+        </div>
+        <div class="header-right">
+          <span [class]="'badge ' + statutClass(activite()!.statut ?? '')">
+            {{ activite()!.statut }}
+          </span>
+          @if (peutModifier) {
+            <button class="btn-edit" (click)="showForm.set(!showForm())">✏️ Modifier</button>
+          }
+        </div>
+      </div>
+
+      @if (activite()!.description) {
+        <div class="section">
+          <h3>Description</h3>
+          <p>{{ activite()!.description }}</p>
+        </div>
+      }
+
+      <div class="section">
+        <h3>Organisateur</h3>
+        <p>{{ activite()!.organisateur_prenom }} {{ activite()!.organisateur_nom }}</p>
+      </div>
+
+      <!-- Stats + actions -->
+      <div class="section">
+        <div class="stats-actions-row">
+          <div class="stat-item">
+            <span class="stat-num">{{ activite()!.nb_participants ?? 0 }}</span>
+            <span class="stat-label">Participants</span>
+          </div>
+
+          <!-- Bouton voir participants (staff) -->
+          @if (isStaff) {
+            <button class="btn-participants" (click)="chargerParticipants()">
+              Voir les participants
+            </button>
+          }
+
+          <!-- Bouton participer (blogueur) -->
+          @if (isBlogueur) {
+            @if (participated()) {
+              <span class="badge-inscrit">✓ Inscrit</span>
+            } @else {
+              <button class="btn-participer" (click)="participer()" [disabled]="participating()">
+                @if (participating()) { Inscription... } @else { Participer }
+              </button>
+            }
+          }
+        </div>
+      </div>
+
+      <!-- Liste des participants -->
+      @if (showParticipants() && isStaff) {
+        <div class="section">
+          <h3>Liste des participants ({{ participants().length }})</h3>
+          @if (participants().length === 0) {
+            <p class="no-participants">Aucun participant inscrit</p>
+          } @else {
+            <div class="participants-list">
+              @for (p of participants(); track p.id) {
+                <div class="participant-row">
+                  <div class="participant-info">
+                    <div class="participant-avatar">
+                      {{ p.prenom.charAt(0) }}{{ p.nom.charAt(0) }}
+                    </div>
+                    <div>
+                      <div class="participant-name">{{ p.prenom }} {{ p.nom }}</div>
+                      <div class="participant-email">{{ p.email }}</div>
+                    </div>
+                  </div>
+                  @if (peutModifier) {
+                    <div class="presence-toggle">
+                      <button
+                        [class]="'btn-presence ' + (p.present ? 'present' : 'absent')"
+                        (click)="marquerPresence(p.id, !p.present)"
+                      >
+                        {{ p.present ? '✓ Présent' : 'Absent' }}
+                      </button>
+                    </div>
+                  } @else {
+                    <span [class]="'badge-presence ' + (p.present ? 'present' : 'absent')">
+                      {{ p.present ? 'Présent' : 'Absent' }}
+                    </span>
+                  }
+                </div>
+              }
+            </div>
+          }
+        </div>
+      }
+
+      @if (activite()!.rapport) {
+        <div class="section">
+          <h3>Rapport</h3>
+          <p>{{ activite()!.rapport }}</p>
+        </div>
+      }
+
+      @if (showForm() && peutModifier) {
+        <div class="section form-section">
+          <h3>Modifier l'activité</h3>
+          <form [formGroup]="form" (ngSubmit)="sauvegarder()">
+            <div class="field">
+              <label>Statut</label>
+              <select formControlName="statut" class="select-input">
+                @for (s of statuts; track s.value) {
+                  <option [value]="s.value">{{ s.label }}</option>
+                }
+              </select>
+            </div>
+            <div class="field">
+              <label>Rapport</label>
+              <textarea formControlName="rapport" class="textarea-input" rows="4"
+                placeholder="Rédigez le rapport..."></textarea>
+            </div>
+            <div class="form-actions">
+              <button type="button" class="btn-cancel" (click)="showForm.set(false)">Annuler</button>
+              <button type="submit" class="btn-save" [disabled]="saving()">
+                @if (saving()) { Sauvegarde... } @else { Sauvegarder }
+              </button>
+            </div>
+          </form>
+        </div>
+      }
+
+    </div>
+  }
+
+</div>

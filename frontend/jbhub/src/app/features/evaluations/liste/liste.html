@@ -1,0 +1,134 @@
+<div class="page">
+
+  <div class="page-header">
+    <div>
+      <h1>Évaluations</h1>
+      <p>{{ evaluationsFiltrees.length }} évaluation(s)</p>
+    </div>
+    <button class="btn-primary" (click)="showForm.set(!showForm())">
+      @if (showForm()) { ✕ Annuler } @else { ➕ Nouvelle évaluation }
+    </button>
+  </div>
+
+  <!-- Formulaire -->
+  @if (showForm()) {
+    <div class="form-card">
+      <h3>Évaluer une publication</h3>
+      <form [formGroup]="form" (ngSubmit)="evaluer()">
+        <div class="field">
+          <label>Publication *</label>
+          <select formControlName="publication_id">
+            <option [value]="null">Choisir une publication</option>
+            @for (p of publications(); track p.id) {
+              <option [value]="p.id">{{ p.titre }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="field checkbox-field">
+          <label class="checkbox-label">
+            <input type="checkbox" formControlName="retenu_reseaux" />
+            <span>Retenu pour les réseaux sociaux</span>
+          </label>
+        </div>
+
+        <div class="field">
+          <label>Commentaire</label>
+          <textarea formControlName="commentaire" rows="3"
+            placeholder="Votre commentaire sur la publication..."></textarea>
+        </div>
+
+        <div class="form-grid">
+          <div class="field">
+            <label>Réseau utilisé</label>
+            <input type="text" formControlName="reseau_utilise"
+              placeholder="Instagram, Facebook..." />
+          </div>
+          <div class="field">
+            <label>Date d'utilisation</label>
+            <input type="date" formControlName="date_utilisation" />
+          </div>
+        </div>
+
+        @if (erreur()) {
+          <div class="alert-error">⚠️ {{ erreur() }}</div>
+        }
+
+        <div class="form-actions">
+          <button type="submit" class="btn-save" [disabled]="saving()">
+            @if (saving()) { Envoi... } @else { ⭐ Évaluer }
+          </button>
+        </div>
+      </form>
+    </div>
+  }
+
+  <!-- Recherche -->
+  <div class="filtres">
+    <input
+      type="text"
+      [(ngModel)]="recherche"
+      placeholder="🔍 Rechercher par titre, évaluateur..."
+      class="input-search"
+    />
+  </div>
+
+  @if (!showForm() && erreur()) {
+    <div class="alert-error">⚠️ {{ erreur() }}</div>
+  }
+
+  @if (loading()) {
+    <div class="loading-list">
+      @for (i of [1,2,3]; track i) {
+        <div class="skeleton-row"></div>
+      }
+    </div>
+  }
+
+  @if (!loading()) {
+    @if (evaluationsFiltrees.length === 0) {
+      <div class="empty-state">
+        <span>⭐</span>
+        <p>Aucune évaluation trouvée</p>
+      </div>
+    } @else {
+      <div class="evaluations-list">
+        @for (e of evaluationsFiltrees; track e.id) {
+          <div class="eval-card">
+            <div class="eval-header">
+              <div class="eval-pub">
+                <span class="pub-titre">{{ e.publication_titre }}</span>
+                @if (e.retenu_reseaux) {
+                  <span class="badge-retenu">✅ Retenu réseaux</span>
+                } @else {
+                  <span class="badge-non-retenu">❌ Non retenu</span>
+                }
+              </div>
+              <span class="eval-date">
+                {{ e.evalue_le | date:'dd/MM/yyyy' }}
+              </span>
+            </div>
+
+            <div class="eval-body">
+              <div class="evaluateur">
+                👤 {{ e.evaluateur_prenom }} {{ e.evaluateur_nom }}
+              </div>
+              @if (e.commentaire) {
+                <p class="commentaire">{{ e.commentaire }}</p>
+              }
+              @if (e.reseau_utilise) {
+                <div class="reseau">
+                  📱 {{ e.reseau_utilise }}
+                  @if (e.date_utilisation) {
+                    · {{ e.date_utilisation | date:'dd/MM/yyyy' }}
+                  }
+                </div>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    }
+  }
+
+</div>

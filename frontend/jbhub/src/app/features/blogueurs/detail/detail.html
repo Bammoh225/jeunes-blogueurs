@@ -1,0 +1,145 @@
+<div class="page">
+
+  <!-- Retour -->
+  <button class="btn-retour" (click)="retour()">← Retour</button>
+
+  <!-- Loading -->
+  @if (loading()) {
+    <div class="skeleton-detail"></div>
+  }
+
+  <!-- Erreur -->
+  @if (erreur()) {
+    <div class="alert-error">⚠️ {{ erreur() }}</div>
+  }
+
+  <!-- Contenu -->
+  @if (!loading() && blogueur()) {
+    <div class="detail-layout">
+
+      <!-- Colonne gauche -->
+      <div class="left-col">
+        <div class="profile-card">
+          <div class="avatar-lg">{{ initiales(blogueur()!) }}</div>
+          <h2>{{ blogueur()!.prenom }} {{ blogueur()!.nom }}</h2>
+          <p class="email">{{ blogueur()!.email }}</p>
+          <span [class]="'badge ' + statutClass(blogueur()!.statut)">
+            {{ blogueur()!.statut }}
+          </span>
+
+          <!-- Changer statut (admin) -->
+          @if (isAdmin) {
+            <div class="statut-actions">
+              <p class="label-statut">Changer le statut :</p>
+              <div class="statut-btns">
+                @for (s of statuts; track s.value) {
+                  <button
+                    [class]="'btn-statut ' + (blogueur()!.statut === s.value ? 'active' : '')"
+                    (click)="changerStatut(s.value)"
+                    [disabled]="saving() || blogueur()!.statut === s.value"
+                  >
+                    {{ s.label }}
+                  </button>
+                }
+              </div>
+            </div>
+          }
+        </div>
+
+        <!-- Infos contact -->
+        <div class="info-card">
+          <h3>Contact</h3>
+          <div class="info-row">
+            <span class="info-label">📧 Email</span>
+            <span>{{ blogueur()!.email }}</span>
+          </div>
+          @if (blogueur()!.telephone) {
+            <div class="info-row">
+              <span class="info-label">📞 Téléphone</span>
+              <span>{{ blogueur()!.telephone }}</span>
+            </div>
+          }
+          @if (blogueur()!.ville_nom) {
+            <div class="info-row">
+              <span class="info-label">📍 Ville</span>
+              <span>{{ blogueur()!.ville_nom }}</span>
+            </div>
+          }
+          @if (blogueur()!.categorie_nom) {
+            <div class="info-row">
+              <span class="info-label">📂 Catégorie</span>
+              <span>{{ blogueur()!.categorie_nom }}</span>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Colonne droite -->
+      <div class="right-col">
+
+        <!-- Profil -->
+        <div class="info-card">
+          <h3>Profil</h3>
+          @if (blogueur()!.bio) {
+            <p class="bio">{{ blogueur()!.bio }}</p>
+          }
+          <div class="info-grid">
+            @if (blogueur()!.date_naissance) {
+              <div class="info-row">
+                <span class="info-label">🎂 Naissance</span>
+                <span>{{ blogueur()!.date_naissance | date:'dd/MM/yyyy' }}</span>
+              </div>
+            }
+            @if (blogueur()!.sexe) {
+              <div class="info-row">
+                <span class="info-label">👤 Sexe</span>
+                <span>{{ blogueur()!.sexe === 'M' ? 'Masculin' : 'Féminin' }}</span>
+              </div>
+            }
+            @if (blogueur()!.niveau_scolaire) {
+              <div class="info-row">
+                <span class="info-label">🎓 Niveau</span>
+                <span>{{ blogueur()!.niveau_scolaire }}</span>
+              </div>
+            }
+            @if (blogueur()!.etablissement) {
+              <div class="info-row">
+                <span class="info-label">🏫 Établissement</span>
+                <span>{{ blogueur()!.etablissement }}</span>
+              </div>
+            }
+            @if (blogueur()!.langue_ecriture) {
+              <div class="info-row">
+                <span class="info-label">✍️ Langue</span>
+                <span>{{ blogueur()!.langue_ecriture }}</span>
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- Thématiques -->
+        @if (blogueur()!.thematiques?.length) {
+          <div class="info-card">
+            <h3>Thématiques</h3>
+            <div class="thematiques">
+              @for (t of blogueur()!.thematiques; track t) {
+                <span class="tag">{{ t }}</span>
+              }
+            </div>
+          </div>
+        }
+
+        <!-- Stats -->
+        <div class="info-card">
+          <h3>Statistiques</h3>
+          <div class="stat-row">
+            <span class="stat-num">{{ blogueur()!.nb_publications ?? 0 }}</span>
+            <span class="stat-label">Publications</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  }
+
+</div>

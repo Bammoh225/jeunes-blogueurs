@@ -1,0 +1,169 @@
+<div class="inscription-wrapper">
+  <div class="inscription-card">
+
+    <!-- Header -->
+    <div class="card-header">
+      <div class="logo">
+        <span>✍️</span>
+        <div>
+          <h1>Jeunes Blogueurs</h1>
+          <p>UNICEF Côte d'Ivoire</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Succès -->
+    @if (succes()) {
+      <div class="succes-state">
+        <span class="succes-icon">🎉</span>
+        <h2>Inscription réussie !</h2>
+        <p>Votre dossier a été soumis. Vous recevrez une confirmation après validation.</p>
+        <a routerLink="/login" class="btn-login">Se connecter</a>
+      </div>
+    }
+
+    @if (!succes()) {
+
+      <!-- Étapes -->
+      <div class="etapes">
+        <div class="etape" [class.active]="etape() >= 1" [class.done]="etape() > 1">
+          <div class="etape-num">1</div>
+          <span>Compte</span>
+        </div>
+        <div class="etape-line" [class.active]="etape() > 1"></div>
+        <div class="etape" [class.active]="etape() >= 2">
+          <div class="etape-num">2</div>
+          <span>Profil</span>
+        </div>
+      </div>
+
+      <form [formGroup]="form">
+
+        <!-- Étape 1 -->
+        @if (etape() === 1) {
+          <div class="form-section">
+            <h3>Informations de connexion</h3>
+            <div class="field">
+              <label>Prénom *</label>
+              <input type="text" formControlName="prenom" placeholder="Votre prénom" />
+            </div>
+            <div class="field">
+              <label>Nom *</label>
+              <input type="text" formControlName="nom" placeholder="Votre nom" />
+            </div>
+            <div class="field">
+              <label>Email *</label>
+              <input type="email" formControlName="email" placeholder="votre@email.ci" />
+            </div>
+            <div class="field">
+              <label>Mot de passe *</label>
+              <input type="password" formControlName="mot_de_passe" placeholder="••••••••" />
+            </div>
+            <button type="button" class="btn-next" (click)="etapeSuivante()">
+              Suivant →
+            </button>
+          </div>
+        }
+
+        <!-- Étape 2 -->
+        @if (etape() === 2) {
+          <div class="form-section">
+            <h3>Votre profil</h3>
+
+            <div class="form-grid">
+              <div class="field">
+                <label>Date de naissance *</label>
+                <input type="date" formControlName="date_naissance" />
+              </div>
+              <div class="field">
+                <label>Sexe *</label>
+                <select formControlName="sexe">
+                  <option value="">Choisir</option>
+                  <option value="M">Masculin</option>
+                  <option value="F">Féminin</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>Téléphone</label>
+                <input type="text" formControlName="telephone" placeholder="+225 07 00 00 00" />
+              </div>
+              <div class="field">
+                <label>Ville</label>
+                <select formControlName="ville_id">
+                  <option [value]="null">Choisir une ville</option>
+                  @for (v of villes(); track v.id) {
+                    <option [value]="v.id">{{ v.nom }}</option>
+                  }
+                </select>
+              </div>
+              <div class="field">
+                <label>Langue d'écriture *</label>
+                <select formControlName="langue_ecriture">
+                  <option value="Français">Français</option>
+                  <option value="Anglais">Anglais</option>
+                  <option value="Dioula">Dioula</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>Niveau scolaire</label>
+                <input type="text" formControlName="niveau_scolaire" placeholder="Ex: Terminale" />
+              </div>
+            </div>
+
+            <div class="field">
+              <label>Établissement</label>
+              <input type="text" formControlName="etablissement" placeholder="Nom de votre école" />
+            </div>
+
+            <div class="field">
+              <label>Bio</label>
+              <textarea formControlName="bio" rows="3" placeholder="Parlez de vous..."></textarea>
+            </div>
+
+            <div class="field">
+              <label>Motivation</label>
+              <textarea formControlName="motivation" rows="3" placeholder="Pourquoi voulez-vous rejoindre le programme ?"></textarea>
+            </div>
+
+            <!-- Thématiques -->
+            <div class="field">
+              <label>Thématiques * (max 3)</label>
+              <div class="thematiques-grid">
+                @for (t of thematiques(); track t.id) {
+                  <button
+                    type="button"
+                    [class]="'thematique-btn ' + (isSelected(t.id) ? 'selected' : '')"
+                    (click)="toggleThematique(t.id)"
+                  >
+                    {{ t.nom }}
+                  </button>
+                }
+              </div>
+              <small>{{ thematiqueIds.length }}/3 sélectionnée(s)</small>
+            </div>
+
+            @if (erreur()) {
+              <div class="alert-error">⚠️ {{ erreur() }}</div>
+            }
+
+            <div class="form-actions">
+              <button type="button" class="btn-back" (click)="etape.set(1)">
+                ← Retour
+              </button>
+              <button type="button" class="btn-submit" (click)="soumettre()" [disabled]="loading()">
+                @if (loading()) { Envoi... } @else { S'inscrire }
+              </button>
+            </div>
+          </div>
+        }
+
+      </form>
+
+      <div class="card-footer">
+        <p>Déjà inscrit ? <a routerLink="/login">Se connecter</a></p>
+      </div>
+
+    }
+
+  </div>
+</div>

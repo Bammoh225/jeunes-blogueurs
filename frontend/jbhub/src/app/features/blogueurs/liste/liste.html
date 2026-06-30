@@ -1,0 +1,126 @@
+<div class="page">
+
+  <div class="page-header">
+    <div>
+      <h1>Blogueurs</h1>
+      <p>{{ blogueursFiltres.length }} blogueur(s) trouvé(s)</p>
+    </div>
+    <a routerLink="/inscription" class="btn-primary">
+      + Inscrire un blogueur
+    </a>
+  </div>
+
+  <!-- Suivi mensuel -->
+  <div class="suivi-bar">
+    <div class="suivi-titre">Suivi des publications — {{ moisLabel() }}</div>
+    <div class="suivi-stats">
+      <button
+        class="suivi-pill suivi-ok"
+        [class.active]="filtreSuivi === 'a_jour'"
+        (click)="filtreSuivi = filtreSuivi === 'a_jour' ? '' : 'a_jour'"
+      >
+        <span class="dot dot-ok"></span>
+        {{ nbAJour }} à jour
+      </button>
+      <button
+        class="suivi-pill suivi-retard"
+        [class.active]="filtreSuivi === 'en_retard'"
+        (click)="filtreSuivi = filtreSuivi === 'en_retard' ? '' : 'en_retard'"
+      >
+        <span class="dot dot-retard"></span>
+        {{ nbEnRetard }} en retard
+      </button>
+    </div>
+  </div>
+
+  <div class="filtres-bar">
+    <input
+      type="text"
+      [(ngModel)]="recherche"
+      placeholder="Rechercher par nom, email..."
+      class="input-search"
+    />
+
+    <select [(ngModel)]="filtreStatut" class="select-filtre">
+      @for (s of statuts; track s.value) {
+        <option [value]="s.value">{{ s.label }}</option>
+      }
+    </select>
+
+    <select [(ngModel)]="filtreVille" class="select-filtre">
+      <option value="">Toutes les villes</option>
+      @for (v of villes(); track v.id) {
+        <option [value]="v.nom">{{ v.nom }}</option>
+      }
+    </select>
+
+    <select [(ngModel)]="tri" class="select-filtre">
+      <option value="recent">Plus récent</option>
+      <option value="ancien">Plus ancien</option>
+      <option value="publications">Plus de publications</option>
+      <option value="nom">Nom (A-Z)</option>
+    </select>
+
+    @if (filtresActifs) {
+      <button class="btn-reset" (click)="reinitialiserFiltres()">Réinitialiser</button>
+    }
+  </div>
+
+  @if (erreur()) {
+    <div class="alert-error">⚠️ {{ erreur() }}</div>
+  }
+
+  @if (loading()) {
+    <div class="loading-grid">
+      @for (i of [1,2,3,4,5,6]; track i) {
+        <div class="skeleton-card"></div>
+      }
+    </div>
+  }
+
+  @if (!loading()) {
+    @if (blogueursFiltres.length === 0) {
+      <div class="empty-state"><p>Aucun blogueur trouvé</p></div>
+    } @else {
+      <div class="blogueurs-grid">
+        @for (b of blogueursFiltres; track b.id) {
+          <a [routerLink]="['/blogueurs', b.id]" class="blogueur-card">
+            <div class="card-header">
+              <div class="avatar">{{ initiales(b) }}</div>
+              <div class="header-badges">
+                <span [class]="'badge ' + statutClass(b.statut)">
+                  {{ statutLabel(b.statut) }}
+                </span>
+                @if (b.statut === 'actif') {
+                  <span [class]="'suivi-badge ' + (b.aPublieMois ? 'ok' : 'retard')">
+                    {{ b.aPublieMois ? 'À jour' : 'En retard' }}
+                  </span>
+                }
+              </div>
+            </div>
+            <div class="card-body">
+              <h3>{{ b.prenom }} {{ b.nom }}</h3>
+              <p class="email">{{ b.email }}</p>
+              <div class="meta">
+                @if (b.ville_nom) { <span>{{ b.ville_nom }}</span> }
+                @if (b.categorie_nom) { <span>{{ b.categorie_nom }}</span> }
+              </div>
+              @if (b.thematiques?.length) {
+                <div class="thematiques">
+                  @for (t of b.thematiques; track t) {
+                    <span class="tag">{{ t }}</span>
+                  }
+                </div>
+              }
+            </div>
+            <div class="card-footer">
+              <span>{{ b.nb_publications ?? 0 }} publication(s)</span>
+              <span class="voir">Voir →</span>
+            </div>
+          </a>
+        }
+      </div>
+    }
+  }
+
+</div>
