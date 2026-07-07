@@ -1,6 +1,5 @@
 <div class="app-shell" [class.sidebar-closed]="!sidebarOpen() && !isMobile()" [class.is-mobile]="isMobile()">
 
-  <!-- Overlay mobile -->
   @if (isMobile() && mobileOpen()) {
     <div class="mobile-overlay" (click)="mobileOpen.set(false)"></div>
   }
@@ -59,6 +58,43 @@
           <line x1="3" y1="18" x2="21" y2="18"/>
         </svg>
       </button>
+
+      <!-- Recherche globale -->
+      <div class="search-container">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <input
+          type="text"
+          class="search-input"
+          placeholder="Rechercher blogueurs, publications, activités..."
+          [(ngModel)]="searchQuery"
+          (input)="onSearchInput()"
+          (focus)="searchOpen.set(searchQuery.trim().length >= 2)"
+          (blur)="closeSearch()"
+        />
+
+        @if (searchOpen()) {
+          <div class="search-dropdown">
+            @if (searching()) {
+              <div class="search-loading">Recherche...</div>
+            } @else if (searchResults().length === 0) {
+              <div class="search-empty">Aucun résultat pour "{{ searchQuery }}"</div>
+            } @else {
+              @for (r of searchResults(); track r.route) {
+                <button class="search-result" (mousedown)="navigateToResult(r.route)">
+                  <span [class]="'result-type result-' + r.type">{{ typeLabel(r.type) }}</span>
+                  <div class="result-content">
+                    <span class="result-titre">{{ r.titre }}</span>
+                    @if (r.meta) { <span class="result-meta">{{ r.meta }}</span> }
+                  </div>
+                </button>
+              }
+            }
+          </div>
+        }
+      </div>
 
       <div class="topbar-right">
         <a routerLink="/notifications" class="notif-btn">

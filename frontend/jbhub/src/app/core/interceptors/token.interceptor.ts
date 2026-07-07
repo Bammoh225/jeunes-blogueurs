@@ -6,12 +6,14 @@ export const tokenInterceptor: HttpInterceptorFn = (req, next) => {
   const storage = inject(StorageService);
   const token = storage.getToken();
 
+  const headers: Record<string, string> = {
+    'ngrok-skip-browser-warning': 'true',
+  };
+
   if (token) {
-    const cloned = req.clone({
-      setHeaders: { Authorization: `Bearer ${token}` }
-    });
-    return next(cloned);
+    headers['Authorization'] = `Bearer ${token}`;
   }
 
-  return next(req);
+  const cloned = req.clone({ setHeaders: headers });
+  return next(cloned);
 };

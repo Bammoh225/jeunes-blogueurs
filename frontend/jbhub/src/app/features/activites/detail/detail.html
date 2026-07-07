@@ -51,27 +51,54 @@
             <span class="stat-label">Participants</span>
           </div>
 
-          <!-- Bouton voir participants (staff) -->
           @if (isStaff) {
             <button class="btn-participants" (click)="chargerParticipants()">
               Voir les participants
             </button>
           }
-
-          <!-- Bouton participer (blogueur) -->
-          @if (isBlogueur) {
-            @if (participated()) {
-              <span class="badge-inscrit">✓ Inscrit</span>
-            } @else {
-              <button class="btn-participer" (click)="participer()" [disabled]="participating()">
-                @if (participating()) { Inscription... } @else { Participer }
-              </button>
-            }
-          }
         </div>
       </div>
 
-      <!-- Liste des participants -->
+      <!-- Statut blogueur -->
+      @if (isBlogueur) {
+        <div class="section blogueur-statut-section">
+          @if (!monStatut().inscrit) {
+            <div class="statut-non-inscrit">
+              <p>Vous n'êtes pas encore inscrit à cette activité.</p>
+              <button class="btn-participer" (click)="participer()" [disabled]="participating()">
+                @if (participating()) { Inscription... } @else { Participer à cette activité }
+              </button>
+            </div>
+          } @else {
+            <div class="statut-inscrit">
+              <div class="inscrit-header">
+                <span class="badge-inscrit">✓ Inscrit</span>
+              </div>
+              <div class="presence-section">
+                <p class="presence-question">Confirmez-vous votre présence à cette activité ?</p>
+                <div class="presence-btns">
+                  <button
+                    [class]="'btn-presence-choice ' + (monStatut().present ? 'oui active' : 'oui')"
+                    (click)="confirmerPresence(true)"
+                    [disabled]="updatingPresence()"
+                  >
+                    ✓ Oui, je serai présent(e)
+                  </button>
+                  <button
+                    [class]="'btn-presence-choice ' + (!monStatut().present && monStatut().inscrit ? 'non active' : 'non')"
+                    (click)="confirmerPresence(false)"
+                    [disabled]="updatingPresence()"
+                  >
+                    ✗ Non, je ne peux pas venir
+                  </button>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      }
+
+      <!-- Liste des participants (staff) -->
       @if (showParticipants() && isStaff) {
         <div class="section">
           <h3>Liste des participants ({{ participants().length }})</h3>
@@ -82,23 +109,19 @@
               @for (p of participants(); track p.id) {
                 <div class="participant-row">
                   <div class="participant-info">
-                    <div class="participant-avatar">
-                      {{ p.prenom.charAt(0) }}{{ p.nom.charAt(0) }}
-                    </div>
+                    <div class="participant-avatar">{{ p.prenom.charAt(0) }}{{ p.nom.charAt(0) }}</div>
                     <div>
                       <div class="participant-name">{{ p.prenom }} {{ p.nom }}</div>
                       <div class="participant-email">{{ p.email }}</div>
                     </div>
                   </div>
                   @if (peutModifier) {
-                    <div class="presence-toggle">
-                      <button
-                        [class]="'btn-presence ' + (p.present ? 'present' : 'absent')"
-                        (click)="marquerPresence(p.id, !p.present)"
-                      >
-                        {{ p.present ? '✓ Présent' : 'Absent' }}
-                      </button>
-                    </div>
+                    <button
+                      [class]="'btn-statut ' + (p.present ? 'recu' : 'absent')"
+                      (click)="marquerPresence(p.id, !p.present)"
+                    >
+                      {{ p.present ? '✓ Présent' : 'Absent' }}
+                    </button>
                   } @else {
                     <span [class]="'badge-presence ' + (p.present ? 'present' : 'absent')">
                       {{ p.present ? 'Présent' : 'Absent' }}

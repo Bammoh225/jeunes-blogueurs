@@ -5,12 +5,13 @@
       <h1>Blogueurs</h1>
       <p>{{ blogueursFiltres.length }} blogueur(s) trouvé(s)</p>
     </div>
-    <a routerLink="/inscription" class="btn-primary">
-      + Inscrire un blogueur
-    </a>
+    <div class="header-actions">
+      <button class="btn-export" (click)="exporterExcel()">Excel</button>
+      <button class="btn-export" (click)="exporterPDF()">PDF</button>
+      <a routerLink="/inscription" class="btn-primary">+ Inscrire</a>
+    </div>
   </div>
 
-  <!-- Suivi mensuel -->
   <div class="suivi-bar">
     <div class="suivi-titre">Suivi des publications — {{ moisLabel() }}</div>
     <div class="suivi-stats">
@@ -40,27 +41,23 @@
       placeholder="Rechercher par nom, email..."
       class="input-search"
     />
-
     <select [(ngModel)]="filtreStatut" class="select-filtre">
       @for (s of statuts; track s.value) {
         <option [value]="s.value">{{ s.label }}</option>
       }
     </select>
-
     <select [(ngModel)]="filtreVille" class="select-filtre">
       <option value="">Toutes les villes</option>
       @for (v of villes(); track v.id) {
         <option [value]="v.nom">{{ v.nom }}</option>
       }
     </select>
-
     <select [(ngModel)]="tri" class="select-filtre">
       <option value="recent">Plus récent</option>
       <option value="ancien">Plus ancien</option>
       <option value="publications">Plus de publications</option>
       <option value="nom">Nom (A-Z)</option>
     </select>
-
     @if (filtresActifs) {
       <button class="btn-reset" (click)="reinitialiserFiltres()">Réinitialiser</button>
     }
@@ -107,7 +104,7 @@
               </div>
               @if (b.thematiques?.length) {
                 <div class="thematiques">
-                  @for (t of b.thematiques; track t) {
+                  @for (t of b.thematiques!.slice(0,2); track t) {
                     <span class="tag">{{ t }}</span>
                   }
                 </div>

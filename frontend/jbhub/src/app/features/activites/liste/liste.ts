@@ -6,6 +6,7 @@ import { ActivitesService } from '../../../core/services/activites.service';
 import { Activite, CreateActiviteDto, TypeActivite } from '../../../core/models/activite.model';
 import { AuthService } from '../../../core/services/auth.service';
 import { VillesService, Ville } from '../../../core/services/villes.service';
+import { BlogueursService } from '../../../core/services/blogueurs.service';
 
 @Component({
   selector: 'app-liste',
@@ -15,18 +16,21 @@ import { VillesService, Ville } from '../../../core/services/villes.service';
   styleUrl: './liste.scss'
 })
 export class Liste implements OnInit {
-  private service   = inject(ActivitesService);
-  private auth      = inject(AuthService);
-  private villesSvc = inject(VillesService);
-  private fb        = inject(FormBuilder);
+  private service       = inject(ActivitesService);
+  private auth          = inject(AuthService);
+  private villesSvc     = inject(VillesService);
+  private blogueursSvc  = inject(BlogueursService);
+  private fb            = inject(FormBuilder);
 
-  activites  = signal<Activite[]>([]);
-  villes     = signal<Ville[]>([]);
-  loading    = signal(true);
-  erreur     = signal('');
-  recherche  = '';
-  showForm   = signal(false);
-  saving     = signal(false);
+  activites   = signal<Activite[]>([]);
+  villes      = signal<Ville[]>([]);
+  blogueurs   = signal<{ id: number; prenom: string; nom: string }[]>([]);
+  loading     = signal(true);
+  erreur      = signal('');
+  recherche   = '';
+  showForm    = signal(false);
+  saving      = signal(false);
+  selectedParticipants: number[] = [];
 
   peutCreer = this.auth.hasRole(
     'responsable_unicef', 'responsable_technique',
@@ -56,6 +60,12 @@ export class Liste implements OnInit {
       next: r => this.villes.set(r.data),
       error: () => {}
     });
+    if (this.peutCreer) {
+      this.blogueursSvc.lister({ statut: 'actif' }).subscribe({
+        next: r => this.blogueurs.set(r.data.map(b => ({ id: b.id, prenom: b.prenom, nom: b.nom }))),
+        error: () => {}
+      });
+    }
   }
 
   charger() {
@@ -66,7 +76,19 @@ export class Liste implements OnInit {
     });
   }
 
-  creer() {
+  toggleParticipant(id: number) {
+    if (this.selectedParticipants.includes(id)) {
+      this.selectedParticipants = this.selectedParticipants.filter(i => i !== id);
+    } else {
+      this.selectedParticipants = [...this.selectedParticipants, id];
+    }
+  }
+
+  isParticipantSelected(id: number): boolean {
+    return this.selectedParticipants.includes(id);
+  }
+
+  async creer() {
     if (this.form.invalid) { this.form.markAllAsTouched(); return; }
     this.saving.set(true);
     const val = this.form.value;
@@ -79,10 +101,19 @@ export class Liste implements OnInit {
       lieu:        val.lieu || null,
       description: val.description || null,
     };
+
     this.service.creer(dto).subscribe({
-      next: r => {
-        this.activites.update(list => [r.data!, ...list]);
+      next: async r => {
+        const activite = r.data!;
+
+        // Ajouter les participants sélectionnés
+        for (const userId of this.selectedParticipants) {
+          await this.service.ajouterParticipant(activite.id, userId).toPromise();
+        }
+
+        this.activites.update(list => [activite, ...list]);
         this.form.reset({ type: 'atelier' });
+        this.selectedParticipants = [];
         this.showForm.set(false);
         this.saving.set(false);
       },
@@ -101,10 +132,7 @@ export class Liste implements OnInit {
 
   typeIcon(type: string): string {
     const map: Record<string, string> = {
-      'atelier':   '🛠️',
-      'formation': '🎓',
-      'evenement': '🎉',
-      'autre':     '📌',
+      'atelier': '🛠️', 'formation': '🎓', 'evenement': '🎉', 'autre': '📌'
     };
     return map[type] ?? '📌';
   }
@@ -121,10 +149,8 @@ export class Liste implements OnInit {
 
   statutLabel(statut: string): string {
     const map: Record<string, string> = {
-      'planifiee': 'Planifiée',
-      'en_cours':  'En cours',
-      'terminee':  'Terminée',
-      'annulee':   'Annulée',
+      'planifiee': 'Planifiée', 'en_cours': 'En cours',
+      'terminee': 'Terminée',   'annulee':  'Annulée',
     };
     return map[statut] ?? statut;
   }

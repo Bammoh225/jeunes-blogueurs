@@ -12,7 +12,6 @@
     }
   </div>
 
-  <!-- Formulaire création -->
   @if (showForm() && peutCreer) {
     <div class="form-card">
       <h3>Créer une activité</h3>
@@ -52,14 +51,33 @@
             <input type="datetime-local" formControlName="date_fin" />
           </div>
         </div>
+
         <div class="field">
           <label>Description</label>
-          <textarea formControlName="description" rows="3"
-            placeholder="Décrivez l'activité..."></textarea>
+          <textarea formControlName="description" rows="2" placeholder="Décrivez l'activité..."></textarea>
         </div>
+
+        @if (blogueurs().length > 0) {
+          <div class="field">
+            <label>Participants désignés ({{ selectedParticipants.length }} sélectionné(s))</label>
+            <div class="participants-select">
+              @for (b of blogueurs(); track b.id) {
+                <button
+                  type="button"
+                  [class]="'participant-btn ' + (isParticipantSelected(b.id) ? 'selected' : '')"
+                  (click)="toggleParticipant(b.id)"
+                >
+                  {{ b.prenom }} {{ b.nom }}
+                </button>
+              }
+            </div>
+          </div>
+        }
+
         @if (erreur()) {
           <div class="alert-error">⚠️ {{ erreur() }}</div>
         }
+
         <div class="form-actions">
           <button type="submit" class="btn-save" [disabled]="saving()">
             @if (saving()) { Création... } @else { Créer }
@@ -92,9 +110,7 @@
 
   @if (!loading()) {
     @if (activitesFiltrees.length === 0) {
-      <div class="empty-state">
-        <p>Aucune activité trouvée</p>
-      </div>
+      <div class="empty-state"><p>Aucune activité trouvée</p></div>
     } @else {
       <div class="activites-grid">
         @for (a of activitesFiltrees; track a.id) {

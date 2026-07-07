@@ -233,3 +233,22 @@
   color: var(--text-muted);
   font-size: 13px;
 }
+
+.participants-select {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.participant-btn {
+  padding: 5px 12px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: var(--surface);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+  &:hover { border-color: #0ea5e9; }
+  &.selected { background: #0ea5e9; color: white; border-color: #0ea5e9; }
+}

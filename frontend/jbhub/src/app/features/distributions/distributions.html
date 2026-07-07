@@ -1,0 +1,116 @@
+<div class="page">
+
+  <div class="page-header">
+    <div>
+      <h1>Distributions</h1>
+      <p>{{ distributions().length }} distribution(s)</p>
+    </div>
+    @if (peutGerer) {
+      <button class="btn-primary" (click)="showForm.set(!showForm())">
+        @if (showForm()) { Annuler } @else { + Nouvelle distribution }
+      </button>
+    }
+  </div>
+
+  @if (showForm() && peutGerer) {
+    <div class="form-card">
+      <h3>Créer une distribution</h3>
+      <form [formGroup]="form" (ngSubmit)="creer()">
+        <div class="form-grid">
+          <div class="field">
+            <label>Type *</label>
+            <select formControlName="type">
+              @for (t of types; track t.value) {
+                <option [value]="t.value">{{ t.label }}</option>
+              }
+            </select>
+          </div>
+          <div class="field">
+            <label>Libellé *</label>
+            <input type="text" formControlName="libelle" placeholder="Ex: Perdiem atelier Bouaké" />
+          </div>
+          <div class="field">
+            <label>Montant (FCFA)</label>
+            <input type="number" formControlName="montant" placeholder="Ex: 5000" />
+          </div>
+          <div class="field">
+            <label>Date *</label>
+            <input type="date" formControlName="date_distribution" />
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Description</label>
+          <textarea formControlName="description" rows="2" placeholder="Détails complémentaires..."></textarea>
+        </div>
+
+        <div class="field">
+          <label>Bénéficiaires * ({{ selectedIds.length }} sélectionné(s))</label>
+          <div class="beneficiaires-grid">
+            @for (b of beneficiairesDispo(); track b.id) {
+              <button
+                type="button"
+                [class]="'benef-btn ' + (isSelected(b.id) ? 'selected' : '')"
+                (click)="toggleBeneficiaire(b.id)"
+              >
+                {{ b.prenom }} {{ b.nom }}
+              </button>
+            }
+          </div>
+        </div>
+
+        @if (erreur()) {
+          <div class="alert-error">⚠️ {{ erreur() }}</div>
+        }
+
+        <div class="form-actions">
+          <button type="submit" class="btn-save" [disabled]="saving()">
+            @if (saving()) { Création... } @else { Créer la distribution }
+          </button>
+        </div>
+      </form>
+    </div>
+  }
+
+  @if (!showForm() && erreur()) {
+    <div class="alert-error">⚠️ {{ erreur() }}</div>
+  }
+
+  @if (loading()) {
+    <div class="loading-list">
+      @for (i of [1,2,3]; track i) {
+        <div class="skeleton-row"></div>
+      }
+    </div>
+  }
+
+  @if (!loading()) {
+    @if (distributions().length === 0) {
+      <div class="empty-state"><p>Aucune distribution enregistrée</p></div>
+    } @else {
+      <div class="distributions-list">
+        @for (d of distributions(); track d.id) {
+          <a [routerLink]="['/distributions', d.id]" class="dist-card">
+            <div class="dist-icon">{{ typeIcon(d.type) }}</div>
+            <div class="dist-info">
+              <h3>{{ d.libelle }}</h3>
+              <div class="dist-meta">
+                <span class="type-badge">{{ typeLabel(d.type) }}</span>
+                @if (d.montant) { <span>{{ d.montant }} FCFA</span> }
+                <span>{{ d.date_distribution | date:'dd/MM/yyyy' }}</span>
+              </div>
+              @if (d.description) {
+                <p class="dist-desc">{{ d.description }}</p>
+              }
+            </div>
+            <div class="dist-stats">
+              <span class="stat-recu">{{ d.nb_recus ?? 0 }}/{{ d.nb_beneficiaires ?? 0 }}</span>
+              <span class="stat-label">reçus</span>
+            </div>
+          </a>
+        }
+      </div>
+    }
+  }
+
+</div>

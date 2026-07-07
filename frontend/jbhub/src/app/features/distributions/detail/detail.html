@@ -1,0 +1,82 @@
+<div class="page">
+
+  <button class="btn-retour" (click)="retour()">← Retour</button>
+
+  @if (loading()) { <div class="skeleton-detail"></div> }
+  @if (erreur()) { <div class="alert-error">⚠️ {{ erreur() }}</div> }
+
+  @if (!loading() && distribution()) {
+    <div class="detail-card">
+
+      <div class="detail-header">
+        <span class="type-icon">{{ typeIcon(distribution()!.type) }}</span>
+        <div>
+          <h1>{{ distribution()!.libelle }}</h1>
+          <div class="header-meta">
+            <span class="type-badge">{{ typeLabel(distribution()!.type) }}</span>
+            @if (distribution()!.montant) { <span>{{ distribution()!.montant }} FCFA</span> }
+            <span>{{ distribution()!.date_distribution | date:'dd/MM/yyyy' }}</span>
+          </div>
+        </div>
+      </div>
+
+      @if (distribution()!.description) {
+        <div class="section">
+          <h3>Description</h3>
+          <p>{{ distribution()!.description }}</p>
+        </div>
+      }
+
+      <!-- Vue blogueur : confirmer sa propre réception -->
+      @if (isBlogueur && monStatut) {
+        <div class="section confirmation-section">
+          <h3>Votre statut</h3>
+          @if (monStatut!.recu) {
+            <div class="statut-confirme">
+              <span class="check-icon">✓</span>
+              <span>Vous avez confirmé avoir reçu cet élément</span>
+              <button class="btn-annuler" (click)="confirmerReception(false)" [disabled]="updating()">
+                Annuler
+              </button>
+            </div>
+          } @else {
+            <div class="statut-attente">
+              <p>Avez-vous reçu : <strong>{{ distribution()!.libelle }}</strong> ?</p>
+              <button class="btn-confirmer" (click)="confirmerReception(true)" [disabled]="updating()">
+                @if (updating()) { Confirmation... } @else { Oui, j'ai reçu }
+              </button>
+            </div>
+          }
+        </div>
+      }
+
+      <!-- Vue staff : liste complète des bénéficiaires -->
+      @if (isStaff) {
+        <div class="section">
+          <h3>Bénéficiaires ({{ beneficiaires().length }})</h3>
+          <div class="beneficiaires-list">
+            @for (b of beneficiaires(); track b.id) {
+              <div class="benef-row">
+                <div class="benef-info">
+                  <div class="benef-avatar">{{ b.prenom.charAt(0) }}{{ b.nom.charAt(0) }}</div>
+                  <div>
+                    <div class="benef-name">{{ b.prenom }} {{ b.nom }}</div>
+                    <div class="benef-email">{{ b.email }}</div>
+                  </div>
+                </div>
+                <button
+                  [class]="'btn-statut ' + (b.recu ? 'recu' : 'non-recu')"
+                  (click)="toggleRecu(b.id, b.recu)"
+                >
+                  {{ b.recu ? '✓ Reçu' : 'En attente' }}
+                </button>
+              </div>
+            }
+          </div>
+        </div>
+      }
+
+    </div>
+  }
+
+</div>

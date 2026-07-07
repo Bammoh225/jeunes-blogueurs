@@ -460,3 +460,119 @@ $topbar-h: 52px;
     gap: 12px;
   }
 }
+
+.search-container {
+  position: relative;
+  flex: 1;
+  max-width: 420px;
+  margin: 0 16px;
+}
+
+.search-icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 15px;
+  height: 15px;
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+.search-input {
+  width: 100%;
+  height: 32px;
+  padding: 0 12px 0 32px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  font-size: 13px;
+  background: var(--bg);
+  outline: none;
+  transition: all 0.15s;
+  box-sizing: border-box;
+
+  &:focus {
+    border-color: #0ea5e9;
+    background: var(--surface);
+  }
+
+  &::placeholder { color: var(--text-muted); }
+}
+
+.search-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+  max-height: 360px;
+  overflow-y: auto;
+  z-index: 200;
+}
+
+.search-loading, .search-empty {
+  padding: 16px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.search-result {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--border-light);
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.12s;
+
+  &:last-child { border-bottom: none; }
+  &:hover { background: var(--bg); }
+}
+
+.result-type {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 10px;
+  white-space: nowrap;
+  flex-shrink: 0;
+
+  &.result-blogueur    { background: #e0f2fe; color: #0369a1; }
+  &.result-publication { background: #f0fdf4; color: #16a34a; }
+  &.result-activite    { background: #fef9c3; color: #ca8a04; }
+}
+
+.result-content {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: 1px;
+}
+
+.result-titre {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.result-meta {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+@media (max-width: 767px) {
+  .search-container {
+    display: none;
+  }
+}

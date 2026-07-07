@@ -1,0 +1,200 @@
+.page { max-width: 700px; }
+
+.btn-retour {
+  background: none;
+  border: none;
+  color: #0ea5e9;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 20px;
+  display: block;
+  &:hover { text-decoration: underline; }
+}
+
+.alert-error {
+  background: var(--danger-light);
+  border: 1px solid #fecaca;
+  color: var(--danger);
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  margin-bottom: 16px;
+}
+
+.detail-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.detail-header {
+  padding: 20px;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  border-bottom: 1px solid var(--border);
+
+  .type-icon { font-size: 32px; }
+  h1 { font-size: 18px; font-weight: 600; color: var(--text-primary); margin: 0 0 6px; }
+}
+
+.header-meta {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.type-badge {
+  background: #e0f2fe;
+  color: #0369a1;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-weight: 500;
+}
+
+.section {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-light);
+  &:last-child { border-bottom: none; }
+
+  h3 {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin: 0 0 12px;
+  }
+  p { font-size: 13px; color: var(--text-primary); margin: 0; line-height: 1.6; }
+}
+
+.confirmation-section {
+  background: #f0f9ff;
+}
+
+.statut-attente {
+  p { margin-bottom: 12px; }
+}
+
+.btn-confirmer {
+  height: 38px;
+  padding: 0 20px;
+  background: #16a34a;
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+  &:hover:not(:disabled) { background: #15803d; }
+  &:disabled { opacity: 0.6; cursor: not-allowed; }
+}
+
+.statut-confirme {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  font-size: 13px;
+  color: #16a34a;
+  font-weight: 500;
+}
+
+.check-icon {
+  width: 20px;
+  height: 20px;
+  background: #16a34a;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+.btn-annuler {
+  margin-left: auto;
+  background: none;
+  border: none;
+  color: #6b7280;
+  font-size: 12px;
+  cursor: pointer;
+  text-decoration: underline;
+  &:hover { color: #374151; }
+}
+
+.beneficiaires-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.benef-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+}
+
+.benef-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.benef-avatar {
+  width: 32px;
+  height: 32px;
+  background: #0ea5e9;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.benef-name  { font-size: 13px; font-weight: 500; color: var(--text-primary); }
+.benef-email { font-size: 11px; color: var(--text-muted); }
+
+.btn-statut {
+  height: 30px;
+  padding: 0 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  transition: all 0.15s;
+
+  &.recu     { background: #f0fdf4; color: #16a34a; border-color: #bbf7d0; }
+  &.non-recu { background: var(--surface); color: var(--text-muted); }
+  &:hover { opacity: 0.85; }
+}
+
+.skeleton-detail {
+  height: 300px;
+  background: linear-gradient(90deg, var(--border-light) 25%, var(--border) 50%, var(--border-light) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+  border-radius: var(--radius-lg);
+}
+
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}

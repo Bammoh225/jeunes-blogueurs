@@ -1,10 +1,13 @@
 import { Component, inject, signal, OnInit, HostListener } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive, Router, NavigationEnd } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../core/services/auth.service';
 import { NotificationsService } from '../../core/services/notifications.service';
+import { SearchService, SearchResult } from '../../core/services/search.service';
 import { ROLES_ADMIN, ROLES_STAFF } from '../../core/models/auth.model';
-import { filter } from 'rxjs/operators';
+import { filter, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { Subject, of } from 'rxjs';
 
 interface NavItem {
   label:  string;
@@ -17,20 +20,32 @@ interface NavItem {
 @Component({
   selector: 'app-main-layout',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, CommonModule],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, CommonModule, FormsModule],
   templateUrl: './main-layout.html',
   styleUrl: './main-layout.scss'
 })
 export class MainLayout implements OnInit {
-  auth     = inject(AuthService);
-  notifSvc = inject(NotificationsService);
-  router   = inject(Router);
+  auth       = inject(AuthService);
+  notifSvc   = inject(NotificationsService);
+  searchSvc  = inject(SearchService);
+  router     = inject(Router);
 
-  sidebarOpen   = signal(true);
-  mobileOpen    = signal(false);
-  isMobile      = signal(false);
-  user          = this.auth.currentUser;
-  nonLus        = signal(0);
+  sidebarOpen = signal(true);
+  mobileOpen  = signal(false);
+  isMobile    = signal(false);
+  user        = this.auth.currentUser;
+  nonLus      = signal(0);
+
+  searchQuery   = '';
+  searchResults = signal<SearchResult[]>([]);
+  searchOpen    = signal(false);
+  searching     = signal(false);
+  private searchSubject = new Subject<string>();
+
+  isStaff = this.auth.hasRole(
+    'responsable_unicef', 'responsable_technique', 'responsable_national',
+    'responsable_zone', 'responsable_categorie', 'equipe_com'
+  );
 
   navItems: NavItem[] = [
     {
@@ -58,6 +73,10 @@ export class MainLayout implements OnInit {
       icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>'
     },
     {
+      label: 'Distributions', route: '/distributions',
+      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>'
+    },
+    {
       label: 'Utilisateurs', route: '/utilisateurs', roles: ROLES_ADMIN,
       icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>'
     },
@@ -72,10 +91,47 @@ export class MainLayout implements OnInit {
     this.chargerNonLus();
     setInterval(() => this.chargerNonLus(), 30000);
 
-    // Fermer le menu mobile à chaque navigation
     this.router.events.pipe(
       filter(e => e instanceof NavigationEnd)
-    ).subscribe(() => this.mobileOpen.set(false));
+    ).subscribe(() => {
+      this.mobileOpen.set(false);
+      this.searchOpen.set(false);
+    });
+
+    this.searchSubject.pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      switchMap(q => {
+        if (q.trim().length < 2) return of([]);
+        this.searching.set(true);
+        return this.searchSvc.rechercher(q, this.isStaff);
+      })
+    ).subscribe(results => {
+      this.searchResults.set(results);
+      this.searching.set(false);
+    });
+  }
+
+  onSearchInput() {
+    this.searchOpen.set(this.searchQuery.trim().length >= 2);
+    this.searchSubject.next(this.searchQuery);
+  }
+
+  closeSearch() {
+    setTimeout(() => this.searchOpen.set(false), 150);
+  }
+
+  navigateToResult(route: string) {
+    this.searchQuery = '';
+    this.searchOpen.set(false);
+    this.router.navigateByUrl(route);
+  }
+
+  typeLabel(type: string): string {
+    const map: Record<string, string> = {
+      blogueur: 'Blogueur', publication: 'Publication', activite: 'Activité'
+    };
+    return map[type] ?? type;
   }
 
   @HostListener('window:resize')
@@ -95,7 +151,7 @@ export class MainLayout implements OnInit {
 
   chargerNonLus() {
     this.notifSvc.countNonLus().subscribe({
-      next: r => this.nonLus.set(r.data?.total ?? 0),
+      next: (r: any) => this.nonLus.set(r.data?.total ?? 0),
       error: () => {}
     });
   }

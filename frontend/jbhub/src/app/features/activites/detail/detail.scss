@@ -328,3 +328,84 @@
   &.present { background: #f0fdf4; color: #16a34a; }
   &.absent  { background: var(--border-light); color: var(--text-muted); }
 }
+
+.blogueur-statut-section {
+  background: #f0f9ff;
+  border-top: 1px solid #bae6fd;
+}
+
+.statut-non-inscrit {
+  p { font-size: 13px; color: var(--text-secondary); margin-bottom: 12px; }
+}
+
+.btn-participer {
+  height: 36px;
+  padding: 0 20px;
+  background: #0ea5e9;
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s;
+  &:hover:not(:disabled) { background: #0284c7; }
+  &:disabled { opacity: 0.5; cursor: not-allowed; }
+}
+
+.statut-inscrit { display: flex; flex-direction: column; gap: 12px; }
+
+.inscrit-header { display: flex; align-items: center; gap: 8px; }
+
+.badge-inscrit {
+  font-size: 12px;
+  font-weight: 600;
+  color: #16a34a;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  padding: 4px 12px;
+  border-radius: 20px;
+}
+
+.presence-section {
+  .presence-question {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 10px;
+  }
+}
+
+.presence-btns {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.btn-presence-choice {
+  height: 36px;
+  padding: 0 16px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1.5px solid var(--border);
+  background: var(--surface);
+  transition: all 0.15s;
+
+  &.oui {
+    color: #16a34a;
+    border-color: #bbf7d0;
+    &.active { background: #16a34a; color: white; border-color: #16a34a; }
+    &:hover:not(:disabled):not(.active) { background: #f0fdf4; }
+  }
+
+  &.non {
+    color: #dc2626;
+    border-color: #fecaca;
+    &.active { background: #dc2626; color: white; border-color: #dc2626; }
+    &:hover:not(:disabled):not(.active) { background: #fef2f2; }
+  }
+
+  &:disabled { opacity: 0.5; cursor: not-allowed; }
+}

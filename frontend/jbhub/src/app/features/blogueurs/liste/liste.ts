@@ -6,6 +6,7 @@ import { BlogueursService } from '../../../core/services/blogueurs.service';
 import { PublicationsService } from '../../../core/services/publications.service';
 import { BlogueurResume } from '../../../core/models/blogueur.model';
 import { VillesService, Ville } from '../../../core/services/villes.service';
+import { ExportService } from '../../../core/services/export.service';
 
 interface BlogueurAvecStatut extends BlogueurResume {
   aPublieMois: boolean;
@@ -22,6 +23,7 @@ export class Liste implements OnInit {
   private service     = inject(BlogueursService);
   private villesSvc   = inject(VillesService);
   private pubService  = inject(PublicationsService);
+  private exportSvc   = inject(ExportService);
 
   blogueurs = signal<BlogueurAvecStatut[]>([]);
   villes    = signal<Ville[]>([]);
@@ -30,7 +32,7 @@ export class Liste implements OnInit {
 
   filtreStatut    = '';
   filtreVille     = '';
-  filtreSuivi     = ''; // '', 'a_jour', 'en_retard'
+  filtreSuivi     = '';
   recherche       = '';
   tri             = 'recent';
 
@@ -52,7 +54,6 @@ export class Liste implements OnInit {
 
   charger() {
     this.loading.set(true);
-
     this.service.lister().subscribe({
       next: blogueurs => {
         this.pubService.lister().subscribe({
@@ -130,6 +131,40 @@ export class Liste implements OnInit {
     }
 
     return result;
+  }
+
+  exporterPDF() {
+    const mois = new Date().toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
+    const colonnes = ['Prénom', 'Nom', 'Email', 'Ville', 'Statut', 'Publications', `Publié ce mois (${mois})`];
+    const lignes = this.blogueursFiltres.map(b => [
+      b.prenom,
+      b.nom,
+      b.email,
+      b.ville_nom ?? '-',
+      b.statut,
+      b.nb_publications ?? 0,
+      b.statut === 'actif' ? (b.aPublieMois ? 'Oui' : 'Non') : '-',
+    ]);
+    this.exportSvc.exportPDF(
+      `Rapport Blogueurs — ${mois}`,
+      colonnes, lignes,
+      `blogueurs_${mois.replace(' ', '_')}`
+    );
+  }
+
+  exporterExcel() {
+    const mois = new Date().toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
+    const colonnes = ['Prénom', 'Nom', 'Email', 'Ville', 'Statut', 'Publications', `Publié ce mois`];
+    const lignes = this.blogueursFiltres.map(b => [
+      b.prenom,
+      b.nom,
+      b.email,
+      b.ville_nom ?? '-',
+      b.statut,
+      b.nb_publications ?? 0,
+      b.statut === 'actif' ? (b.aPublieMois ? 'Oui' : 'Non') : '-',
+    ]);
+    this.exportSvc.exportExcel(colonnes, lignes, `blogueurs_${mois.replace(' ', '_')}`);
   }
 
   reinitialiserFiltres() {

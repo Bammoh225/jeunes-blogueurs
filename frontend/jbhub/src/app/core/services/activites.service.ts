@@ -13,6 +13,11 @@ export interface Participant {
   present:    boolean;
 }
 
+export interface MonStatut {
+  inscrit: boolean;
+  present: boolean;
+}
+
 @Injectable({ providedIn: 'root' })
 export class ActivitesService {
   private http = inject(HttpClient);
@@ -26,6 +31,10 @@ export class ActivitesService {
 
   trouver(id: number) {
     return this.http.get<ApiResponse<Activite>>(`${this.api}/${id}`);
+  }
+
+  monStatut(id: number) {
+    return this.http.get<ApiResponse<MonStatut>>(`${this.api}/${id}/mon-statut`);
   }
 
   listerParticipants(id: number) {
@@ -47,6 +56,15 @@ export class ActivitesService {
     );
   }
 
+  // Blogueur confirme SA PROPRE présence
+  confirmerPresence(activiteId: number, userId: number, present: boolean) {
+    return this.http.patch<ApiResponse<null>>(
+      `${this.api}/${activiteId}/ma-presence`,
+      { present }
+    );
+  }
+
+  // Staff marque la présence de n'importe qui
   marquerPresence(activiteId: number, userId: number, present: boolean) {
     return this.http.patch<ApiResponse<null>>(
       `${this.api}/${activiteId}/participants/presence`,
