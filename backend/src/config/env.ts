@@ -23,5 +23,5 @@ export const env = {
   JWT_SECRET:     requireEnv('JWT_SECRET'),
   JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN || '24h',
 
-  CORS_ORIGIN:    process.env.CORS_ORIGIN || '*',  // Autorise toutes les origines pour le développement
+  CORS_ORIGIN:    process.env.CORS_ORIGIN ||'http://localhost:4200' ,  // Autorise toutes les origines pour le développement
 };

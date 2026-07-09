@@ -25,3 +25,6 @@ export async function connectDB(): Promise<void> {
     process.exit(1); // Arrête le serveur si la DB est inaccessible
   }
 }
+export const closeDB = async () => {
+  await pool.end();
+};

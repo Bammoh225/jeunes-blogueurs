@@ -25,6 +25,7 @@ router.post('/',      gestionnaires, distributionsController.creer);
 router.patch('/:id',  gestionnaires, distributionsController.modifier);
 router.delete('/:id', gestionnaires, distributionsController.supprimer);
 
-router.patch('/:id/beneficiaires/recu', gestionnaires, distributionsController.marquerRecu);
+// Le staff peut marquer n'importe qui ; un blogueur ne peut confirmer que lui-même (vérifié dans le controller)
+router.patch('/:id/beneficiaires/recu', tousLesRoles, distributionsController.marquerRecu);
 
 export default router;

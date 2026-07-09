@@ -3,6 +3,10 @@ import { AuthRequest } from '../middlewares/auth.middleware';
 import { distributionsService } from '../services/distributions.service';
 import { sendSuccess, sendError } from '../utils/response';
 
+const isStaff = (role: string) =>
+  ['responsable_unicef','responsable_technique','responsable_national','responsable_zone',
+   'responsable_categorie','equipe_com'].includes(role);
+
 export const distributionsController = {
 
   async lister(req: AuthRequest, res: Response): Promise<void> {
@@ -37,7 +41,15 @@ export const distributionsController = {
 
   async marquerRecu(req: AuthRequest, res: Response): Promise<void> {
     try {
-      await distributionsService.marquerRecu(+req.params.id, +req.body.utilisateur_id, req.body.recu);
+      const cibleId = +req.body.utilisateur_id;
+
+      // Un blogueur ne peut confirmer que sa propre réception
+      if (!isStaff(req.user!.role) && cibleId !== req.user!.id) {
+        sendError(res, 'Vous ne pouvez confirmer que votre propre réception', 403);
+        return;
+      }
+
+      await distributionsService.marquerRecu(+req.params.id, cibleId, req.body.recu);
       sendSuccess(res, null, 'Statut mis à jour');
     } catch (err: any) { sendError(res, err.message); }
   },
