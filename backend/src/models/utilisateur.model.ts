@@ -8,6 +8,7 @@ export interface Utilisateur {
   mot_de_passe: string;
   role: Role;
   telephone?: string;
+  numero_urgence?: string;
   ville_id?: number | null;
   categorie_id?: number | null;
   cree_le: Date;
@@ -30,6 +31,7 @@ export interface CreateUtilisateurDto {
   mot_de_passe: string;
   role?: Role;
   telephone?: string;
+  numero_urgence?: string;
   ville_id?: number | null;
   categorie_id?: number | null;
 }
@@ -41,6 +43,7 @@ export interface UpdateUtilisateurDto {
   mot_de_passe?: string;
   role?: Role;
   telephone?: string;
+  numero_urgence?: string;
   ville_id?: number | null;
   categorie_id?: number | null;
 }

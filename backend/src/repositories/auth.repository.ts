@@ -45,4 +45,35 @@ export const authRepository = {
     );
   },
 
+  async createResetToken(userId: number, tokenHash: string, expiresAt: Date) {
+    await pool.execute<ResultSetHeader>(
+      'INSERT INTO password_reset_tokens (user_id, token_hash, expires_at) VALUES (?, ?, ?)',
+      [userId, tokenHash, expiresAt]
+    );
+  },
+
+  async findValidResetToken(tokenHash: string) {
+    const [rows] = await pool.execute<RowDataPacket[]>(
+      `SELECT * FROM password_reset_tokens 
+       WHERE token_hash = ? AND used = FALSE AND expires_at > NOW() 
+       LIMIT 1`,
+      [tokenHash]
+    );
+    return rows[0] ?? null;
+  },
+
+  async markResetTokenUsed(id: number) {
+    await pool.execute<ResultSetHeader>(
+      'UPDATE password_reset_tokens SET used = TRUE WHERE id = ?',
+      [id]
+    );
+  },
+
+  async invalidateUserResetTokens(userId: number) {
+    await pool.execute(
+      'UPDATE password_reset_tokens SET used = TRUE WHERE user_id = ? AND used = FALSE',
+      [userId]
+    );
+  },
+
 };

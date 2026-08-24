@@ -11,7 +11,7 @@ export const utilisateursRepository = {
 
   async findAll(): Promise<UtilisateurPublic[]> {
     const [rows] = await pool.execute<RowDataPacket[]>(`
-      SELECT u.id, u.prenom, u.nom, u.email, u.telephone, u.photo_url,
+      SELECT u.id, u.prenom, u.nom, u.email, u.telephone, u.numero_urgence, u.photo_url,
              u.role, u.ville_id, u.categorie_id, u.actif, u.created_at, u.updated_at,
              v.nom AS ville_nom, c.nom AS categorie_nom
       FROM utilisateurs u
@@ -25,7 +25,7 @@ export const utilisateursRepository = {
 
   async findById(id: number): Promise<UtilisateurPublic | null> {
     const [rows] = await pool.execute<RowDataPacket[]>(`
-      SELECT u.id, u.prenom, u.nom, u.email, u.telephone, u.photo_url,
+      SELECT u.id, u.prenom, u.nom, u.email, u.telephone, u.numero_urgence, u.photo_url,
              u.role, u.ville_id, u.categorie_id, u.actif, u.created_at, u.updated_at,
              v.nom AS ville_nom, c.nom AS categorie_nom
       FROM utilisateurs u
@@ -38,14 +38,15 @@ export const utilisateursRepository = {
 
   async create(dto: CreateUtilisateurDto & { mot_de_passe: string }): Promise<number> {
     const [result] = await pool.execute<ResultSetHeader>(`
-      INSERT INTO utilisateurs (prenom, nom, email, mot_de_passe, telephone, role, ville_id, categorie_id)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO utilisateurs (prenom, nom, email, mot_de_passe, telephone, numero_urgence, role, ville_id, categorie_id)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     `, [
       dto.prenom,
       dto.nom,
       dto.email,
       dto.mot_de_passe,
       dto.telephone ?? null,
+      dto.numero_urgence ?? null,
       dto.role ?? 'blogueur',
       dto.ville_id ?? null,
       dto.categorie_id ?? null,

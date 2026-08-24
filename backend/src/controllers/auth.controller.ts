@@ -43,4 +43,24 @@ export const authController = {
     }
   },
 
+  async motDePasseOublie(req: AuthRequest, res: Response): Promise<void> {
+    try {
+      const { email } = req.body;
+      await authService.motDePasseOublie(email);
+      sendSuccess(res, null, 'Si ce compte existe, un email a été envoyé.');
+    } catch (err: any) {
+      sendError(res, err.message, 400);
+    }
+  },
+
+  async reinitialiserMotDePasse(req: AuthRequest, res: Response): Promise<void> {
+    try {
+      const { token, nouveau_mot_de_passe } = req.body;
+      await authService.reinitialiserMotDePasse(token, nouveau_mot_de_passe);
+      sendSuccess(res, null, 'Mot de passe réinitialisé avec succès');
+    } catch (err: any) {
+      sendError(res, err.message, 400);
+    }
+  },
+
 };

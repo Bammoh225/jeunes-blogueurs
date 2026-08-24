@@ -27,6 +27,7 @@ export interface CreateActiviteDto {
   date_debut:   Date;
   date_fin?:    Date | null;
   lieu?:        string | null;
+  participants?: number[];
 }
 
 export interface UpdateActiviteDto {

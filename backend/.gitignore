@@ -1,5 +1,28 @@
-node_modules/
-dist/
-.env
+# Node backend
+backend/node_modules/
+backend/dist/
+backend/.env
+backend/src/config/certs/*.pem
+
+# Angular frontend
+frontend/jbhub/node_modules/
+frontend/jbhub/dist/
+frontend/jbhub/.angular/
+
+# Logs
 *.log
-coverage/
+
+# Env global
+.env
+.env.*
+
+# IDE
+.vscode/
+.idea/
+
+# Database dumps & SQL
+*.sql
+structure.txt
+
+# OS
+.DS_Store

@@ -15,12 +15,17 @@ router.get('/:id',    requireRoles(
   'responsable_unicef', 'responsable_technique', 'responsable_national',
   'responsable_zone', 'responsable_categorie', 'equipe_com', 'jeune_blogueur'
 ),                                                                       publicationsController.trouver);
-router.post('/',      requireRoles('jeune_blogueur'),                    publicationsController.soumettre);
+router.post('/',      requireRoles(
+  'responsable_technique', 'responsable_national', 'responsable_zone',
+  'responsable_categorie', 'equipe_com', 'jeune_blogueur'
+),                                                                       publicationsController.soumettre);
 router.patch('/:id',  requireRoles(
-  'jeune_blogueur','responsable_unicef','responsable_technique'
+  'responsable_unicef','responsable_technique','responsable_national',
+  'responsable_zone', 'responsable_categorie', 'equipe_com', 'jeune_blogueur'
 ),                                                                       publicationsController.modifier);
 router.delete('/:id', requireRoles(
-  'jeune_blogueur','responsable_unicef','responsable_technique'
+  'responsable_unicef','responsable_technique','responsable_national',
+  'responsable_zone', 'responsable_categorie', 'equipe_com', 'jeune_blogueur'
 ),                                                                       publicationsController.supprimer);
 
 export default router;
