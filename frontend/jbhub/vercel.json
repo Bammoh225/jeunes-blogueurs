@@ -1,5 +1,10 @@
 {
+  "buildCommand": "ng build",
+  "outputDirectory": "dist/jbhub/browser",
   "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
   ]
 }
