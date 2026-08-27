@@ -1,6 +1,7 @@
 # Node backend
 backend/node_modules/
 backend/dist/
+backend/src/config/certs/*.pem
 backend/.env
 
 # Angular frontend
@@ -19,5 +20,10 @@ frontend/jbhub/.angular/
 .vscode/
 .idea/
 
+# Database dumps & SQL
+*.sql
+structure.txt
+
 # OS
 .DS_Store
+

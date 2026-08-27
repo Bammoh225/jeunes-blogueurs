@@ -98,6 +98,9 @@
             <div class="card-body">
               <h3>{{ b.prenom }} {{ b.nom }}</h3>
               <p class="email">{{ b.email }}</p>
+              @if (b.numero_urgence) {
+                <p class="urgence">🆘 Urgence: <strong>{{ b.numero_urgence }}</strong></p>
+              }
               <div class="meta">
                 @if (b.ville_nom) { <span>{{ b.ville_nom }}</span> }
                 @if (b.categorie_nom) { <span>{{ b.categorie_nom }}</span> }

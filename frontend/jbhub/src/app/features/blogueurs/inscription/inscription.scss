@@ -4,6 +4,13 @@
   justify-content: center;
   padding: 2rem 1rem;
 }
+.logo-icon {
+  width: 100%;
+  max-width: 220px;
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
 
 .inscription-card {
   background: white;
@@ -12,6 +19,7 @@
   width: 100%;
   max-width: 560px;
   box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+  box-sizing: border-box;
 }
 
 .card-header {
@@ -71,6 +79,7 @@
     font-weight: 700;
     font-size: 0.875rem;
     transition: all 0.2s;
+    flex-shrink: 0;
   }
 
   span { font-size: 0.75rem; color: #9ca3af; }
@@ -86,6 +95,7 @@
   background: #e5e7eb;
   margin-bottom: 1.2rem;
   transition: background 0.2s;
+  flex-shrink: 1;
   &.active { background: #1a237e; }
 }
 
@@ -102,6 +112,7 @@
 
 .field {
   margin-bottom: 0.75rem;
+  min-width: 0; // évite qu'un champ force le débordement du grid parent
 
   label {
     display: block;
@@ -209,5 +220,52 @@
   p { color: #6b7280; font-size: 0.875rem; margin: 0; }
   a { color: #1a237e; font-weight: 600; text-decoration: none;
     &:hover { text-decoration: underline; }
+  }
+}
+
+// ==========================================
+// RESPONSIVE
+// ==========================================
+@media (max-width: 640px) {
+  .inscription-wrapper {
+    padding: 1rem 0.75rem;
+  }
+
+  .inscription-card {
+    padding: 1.25rem;
+    border-radius: 12px;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr; // les champs s'empilent au lieu de se coincer côte à côte
+  }
+
+  .etape-line {
+    width: 48px; // ligne raccourcie pour laisser plus de place aux libellés d'étapes
+  }
+
+  .form-actions {
+    flex-direction: column; // Retour/S'inscrire empilés plutôt que côte à côte
+  }
+
+  .btn-back,
+  .btn-submit {
+    flex: none;
+    width: 100%;
+  }
+}
+
+@media (max-width: 380px) {
+  .inscription-card {
+    padding: 1rem;
+  }
+
+  .etape span {
+    font-size: 0.7rem;
+  }
+
+  .thematique-btn {
+    font-size: 0.75rem;
+    padding: 0.3rem 0.6rem;
   }
 }

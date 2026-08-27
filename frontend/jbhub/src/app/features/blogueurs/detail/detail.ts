@@ -10,7 +10,7 @@ import { ROLES_ADMIN } from '../../../core/models/auth.model';
 @Component({
   selector: 'app-detail',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './detail.html',
   styleUrl: './detail.scss'
 })

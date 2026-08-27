@@ -31,6 +31,17 @@ export class AuthService {
     );
   }
 
+  motDePasseOublie(email: string) {
+    return this.http.post<ApiResponse<null>>(`${this.apiUrl}/mot-de-passe-oublie`, { email });
+  }
+
+  reinitialiserMotDePasse(token: string, nouveau_mot_de_passe: string) {
+    return this.http.post<ApiResponse<null>>(`${this.apiUrl}/reinitialiser-mot-de-passe`, {
+      token,
+      nouveau_mot_de_passe
+    });
+  }
+
   logout(): void {
     this.storage.clear();
     this.currentUser.set(null);

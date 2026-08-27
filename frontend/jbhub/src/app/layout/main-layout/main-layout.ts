@@ -1,4 +1,4 @@
-import { Component, inject, signal, OnInit, HostListener } from '@angular/core';
+import { Component, inject, signal, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive, Router, NavigationEnd } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -24,7 +24,7 @@ interface NavItem {
   templateUrl: './main-layout.html',
   styleUrl: './main-layout.scss'
 })
-export class MainLayout implements OnInit {
+export class MainLayout implements OnInit, OnDestroy {
   auth       = inject(AuthService);
   notifSvc   = inject(NotificationsService);
   searchSvc  = inject(SearchService);
@@ -41,6 +41,8 @@ export class MainLayout implements OnInit {
   searchOpen    = signal(false);
   searching     = signal(false);
   private searchSubject = new Subject<string>();
+
+  private notifIntervalId?: ReturnType<typeof setInterval>;
 
   isStaff = this.auth.hasRole(
     'responsable_unicef', 'responsable_technique', 'responsable_national',
@@ -89,7 +91,7 @@ export class MainLayout implements OnInit {
   ngOnInit() {
     this.checkScreenSize();
     this.chargerNonLus();
-    setInterval(() => this.chargerNonLus(), 30000);
+    this.notifIntervalId = setInterval(() => this.chargerNonLus(), 30000);
 
     this.router.events.pipe(
       filter(e => e instanceof NavigationEnd)
@@ -110,6 +112,12 @@ export class MainLayout implements OnInit {
       this.searchResults.set(results);
       this.searching.set(false);
     });
+  }
+
+  ngOnDestroy() {
+    if (this.notifIntervalId) {
+      clearInterval(this.notifIntervalId);
+    }
   }
 
   onSearchInput() {

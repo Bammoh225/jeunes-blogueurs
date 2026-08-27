@@ -16,6 +16,18 @@ export const routes: Routes = [
       {
         path: 'inscription',
         loadComponent: () => import('./features/blogueurs/inscription/inscription').then(m => m.Inscription)
+      },
+      {
+        path: 'mot-de-passe-oublie',
+        loadComponent: () => import('./features/auth/forgot-password/forgot-password').then(m => m.ForgotPassword)
+      },
+      {
+        path: 'reinitialiser-mot-de-passe',
+        loadComponent: () => import('./features/auth/reset-password/reset-password').then(m => m.ResetPassword)
+      },
+      {
+        path: 'reset-password',
+        loadComponent: () => import('./features/auth/reset-password/reset-password').then(m => m.ResetPassword)
       }
     ]
   },

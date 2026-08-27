@@ -40,23 +40,27 @@
       "sourceRoot": "src",
       "prefix": "app",
       "architect": {
-  "build": {
-    "builder": "@angular/build:application",
-    "options": {
-      "browser": "src/main.ts",
-      "tsConfig": "tsconfig.app.json",
-      "inlineStyleLanguage": "scss",
-      "prerender": false,
-      "assets": [
-        {
-          "glob": "**/*",
-          "input": "public"
-        }
-      ],
-      "styles": [
-        "src/styles.scss"
-      ]
-    },
+        "build": {
+          "builder": "@angular/build:application",
+          "options": {
+            "browser": "src/main.ts",
+            "tsConfig": "tsconfig.app.json",
+            "inlineStyleLanguage": "scss",
+            "prerender": false,
+            "allowedCommonJsDependencies": [
+              "html2canvas",
+              "core-js/modules/es.regexp.to-string.js"
+            ],
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "public"
+              }
+            ],
+            "styles": [
+              "src/styles.scss"
+            ]
+          },
           "configurations": {
             "production": {
               "optimization": {

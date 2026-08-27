@@ -5,6 +5,8 @@ export interface BlogueurResume {
   prenom:          string;
   nom:             string;
   email:           string;
+  telephone?:      string;
+  numero_urgence?: string | null;
   photo_url?:      string | null;
   statut:          StatutBlogueur;
   nb_publications?: number;
@@ -16,6 +18,7 @@ export interface BlogueurResume {
 
 export interface Blogueur extends BlogueurResume {
   telephone?:      string;
+  numero_urgence?: string | null;
   ville_id?:       number | null;
   categorie_id?:   number | null;
   date_naissance?: Date;

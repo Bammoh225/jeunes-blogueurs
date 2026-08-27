@@ -59,6 +59,10 @@
               <span>{{ blogueur()!.telephone }}</span>
             </div>
           }
+          <div class="info-row u-urgence">
+            <span class="info-label">🆘 Numéro d'urgence</span>
+            <span class="val-urgence">{{ blogueur()!.numero_urgence || 'Non renseigné' }}</span>
+          </div>
           @if (blogueur()!.ville_nom) {
             <div class="info-row">
               <span class="info-label">📍 Ville</span>

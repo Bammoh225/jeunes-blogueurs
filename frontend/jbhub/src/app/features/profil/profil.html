@@ -14,7 +14,7 @@
         <p class="email">{{ user()?.email }}</p>
         <span class="role-badge">{{ getRoleLabel() }}</span>
 
-        @if (profilData()?.numero_urgence && !isAdmin) {
+        @if (profilData()?.numero_urgence) {
           <div class="urgence-box">
             <span class="urgence-label">Contact urgence</span>
             <span class="urgence-num">{{ profilData()?.numero_urgence }}</span>
@@ -55,17 +55,15 @@
             </div>
           </div>
 
-          <!-- Numéro urgence (sauf admin unicef) -->
-          @if (!isAdmin) {
-            <div class="field urgence-field">
-              <label>
-                Numéro d'urgence
-                <span class="field-hint">Personne à contacter en cas d'urgence</span>
-              </label>
-              <input type="text" formControlName="numero_urgence"
-                placeholder="+225 07 00 00 00" />
-            </div>
-          }
+          <!-- Numéro urgence -->
+          <div class="field urgence-field">
+            <label>
+              Numéro d'urgence
+              <span class="field-hint">Personne à contacter en cas d'urgence</span>
+            </label>
+            <input type="text" formControlName="numero_urgence"
+              placeholder="+225 07 00 00 00" />
+          </div>
 
           <div class="form-actions">
             <button type="submit" class="btn-save" [disabled]="saving()">

@@ -112,6 +112,17 @@
   &:last-child { border-bottom: none; }
 }
 
+.u-urgence {
+  background: #fef2f2;
+  margin: 0.25rem 0;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  border-bottom: none !important;
+
+  .info-label { color: #dc2626; font-weight: 600; }
+  .val-urgence { color: #dc2626; font-weight: 700; }
+}
+
 .info-label { color: #6b7280; }
 
 .thematiques {

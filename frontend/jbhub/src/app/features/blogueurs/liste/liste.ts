@@ -135,11 +135,13 @@ export class Liste implements OnInit {
 
   exporterPDF() {
     const mois = new Date().toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
-    const colonnes = ['Prénom', 'Nom', 'Email', 'Ville', 'Statut', 'Publications', `Publié ce mois (${mois})`];
+    const colonnes = ['Prénom', 'Nom', 'Email', 'Téléphone', "N° d'Urgence", 'Ville', 'Statut', 'Publications', `Publié ce mois (${mois})`];
     const lignes = this.blogueursFiltres.map(b => [
       b.prenom,
       b.nom,
       b.email,
+      b.telephone ?? '-',
+      b.numero_urgence ?? '-',
       b.ville_nom ?? '-',
       b.statut,
       b.nb_publications ?? 0,
@@ -154,11 +156,13 @@ export class Liste implements OnInit {
 
   exporterExcel() {
     const mois = new Date().toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
-    const colonnes = ['Prénom', 'Nom', 'Email', 'Ville', 'Statut', 'Publications', `Publié ce mois`];
+    const colonnes = ['Prénom', 'Nom', 'Email', 'Téléphone', "N° d'Urgence", 'Ville', 'Statut', 'Publications', `Publié ce mois`];
     const lignes = this.blogueursFiltres.map(b => [
       b.prenom,
       b.nom,
       b.email,
+      b.telephone ?? '-',
+      b.numero_urgence ?? '-',
       b.ville_nom ?? '-',
       b.statut,
       b.nb_publications ?? 0,

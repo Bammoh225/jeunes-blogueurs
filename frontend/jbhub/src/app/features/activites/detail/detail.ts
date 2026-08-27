@@ -43,7 +43,7 @@ export class Detail implements OnInit {
     'responsable_zone', 'responsable_categorie', 'equipe_com'
   );
 
-  isBlogueur = this.auth.hasRole('jeune_blogueur');
+  isBlogueur = this.auth.hasRole('jeune_blogueur','responsable_national', 'responsable_technique','responsable_categorie','equipe_com');
 
   statuts: { value: StatutActivite; label: string }[] = [
     { value: 'planifiee', label: 'Planifiée' },

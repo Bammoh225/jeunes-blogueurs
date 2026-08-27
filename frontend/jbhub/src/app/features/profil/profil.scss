@@ -180,3 +180,30 @@
   &:hover:not(:disabled) { background: #0284c7; }
   &:disabled { opacity: 0.5; cursor: not-allowed; }
 }
+
+// ==========================================
+// RESPONSIVE
+// ==========================================
+@media (max-width: 768px) {
+  .profil-layout {
+    grid-template-columns: 1fr; // une seule colonne, tout empilé
+  }
+
+  .identity-card {
+    position: static; // le sticky n'a plus de sens en colonne unique
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr; // les champs (prénom/nom, etc.) s'empilent aussi
+  }
+}
+
+@media (max-width: 400px) {
+  .card {
+    padding: 16px; // moins de padding sur très petit écran pour gagner de la place
+  }
+
+  .page-header h1 {
+    font-size: 18px;
+  }
+}

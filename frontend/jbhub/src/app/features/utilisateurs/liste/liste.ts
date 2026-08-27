@@ -32,12 +32,13 @@ export class Liste implements OnInit {
   ];
 
   form = this.fb.group({
-    prenom:       ['', Validators.required],
-    nom:          ['', Validators.required],
-    email:        ['', [Validators.required, Validators.email]],
-    mot_de_passe: ['', [Validators.required, Validators.minLength(6)]],
-    role:         ['responsable_national', Validators.required],
-    telephone:    [''],
+    prenom:          ['', Validators.required],
+    nom:             ['', Validators.required],
+    email:           ['', [Validators.required, Validators.email]],
+    mot_de_passe:    ['', [Validators.required, Validators.minLength(6)]],
+    role:            ['responsable_national', Validators.required],
+    telephone:       [''],
+    numero_urgence:  [''],
   });
 
   ngOnInit() { this.charger(); }

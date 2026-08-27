@@ -44,6 +44,10 @@
             <label>Téléphone</label>
             <input type="text" formControlName="telephone" placeholder="+225 07 00 00 00" />
           </div>
+          <div class="field">
+            <label>Numéro d'urgence</label>
+            <input type="text" formControlName="numero_urgence" placeholder="+225 07 00 00 00" />
+          </div>
         </div>
         @if (erreur()) {
           <div class="alert-error">⚠️ {{ erreur() }}</div>
@@ -114,7 +118,8 @@
                   </span>
                 </td>
                 <td class="contact-cell">
-                  @if (u.telephone) { <span>{{ u.telephone }}</span> }
+                  @if (u.telephone) { <span>📞 {{ u.telephone }}</span> }
+                  @if (u.numero_urgence) { <span>🆘 {{ u.numero_urgence }}</span> }
                   @if (u.ville_nom) { <span>📍 {{ u.ville_nom }}</span> }
                 </td>
                 <td>

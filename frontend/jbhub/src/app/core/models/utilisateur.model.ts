@@ -14,6 +14,7 @@ export interface Utilisateur {
   email:        string;
   role:         Role;
   telephone?:   string;
+  numero_urgence?: string;
   photo_url?:   string | null;
   ville_id?:    number | null;
   ville_nom?:   string | null;
@@ -30,6 +31,7 @@ export interface CreateUtilisateurDto {
   mot_de_passe: string;
   role:         Role;
   telephone?:   string;
+  numero_urgence?: string;
   ville_id?:    number | null;
   categorie_id?: number | null;
 }

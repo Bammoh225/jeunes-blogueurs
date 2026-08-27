@@ -25,9 +25,10 @@ export const env = {
 
   DB_SSL: process.env.DB_SSL || 'false',
 
-  // Chemin du certificat CA Aiven.
-  // Optionnel : nécessaire uniquement lorsque DB_SSL=true.
+  // Certificat CA Aiven — soit via un fichier local (dev), soit via son contenu direct (Render).
+  // Optionnels : nécessaires uniquement lorsque DB_SSL=true.
   DB_CA_CERT_PATH: process.env.DB_CA_CERT_PATH || '',
+  DB_CA_CERT_CONTENT: process.env.DB_CA_CERT_CONTENT || '',
 
   JWT_SECRET: requireEnv('JWT_SECRET'),
   JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN || '24h',
