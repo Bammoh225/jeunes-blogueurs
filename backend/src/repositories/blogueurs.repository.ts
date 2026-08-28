@@ -18,7 +18,7 @@ export const blogueursRepository = {
     }
   ): Promise<BlogueurResume[]> {
 
-    let where = 'WHERE u.role != "responsable_unicef"';
+    let where = "WHERE u.role != 'responsable_unicef'";
 
     const params: (string | number)[] = [];
 
