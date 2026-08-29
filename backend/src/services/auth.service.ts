@@ -34,7 +34,7 @@ export const authService = {
     if (!utilisateur) throw new Error('Utilisateur introuvable');
     const { mot_de_passe: _, ...reste } = utilisateur;
 
-    if (utilisateur.role === 'jeune_blogueur') {
+    if (utilisateur.role !== 'responsable_unicef') {
       const blogueur = await blogueursRepository.findById(id);
       if (blogueur?.numero_urgence) {
         reste.numero_urgence = blogueur.numero_urgence;
@@ -48,7 +48,7 @@ export const authService = {
     await authRepository.updateProfil(id, dto);
 
     const user = await authRepository.findById(id);
-    if (user && user.role === 'jeune_blogueur' && dto.numero_urgence !== undefined) {
+    if (user && user.role !== 'responsable_unicef' && dto.numero_urgence !== undefined) {
       await blogueursRepository.update(id, { numero_urgence: dto.numero_urgence });
     }
 

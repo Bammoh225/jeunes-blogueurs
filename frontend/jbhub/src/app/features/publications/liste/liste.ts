@@ -35,11 +35,11 @@ export class Liste implements OnInit {
   filtreThematique = '';
   tri              = 'recent';
 
-  vueMois = signal(false);
-  moisOuverts = signal<Set<string>>(new Set());
+  isStaff    = !this.auth.hasRole('jeune_blogueur');
+  isBlogueur = !this.auth.hasRole('responsable_unicef');
 
-  isBlogueur = this.auth.hasRole('jeune_blogueur');
-  isStaff    = !this.isBlogueur;
+  vueMois = signal(this.isStaff);
+  moisOuverts = signal<Set<string>>(new Set());
 
   categories = [
     { id: 1, nom: 'Blog' },
