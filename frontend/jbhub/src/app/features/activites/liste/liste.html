@@ -12,6 +12,22 @@
     }
   </div>
 
+  @if (lienGenere()) {
+    <div class="lien-card">
+      <div class="lien-info">
+        <strong>✓ Activité créée !</strong>
+        <p>Partagez ce lien pour permettre l'inscription rapide :</p>
+        <div class="lien-box">
+          <input type="text" readonly [value]="lienGenere()" />
+          <button class="btn-copier" (click)="copierLien()">
+            {{ lienCopie() ? '✓ Copié' : 'Copier' }}
+          </button>
+        </div>
+      </div>
+      <button class="btn-fermer" (click)="fermerLien()">✕</button>
+    </div>
+  }
+
   @if (showForm() && peutCreer) {
     <div class="form-card">
       <h3>Créer une activité</h3>
@@ -50,6 +66,18 @@
             <label>Date fin</label>
             <input type="datetime-local" formControlName="date_fin" />
           </div>
+          <div class="field">
+            <label>Places disponibles</label>
+            <input type="number" min="1" formControlName="capacite_max" placeholder="Illimité si vide" />
+          </div>
+          <div class="field">
+            <label>Visibilité *</label>
+            <select formControlName="visibilite">
+              @for (v of visibilites; track v.value) {
+                <option [value]="v.value">{{ v.label }}</option>
+              }
+            </select>
+          </div>
         </div>
 
         <div class="field">
@@ -57,9 +85,9 @@
           <textarea formControlName="description" rows="2" placeholder="Décrivez l'activité..."></textarea>
         </div>
 
-        @if (blogueurs().length > 0) {
+        @if (visibiliteDesignee && blogueurs().length > 0) {
           <div class="field">
-            <label>Participants désignés ({{ selectedParticipants.length }} sélectionné(s))</label>
+            <label>Participants désignés * ({{ selectedParticipants.length }} sélectionné(s))</label>
             <div class="participants-select">
               @for (b of blogueurs(); track b.id) {
                 <button
@@ -133,7 +161,9 @@
               </div>
             </div>
             <div class="card-footer">
-              <span>{{ a.nb_participants ?? 0 }} participant(s)</span>
+              <span>
+                {{ a.nb_participants ?? 0 }}{{ a.capacite_max ? ' / ' + a.capacite_max : '' }} participant(s)
+              </span>
               <span class="voir">Voir →</span>
             </div>
           </a>

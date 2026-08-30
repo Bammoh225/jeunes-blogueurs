@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
@@ -30,6 +30,7 @@ export class Detail implements OnInit {
   showParticipants = signal(false);
   participating    = signal(false);
   updatingPresence = signal(false);
+  lienCopie        = signal(false);
 
   user = this.auth.currentUser;
 
@@ -44,6 +45,18 @@ export class Detail implements OnInit {
   );
 
   isBlogueur = this.auth.hasRole('jeune_blogueur','responsable_national', 'responsable_technique','responsable_categorie','equipe_com');
+
+  placesRestantes = computed(() => {
+    const a = this.activite();
+    if (!a || a.capacite_max == null) return null;
+    return Math.max(0, a.capacite_max - (a.nb_participants ?? 0));
+  });
+
+  lienPartage = computed(() => {
+    const a = this.activite();
+    if (!a?.token_partage) return null;
+    return `${window.location.origin}/rejoindre/${a.token_partage}`;
+  });
 
   statuts: { value: StatutActivite; label: string }[] = [
     { value: 'planifiee', label: 'Planifiée' },
@@ -72,9 +85,7 @@ export class Detail implements OnInit {
           rapport: r.data.rapport ?? '',
         });
 
-        // Charger le statut selon le rôle
         if (this.isBlogueur) {
-          // Blogueur : juste son propre statut
           this.service.monStatut(id).subscribe({
             next: rs => {
               this.monStatut.set(rs.data ?? { inscrit: false, present: false });
@@ -83,7 +94,6 @@ export class Detail implements OnInit {
             error: () => this.loading.set(false)
           });
         } else {
-          // Staff : pas besoin du statut personnel
           this.loading.set(false);
         }
       },
@@ -139,6 +149,15 @@ export class Detail implements OnInit {
         );
       },
       error: e => this.erreur.set(e.error?.message ?? 'Erreur')
+    });
+  }
+
+  copierLien() {
+    const lien = this.lienPartage();
+    if (!lien) return;
+    navigator.clipboard.writeText(lien).then(() => {
+      this.lienCopie.set(true);
+      setTimeout(() => this.lienCopie.set(false), 2000);
     });
   }
 

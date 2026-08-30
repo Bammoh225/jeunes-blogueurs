@@ -8,10 +8,13 @@ export const activitesController = {
 
   async lister(req: AuthRequest, res: Response): Promise<void> {
     try {
-      const villeId = req.user!.role === 'responsable_zone'
-        ? req.user!.ville_id ?? undefined
-        : req.query.ville_id ? +req.query.ville_id : undefined;
-      sendSuccess(res, await activitesService.lister(villeId));
+      const role = req.user!.role;
+      const filtres = role === 'jeune_blogueur'
+        ? { userId: req.user!.id, role }
+        : role === 'responsable_zone'
+          ? { villeId: req.user!.ville_id ?? undefined, role }
+          : { villeId: req.query.ville_id ? +req.query.ville_id : undefined, role };
+      sendSuccess(res, await activitesService.lister(filtres));
     } catch (err: any) { sendError(res, err.message); }
   },
 
@@ -19,6 +22,36 @@ export const activitesController = {
     try {
       sendSuccess(res, await activitesService.trouver(+req.params.id));
     } catch (err: any) { sendError(res, err.message, 404); }
+  },
+
+  // Route PUBLIQUE (sans auth) — voir les infos de base via le lien de partage
+  async trouverParToken(req: AuthRequest, res: Response): Promise<void> {
+    try {
+      const activite = await activitesService.trouverParToken(req.params.token);
+      // On ne renvoie que les infos utiles publiquement
+      sendSuccess(res, {
+        id:             activite.id,
+        titre:          activite.titre,
+        description:    activite.description,
+        type:           activite.type,
+        date_debut:     activite.date_debut,
+        date_fin:       activite.date_fin,
+        lieu:           activite.lieu,
+        ville_nom:      activite.ville_nom,
+        capacite_max:   activite.capacite_max,
+        places_restantes: activite.capacite_max != null
+          ? Math.max(0, activite.capacite_max - (activite.nb_participants ?? 0))
+          : null,
+      });
+    } catch (err: any) { sendError(res, err.message, 404); }
+  },
+
+  // Route AUTHENTIFIÉE — confirmer sa participation via le lien
+  async inscrireViaLien(req: AuthRequest, res: Response): Promise<void> {
+    try {
+      const activite = await activitesService.inscrireViaLien(req.params.token, req.user!.id);
+      sendSuccess(res, activite, 'Inscription confirmée');
+    } catch (err: any) { sendError(res, err.message); }
   },
 
   async listerParticipants(req: AuthRequest, res: Response): Promise<void> {
@@ -55,7 +88,6 @@ export const activitesController = {
 
   async confirmerMaPresence(req: AuthRequest, res: Response): Promise<void> {
     try {
-      // Le blogueur confirme uniquement SA PROPRE présence
       await activitesService.marquerPresence(+req.params.id, req.user!.id, req.body.present);
       sendSuccess(res, null, 'Présence confirmée');
     } catch (err: any) { sendError(res, err.message); }

@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { ApiResponse } from '../models/api.model';
-import { Activite, CreateActiviteDto, UpdateActiviteDto } from '../models/activite.model';
+import { Activite, ActivitePublique, CreateActiviteDto, UpdateActiviteDto } from '../models/activite.model';
 
 export interface Participant {
   id:         number;
@@ -56,7 +56,16 @@ export class ActivitesService {
     );
   }
 
-  // Blogueur confirme SA PROPRE présence
+  // Infos publiques via le lien de partage (pas d'auth requise)
+  voirParToken(token: string) {
+    return this.http.get<ApiResponse<ActivitePublique>>(`${this.api}/public/${token}`);
+  }
+
+  // Confirmer sa participation via le lien (auth requise)
+  inscrireViaLien(token: string) {
+    return this.http.post<ApiResponse<Activite>>(`${this.api}/rejoindre/${token}`, {});
+  }
+
   confirmerPresence(activiteId: number, userId: number, present: boolean) {
     return this.http.patch<ApiResponse<null>>(
       `${this.api}/${activiteId}/ma-presence`,
@@ -64,7 +73,6 @@ export class ActivitesService {
     );
   }
 
-  // Staff marque la présence de n'importe qui
   marquerPresence(activiteId: number, userId: number, present: boolean) {
     return this.http.patch<ApiResponse<null>>(
       `${this.api}/${activiteId}/participants/presence`,

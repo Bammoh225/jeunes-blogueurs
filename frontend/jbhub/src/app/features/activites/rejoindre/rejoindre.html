@@ -1,0 +1,58 @@
+<div class="page-rejoindre">
+
+  @if (loading()) {
+    <div class="loading">Chargement...</div>
+  }
+
+  @if (erreur() && !activite()) {
+    <div class="carte erreur">
+      <p>⚠️ {{ erreur() }}</p>
+    </div>
+  }
+
+  @if (!loading() && activite()) {
+    <div class="carte">
+      <span class="type-icon">{{ typeIcon(activite()!.type) }}</span>
+      <h1>{{ activite()!.titre }}</h1>
+
+      <div class="meta">
+        @if (activite()!.ville_nom) { <span>📍 {{ activite()!.ville_nom }}</span> }
+        @if (activite()!.lieu)      { <span>🏢 {{ activite()!.lieu }}</span> }
+        <span>📅 {{ activite()!.date_debut | date:'dd/MM/yyyy HH:mm' }}</span>
+      </div>
+
+      @if (activite()!.description) {
+        <p class="description">{{ activite()!.description }}</p>
+      }
+
+      @if (activite()!.capacite_max) {
+        <div class="places">
+          {{ activite()!.places_restantes }} place(s) restante(s) sur {{ activite()!.capacite_max }}
+        </div>
+      }
+
+      @if (erreur()) {
+        <div class="alert-error">⚠️ {{ erreur() }}</div>
+      }
+
+      @if (inscrit()) {
+        <div class="succes">✓ Votre participation est confirmée !</div>
+      } @else if (complet) {
+        <div class="complet">Cette activité est complète</div>
+      } @else if (user()) {
+        <button class="btn-primary" [disabled]="inscription()" (click)="confirmerParticipation()">
+          {{ inscription() ? 'Inscription...' : 'Confirmer ma participation' }}
+        </button>
+      } @else {
+        <div class="connexion-requise">
+          <p>Connectez-vous ou créez un compte pour vous inscrire</p>
+          <div class="actions">
+            <a [routerLink]="lienConnexion" [queryParams]="queryParamsConnexion" class="btn-primary">Se connecter</a>
+            <a routerLink="/inscription" class="btn-secondary">Créer un compte</a>
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+</div>

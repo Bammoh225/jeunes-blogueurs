@@ -28,6 +28,14 @@ export const routes: Routes = [
       {
         path: 'reset-password',
         loadComponent: () => import('./features/auth/reset-password/reset-password').then(m => m.ResetPassword)
+      },
+      {
+        path: 'rejoindre/:token',
+        loadComponent: () => import('./features/activites/rejoindre/rejoindre').then(m => m.Rejoindre)
+      },
+      {
+        path: 'activites/rejoindre/:token',
+        loadComponent: () => import('./features/activites/rejoindre/rejoindre').then(m => m.Rejoindre)
       }
     ]
   },

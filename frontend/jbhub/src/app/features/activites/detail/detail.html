@@ -98,6 +98,28 @@
 
         </div>
       </div>
+            <!-- Places disponibles -->
+      @if (activite()!.capacite_max) {
+        <div class="section">
+          <div class="stat-item">
+            <span class="stat-num">{{ placesRestantes() }}</span>
+            <span class="stat-label">place(s) restante(s) sur {{ activite()!.capacite_max }}</span>
+          </div>
+        </div>
+      }
+
+      <!-- Lien de partage (organisateurs) -->
+      @if (peutModifier && lienPartage()) {
+        <div class="section">
+          <h3>Lien d'inscription rapide</h3>
+          <div class="lien-box">
+            <input type="text" readonly [value]="lienPartage()" />
+            <button class="btn-copier" (click)="copierLien()">
+              {{ lienCopie() ? '✓ Copié' : 'Copier' }}
+            </button>
+          </div>
+        </div>
+      }
 
       <!-- Statut du blogueur -->
       @if (isBlogueur) {

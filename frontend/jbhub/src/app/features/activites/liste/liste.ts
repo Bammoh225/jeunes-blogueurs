@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { ActivitesService } from '../../../core/services/activites.service';
-import { Activite, CreateActiviteDto, TypeActivite } from '../../../core/models/activite.model';
+import { Activite, CreateActiviteDto, TypeActivite, VisibiliteActivite } from '../../../core/models/activite.model';
 import { AuthService } from '../../../core/services/auth.service';
 import { VillesService, Ville } from '../../../core/services/villes.service';
 import { BlogueursService } from '../../../core/services/blogueurs.service';
@@ -31,6 +31,8 @@ export class Liste implements OnInit {
   showForm    = signal(false);
   saving      = signal(false);
   selectedParticipants: number[] = [];
+  lienGenere  = signal<string | null>(null);
+  lienCopie   = signal(false);
 
   peutCreer = this.auth.hasRole(
     'responsable_unicef', 'responsable_technique',
@@ -44,14 +46,21 @@ export class Liste implements OnInit {
     { value: 'autre',     label: 'Autre' },
   ];
 
+  visibilites: { value: VisibiliteActivite; label: string }[] = [
+    { value: 'ville',    label: 'Toute la ville' },
+    { value: 'designee', label: 'Personnes désignées' },
+  ];
+
   form = this.fb.group({
-    titre:       ['', Validators.required],
-    type:        ['atelier', Validators.required],
-    ville_id:    [null, Validators.required],
-    date_debut:  ['', Validators.required],
-    date_fin:    [''],
-    lieu:        [''],
-    description: [''],
+    titre:        ['', Validators.required],
+    type:         ['atelier', Validators.required],
+    ville_id:     [null, Validators.required],
+    date_debut:   ['', Validators.required],
+    date_fin:     [''],
+    lieu:         [''],
+    description:  [''],
+    capacite_max: [null as number | null],
+    visibilite:   ['ville' as VisibiliteActivite, Validators.required],
   });
 
   ngOnInit() {
@@ -88,37 +97,59 @@ export class Liste implements OnInit {
     return this.selectedParticipants.includes(id);
   }
 
-  async creer() {
+  get visibiliteDesignee(): boolean {
+    return this.form.value.visibilite === 'designee';
+  }
+
+  creer() {
     if (this.form.invalid) { this.form.markAllAsTouched(); return; }
+
+    if (this.visibiliteDesignee && this.selectedParticipants.length === 0) {
+      this.erreur.set('Veuillez désigner au moins un blogueur pour une activité à visibilité restreinte');
+      return;
+    }
+
     this.saving.set(true);
+    this.erreur.set('');
     const val = this.form.value;
     const dto: CreateActiviteDto = {
-      titre:       val.titre!,
-      type:        val.type as TypeActivite,
-      ville_id:    +val.ville_id!,
-      date_debut:  val.date_debut!,
-      date_fin:    val.date_fin || null,
-      lieu:        val.lieu || null,
-      description: val.description || null,
+      titre:            val.titre!,
+      type:             val.type as TypeActivite,
+      ville_id:         +val.ville_id!,
+      date_debut:       val.date_debut!,
+      date_fin:         val.date_fin || null,
+      lieu:             val.lieu || null,
+      description:      val.description || null,
+      capacite_max:     val.capacite_max || null,
+      visibilite:       val.visibilite as VisibiliteActivite,
+      participant_ids:  this.visibiliteDesignee ? this.selectedParticipants : undefined,
     };
 
     this.service.creer(dto).subscribe({
-      next: async r => {
+      next: r => {
         const activite = r.data!;
-
-        // Ajouter les participants sélectionnés
-        for (const userId of this.selectedParticipants) {
-          await this.service.ajouterParticipant(activite.id, userId).toPromise();
-        }
-
         this.activites.update(list => [activite, ...list]);
-        this.form.reset({ type: 'atelier' });
+        this.lienGenere.set(`${window.location.origin}/rejoindre/${activite.token_partage}`);
+        this.form.reset({ type: 'atelier', visibilite: 'ville' });
         this.selectedParticipants = [];
         this.showForm.set(false);
         this.saving.set(false);
       },
       error: e => { this.erreur.set(e.error?.message ?? 'Erreur'); this.saving.set(false); }
     });
+  }
+
+  copierLien() {
+    const lien = this.lienGenere();
+    if (!lien) return;
+    navigator.clipboard.writeText(lien).then(() => {
+      this.lienCopie.set(true);
+      setTimeout(() => this.lienCopie.set(false), 2000);
+    });
+  }
+
+  fermerLien() {
+    this.lienGenere.set(null);
   }
 
   get activitesFiltrees(): Activite[] {

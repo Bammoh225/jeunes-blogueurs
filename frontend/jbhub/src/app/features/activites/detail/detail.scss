@@ -26,6 +26,29 @@
   border-radius: 8px;
   margin-bottom: 1rem;
 }
+.lien-box {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+
+  input {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 0.85rem;
+  }
+
+  .btn-copier {
+    padding: 8px 14px;
+    background: #059669;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+}
 
 /* ================================
    CARD
