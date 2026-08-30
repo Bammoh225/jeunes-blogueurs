@@ -115,7 +115,7 @@ export class Liste implements OnInit {
     const dto: CreateActiviteDto = {
       titre:            val.titre!,
       type:             val.type as TypeActivite,
-      ville_id:         +val.ville_id!,
+      ville_id: Number(val.ville_id),
       date_debut:       val.date_debut!,
       date_fin:         val.date_fin || null,
       lieu:             val.lieu || null,
