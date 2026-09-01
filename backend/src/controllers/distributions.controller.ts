@@ -11,19 +11,23 @@ export const distributionsController = {
 
   async lister(req: AuthRequest, res: Response): Promise<void> {
     try {
-      sendSuccess(res, await distributionsService.lister());
+      sendSuccess(res, await distributionsService.lister(req.user!.id, req.user!.role));
     } catch (err: any) { sendError(res, err.message); }
   },
 
   async trouver(req: AuthRequest, res: Response): Promise<void> {
     try {
-      sendSuccess(res, await distributionsService.trouver(+req.params.id));
+      sendSuccess(res, await distributionsService.trouver(+req.params.id, req.user!.id, req.user!.role));
     } catch (err: any) { sendError(res, err.message, 404); }
   },
 
   async listerBeneficiaires(req: AuthRequest, res: Response): Promise<void> {
     try {
-      sendSuccess(res, await distributionsService.listerBeneficiaires(+req.params.id));
+      sendSuccess(res, await distributionsService.listerBeneficiaires(
+        +req.params.id,
+        req.user!.id,
+        req.user!.role
+      ));
     } catch (err: any) { sendError(res, err.message); }
   },
 
@@ -49,7 +53,12 @@ export const distributionsController = {
         return;
       }
 
-      await distributionsService.marquerRecu(+req.params.id, cibleId, req.body.recu);
+      await distributionsService.marquerRecu(
+        +req.params.id,
+        cibleId,
+        req.body.recu,
+        req.user!.role
+      );
       sendSuccess(res, null, 'Statut mis à jour');
     } catch (err: any) { sendError(res, err.message); }
   },
