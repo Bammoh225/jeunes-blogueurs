@@ -4,18 +4,34 @@ import { notificationsService } from './notifications.service';
 
 export const distributionsService = {
 
-  async lister() {
-    return distributionsRepository.findAll();
+  async lister(userId: number, role: string) {
+    return distributionsRepository.findAll(userId, role);
   },
 
-  async trouver(id: number) {
-    const d = await distributionsRepository.findById(id);
-    if (!d) throw new Error('Distribution introuvable');
+  async trouver(id: number, userId: number, role: string) {
+    const d = await distributionsRepository.findByIdForUser(id, userId, role);
+    if (!d) throw new Error('Distribution introuvable ou accès non autorisé');
     return d;
   },
 
-  async listerBeneficiaires(id: number) {
-    return distributionsRepository.findBeneficiaires(id);
+  async listerBeneficiaires(id: number, userId: number, role: string) {
+    const distribution = await distributionsRepository.findByIdForUser(
+      id,
+      userId,
+      role
+    );
+
+    if (!distribution) {
+      throw new Error('Distribution introuvable ou accès non autorisé');
+    }
+
+    const beneficiaires = await distributionsRepository.findBeneficiaires(id);
+
+    if (role === 'jeune_blogueur') {
+      return beneficiaires.filter((b) => b.id === userId);
+    }
+
+    return beneficiaires;
   },
 
   async creer(responsableId: number, dto: CreateDistributionDto) {
@@ -43,8 +59,43 @@ export const distributionsService = {
     return distributionsRepository.findById(id);
   },
 
-  async marquerRecu(distributionId: number, userId: number, recu: boolean) {
-    await distributionsRepository.marquerRecu(distributionId, userId, recu);
+  async marquerRecu(
+    distributionId: number,
+    userId: number,
+    recu: boolean,
+    role: string
+  ) {
+    const distribution = await distributionsRepository.findByIdForUser(
+      distributionId,
+      userId,
+      role
+    );
+
+    if (!distribution) {
+      throw new Error('Distribution introuvable ou accès non autorisé');
+    }
+
+    if (role === 'jeune_blogueur') {
+      const beneficiaires = await distributionsRepository.findBeneficiaires(
+        distributionId
+      );
+
+      const estBeneficiaire = beneficiaires.some(
+        (b) => b.id === userId
+      );
+
+      if (!estBeneficiaire) {
+        throw new Error(
+          'Vous n\'êtes pas bénéficiaire de cette distribution'
+        );
+      }
+    }
+
+    await distributionsRepository.marquerRecu(
+      distributionId,
+      userId,
+      recu
+    );
   },
 
   async supprimer(id: number) {
