@@ -2,6 +2,11 @@ import { Router } from 'express';
 import { utilisateursController } from '../controllers/utilisateurs.controller';
 import { authMiddleware } from '../middlewares/auth.middleware';
 import { adminOnly } from '../middlewares/role.middleware';
+import { validateBody } from '../middlewares/validate.middleware';
+import {
+  creerUtilisateurSchema,
+  modifierUtilisateurSchema,
+} from '../validators/utilisateur.validator';
 
 const router = Router();
 
@@ -10,8 +15,8 @@ router.use(authMiddleware, adminOnly);
 
 router.get('/',       utilisateursController.lister);
 router.get('/:id',    utilisateursController.trouver);
-router.post('/',      utilisateursController.creer);
-router.patch('/:id',  utilisateursController.modifier);
+router.post('/',      validateBody(creerUtilisateurSchema),   utilisateursController.creer);
+router.patch('/:id',  validateBody(modifierUtilisateurSchema), utilisateursController.modifier);
 router.delete('/:id', utilisateursController.desactiver);
 
 export default router;

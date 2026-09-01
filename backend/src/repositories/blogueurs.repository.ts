@@ -229,9 +229,10 @@ export const blogueursRepository = {
     experience,
     langue_ecriture,
     motivation,
-    numero_urgence
+    numero_urgence,
+    statut
   )
-  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `,
   [
     userId,
@@ -246,7 +247,11 @@ export const blogueursRepository = {
 
     // IMPORTANT :
     // numero_urgence est obligatoire
-    dto.numero_urgence
+    dto.numero_urgence,
+
+    // Projet réservé à un groupe fermé : un nouveau compte doit être
+    // validé par un responsable avant de devenir actif.
+    'en_attente'
   ]
 );
 

@@ -2,6 +2,8 @@ import { Router } from 'express';
 import { evaluationsController } from '../controllers/evaluations.controller';
 import { authMiddleware } from '../middlewares/auth.middleware';
 import { requireRoles, allStaff } from '../middlewares/role.middleware';
+import { validateBody } from '../middlewares/validate.middleware';
+import { evaluerSchema } from '../validators/evaluation.validator';
 
 const router = Router();
 
@@ -16,6 +18,6 @@ router.get('/publication/:publicationId', allStaff, evaluationsController.parPub
 // Évaluer une publication (équipe com uniquement)
 router.post('/', requireRoles(
   'equipe_com', 'responsable_unicef', 'responsable_technique'
-), evaluationsController.evaluer);
+), validateBody(evaluerSchema), evaluationsController.evaluer);
 
 export default router;

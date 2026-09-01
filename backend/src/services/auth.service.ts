@@ -15,6 +15,22 @@ export const authService = {
     const valide = await comparePassword(motDePasse, utilisateur.mot_de_passe);
     if (!valide) throw new Error('Email ou mot de passe incorrect');
 
+    // Projet réservé à un groupe fermé : un blogueur ne peut se connecter
+    // que si son compte a été validé (statut 'actif') par un responsable.
+    if (utilisateur.role === 'jeune_blogueur') {
+      const blogueur = await blogueursRepository.findById(utilisateur.id);
+
+      if (blogueur?.statut === 'en_attente') {
+        throw new Error('Votre compte est en attente de validation par un responsable');
+      }
+      if (blogueur?.statut === 'suspendu') {
+        throw new Error('Votre compte a été suspendu. Contactez un responsable.');
+      }
+      if (blogueur?.statut === 'inactif') {
+        throw new Error('Votre compte est inactif. Contactez un responsable.');
+      }
+    }
+
     const payload: JwtPayload = {
       id:           utilisateur.id,
       email:        utilisateur.email,

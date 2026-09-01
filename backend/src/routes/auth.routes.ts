@@ -2,6 +2,14 @@ import { Router } from 'express';
 import rateLimit from 'express-rate-limit';
 import { authController } from '../controllers/auth.controller';
 import { authMiddleware } from '../middlewares/auth.middleware';
+import { validateBody } from '../middlewares/validate.middleware';
+import {
+  loginSchema,
+  modifierProfilSchema,
+  changerMotDePasseSchema,
+  motDePasseOublieSchema,
+  reinitialiserMotDePasseSchema,
+} from '../validators/auth.validator';
 
 const router = Router();
 
@@ -11,11 +19,26 @@ const forgotPasswordLimiter = rateLimit({
   message: { success: false, message: 'Trop de tentatives, réessayez plus tard.' }
 });
 
-router.post('/login',                      authController.login);
-router.post('/mot-de-passe-oublie',        forgotPasswordLimiter, authController.motDePasseOublie);
-router.post('/reinitialiser-mot-de-passe', authController.reinitialiserMotDePasse);
-router.get('/profil',                      authMiddleware, authController.profil);
-router.patch('/profil',                    authMiddleware, authController.modifierProfil);
-router.patch('/mot-de-passe',              authMiddleware, authController.changerMotDePasse);
+router.post('/login', validateBody(loginSchema), authController.login);
+router.post('/mot-de-passe-oublie',
+  forgotPasswordLimiter,
+  validateBody(motDePasseOublieSchema),
+  authController.motDePasseOublie
+);
+router.post('/reinitialiser-mot-de-passe',
+  validateBody(reinitialiserMotDePasseSchema),
+  authController.reinitialiserMotDePasse
+);
+router.get('/profil', authMiddleware, authController.profil);
+router.patch('/profil',
+  authMiddleware,
+  validateBody(modifierProfilSchema),
+  authController.modifierProfil
+);
+router.patch('/mot-de-passe',
+  authMiddleware,
+  validateBody(changerMotDePasseSchema),
+  authController.changerMotDePasse
+);
 
 export default router;

@@ -56,6 +56,21 @@ export const blogueursService = {
   async changerStatut(id: number, statut: StatutBlogueur) {
     const ok = await blogueursRepository.updateStatut(id, statut);
     if (!ok) throw new Error('Blogueur introuvable');
+
+    const messages: Record<StatutBlogueur, string> = {
+      actif:      'Votre compte a été activé. Vous pouvez maintenant vous connecter.',
+      en_attente: 'Votre compte est en attente de validation par un responsable.',
+      inactif:    'Votre compte a été désactivé. Contactez un responsable pour plus d\'informations.',
+      suspendu:   'Votre compte a été suspendu. Contactez un responsable pour plus d\'informations.',
+    };
+
+    await notificationsService.creer({
+      destinataire_id: id,
+      type:            'systeme',
+      message:         messages[statut],
+      lien:            '/profil',
+    });
+
     return blogueursRepository.findById(id);
   },
 

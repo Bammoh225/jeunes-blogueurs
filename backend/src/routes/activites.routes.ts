@@ -2,6 +2,14 @@ import { Router } from 'express';
 import { activitesController } from '../controllers/activites.controller';
 import { authMiddleware } from '../middlewares/auth.middleware';
 import { requireRoles } from '../middlewares/role.middleware';
+import { validateBody } from '../middlewares/validate.middleware';
+import {
+  creerActiviteSchema,
+  modifierActiviteSchema,
+  ajouterParticipantSchema,
+  confirmerPresenceSchema,
+  marquerPresenceSchema,
+} from '../validators/activite.validator';
 
 const router = Router();
 
@@ -25,13 +33,16 @@ router.get('/:id/mon-statut',             tousLesRoles,   activitesController.mo
 router.get('/:id/participants',           staffSeulement, activitesController.listerParticipants);
 router.post('/', requireRoles(
   'responsable_unicef','responsable_technique','responsable_national','responsable_zone'
-), activitesController.creer);
+), validateBody(creerActiviteSchema), activitesController.creer);
 router.patch('/:id', requireRoles(
   'responsable_unicef','responsable_technique','responsable_national','responsable_zone'
-), activitesController.modifier);
-router.post('/:id/participants',              tousLesRoles,   activitesController.ajouterParticipant);
+), validateBody(modifierActiviteSchema), activitesController.modifier);
+router.post('/:id/participants',              tousLesRoles,
+  validateBody(ajouterParticipantSchema),      activitesController.ajouterParticipant);
 router.post('/rejoindre/:token',              tousLesRoles,   activitesController.inscrireViaLien);
-router.patch('/:id/ma-presence',              tousLesRoles,   activitesController.confirmerMaPresence);
-router.patch('/:id/participants/presence',    staffSeulement, activitesController.marquerPresence);
+router.patch('/:id/ma-presence',              tousLesRoles,
+  validateBody(confirmerPresenceSchema),       activitesController.confirmerMaPresence);
+router.patch('/:id/participants/presence',    staffSeulement,
+  validateBody(marquerPresenceSchema),         activitesController.marquerPresence);
 
 export default router;
