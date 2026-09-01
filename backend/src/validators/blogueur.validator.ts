@@ -38,7 +38,9 @@ export const inscrireBlogueurSchema = z.object({
   niveau_scolaire: z.string().trim().max(150).optional(),
   etablissement: z.string().trim().max(200).optional(),
   experience: z.string().trim().max(2000).optional(),
-  langue_ecriture: z.string().trim().min(1).max(50),
+  // Absent du formulaire d'inscription actuel — le repository applique
+  // déjà 'Français' par défaut si non fourni.
+  langue_ecriture: z.string().trim().min(1).max(50).optional().default('Français'),
   motivation: z.string().trim().max(2000).optional(),
   lien_portfolio: z.string().trim().url('URL de portfolio invalide').max(500).optional(),
   presentation: z.string().trim().max(2000).optional(),
