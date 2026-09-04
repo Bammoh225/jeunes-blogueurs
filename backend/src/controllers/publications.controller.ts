@@ -10,16 +10,34 @@ export const publicationsController = {
 
   async lister(req: AuthRequest, res: Response): Promise<void> {
     try {
-      const { auteur_id, categorie_id, thematique_id } = req.query;
+      const { auteur_id, categorie_id, thematique_id, page, limit, recherche, tri } = req.query;
       const filtAuteur = req.user!.role === 'jeune_blogueur'
         ? req.user!.id
         : auteur_id ? +auteur_id : undefined;
 
-      sendSuccess(res, await publicationsService.lister({
-        auteur_id:     filtAuteur,
-        categorie_id:  categorie_id  ? +categorie_id  : undefined,
-        thematique_id: thematique_id ? +thematique_id : undefined,
-      }));
+      const { data, total } = await publicationsService.lister(
+        {
+          auteur_id:     filtAuteur,
+          categorie_id:  categorie_id  ? +categorie_id  : undefined,
+          thematique_id: thematique_id ? +thematique_id : undefined,
+        },
+        {
+          page:  page  ? +page  : undefined,
+          limit: limit ? +limit : undefined,
+        },
+        typeof recherche === 'string' ? recherche : undefined,
+        typeof tri === 'string' ? tri : undefined,
+      );
+
+      const limitUtilise = limit ? +limit : 20;
+      const pageUtilisee  = page  ? +page  : 1;
+
+      sendSuccess(res, data, 'Succès', 200, {
+        total,
+        page:       pageUtilisee,
+        limit:      limitUtilise,
+        totalPages: Math.max(1, Math.ceil(total / limitUtilise)),
+      });
     } catch (err: any) { sendError(res, err.message); }
   },
 

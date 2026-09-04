@@ -3,7 +3,7 @@
   <div class="page-header">
     <div>
       <h1>Publications</h1>
-      <p>{{ publicationsFiltrees.length }} publication(s)</p>
+      <p>{{ meta().total }} publication(s)</p>
     </div>
     <div class="header-actions">
       @if (isStaff) {
@@ -23,18 +23,19 @@
     <input
       type="text"
       [(ngModel)]="recherche"
+      (ngModelChange)="onRechercheChange()"
       placeholder="Rechercher par titre, auteur..."
       class="input-search"
     />
 
-    <select [(ngModel)]="filtreCategorie" class="select-filtre">
+    <select [(ngModel)]="filtreCategorie" (ngModelChange)="onFiltreChange()" class="select-filtre">
       <option value="">Toutes les catégories</option>
       @for (c of categories; track c.id) {
         <option [value]="c.id">{{ c.nom }}</option>
       }
     </select>
 
-    <select [(ngModel)]="filtreThematique" class="select-filtre">
+    <select [(ngModel)]="filtreThematique" (ngModelChange)="onFiltreChange()" class="select-filtre">
       <option value="">Toutes les thématiques</option>
       @for (t of thematiques(); track t.id) {
         <option [value]="t.nom">{{ t.nom }}</option>
@@ -42,7 +43,7 @@
     </select>
 
     @if (!vueMois()) {
-      <select [(ngModel)]="tri" class="select-filtre">
+      <select [(ngModel)]="tri" (ngModelChange)="onFiltreChange()" class="select-filtre">
         <option value="recent">Plus récent</option>
         <option value="ancien">Plus ancien</option>
         <option value="evaluations">Plus évalué</option>
@@ -68,11 +69,11 @@
 
   <!-- VUE LISTE -->
   @if (!loading() && !vueMois()) {
-    @if (publicationsFiltrees.length === 0) {
+    @if (publications().length === 0) {
       <div class="empty-state"><p>Aucune publication trouvée</p></div>
     } @else {
       <div class="publications-list">
-        @for (p of publicationsFiltrees; track p.id) {
+        @for (p of publications(); track p.id) {
           <a [routerLink]="['/publications', p.id]" class="pub-card">
             <div class="pub-left">
               @if (p.thematique_couleur) {
@@ -97,10 +98,18 @@
           </a>
         }
       </div>
+
+      @if (meta().totalPages > 1) {
+        <div class="pagination-bar">
+          <button class="btn-page" [disabled]="meta().page <= 1" (click)="pagePrecedente()">← Précédent</button>
+          <span class="pagination-info">Page {{ meta().page }} / {{ meta().totalPages }}</span>
+          <button class="btn-page" [disabled]="meta().page >= meta().totalPages" (click)="pageSuivante()">Suivant →</button>
+        </div>
+      }
     }
   }
 
-  <!-- VUE PAR MOIS -->
+  <!-- VUE PAR MOIS (regroupe uniquement la page actuellement chargée) -->
   @if (!loading() && vueMois()) {
     @if (groupesParMois.length === 0) {
       <div class="empty-state"><p>Aucune publication trouvée</p></div>
@@ -143,6 +152,14 @@
           </div>
         }
       </div>
+
+      @if (meta().totalPages > 1) {
+        <div class="pagination-bar">
+          <button class="btn-page" [disabled]="meta().page <= 1" (click)="pagePrecedente()">← Précédent</button>
+          <span class="pagination-info">Page {{ meta().page }} / {{ meta().totalPages }}</span>
+          <button class="btn-page" [disabled]="meta().page >= meta().totalPages" (click)="pageSuivante()">Suivant →</button>
+        </div>
+      }
     }
   }
 

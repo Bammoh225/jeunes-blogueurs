@@ -5,9 +5,10 @@ export function sendSuccess<T>(
   res: Response,
   data: T,
   message = 'Succès',
-  statusCode = 200
+  statusCode = 200,
+  meta?: { total: number; page: number; limit: number; totalPages: number }
 ): Response {
-  const body: ApiResponse<T> = { success: true, message, data };
+  const body: ApiResponse<T> = { success: true, message, data, meta };
   return res.status(statusCode).json(body);
 }
 

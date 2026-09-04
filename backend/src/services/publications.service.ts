@@ -7,8 +7,13 @@ import { JwtPayload } from '../types';
 
 export const publicationsService = {
 
-  async lister(filtres?: { auteur_id?: number; categorie_id?: number; thematique_id?: number }) {
-    return publicationsRepository.findAll(filtres);
+   async lister(
+    filtres?: { auteur_id?: number; categorie_id?: number; thematique_id?: number },
+    pagination?: { page?: number; limit?: number },
+    recherche?: string,
+    tri?: string
+  ) {
+    return publicationsRepository.findAll(filtres, pagination, recherche, tri);
   },
 
   async trouver(id: number) {

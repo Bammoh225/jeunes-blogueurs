@@ -1,9 +1,10 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { PublicationsService } from '../../../core/services/publications.service';
 import { PublicationResume } from '../../../core/models/publication.model';
+import { ApiMeta } from '../../../core/models/api.model';
 import { AuthService } from '../../../core/services/auth.service';
 import { ThematiquesService, Thematique } from '../../../core/services/thematiques.service';
 
@@ -13,6 +14,9 @@ interface GroupeMois {
   publications: PublicationResume[];
 }
 
+const LIMIT_PAR_DEFAUT = 30;
+const DEBOUNCE_RECHERCHE_MS = 350;
+
 @Component({
   selector: 'app-liste',
   standalone: true,
@@ -20,17 +24,22 @@ interface GroupeMois {
   templateUrl: './liste.html',
   styleUrl: './liste.scss'
 })
-export class Liste implements OnInit {
+export class Liste implements OnInit, OnDestroy {
   private service        = inject(PublicationsService);
   private auth           = inject(AuthService);
   private thematiquesSvc = inject(ThematiquesService);
 
+  // Publications de la PAGE COURANTE uniquement (le filtrage/tri/recherche
+  // et la pagination sont faits côté backend en SQL, plus côté client sur
+  // tout le jeu de données)
   publications = signal<PublicationResume[]>([]);
   thematiques  = signal<Thematique[]>([]);
   loading      = signal(true);
   erreur       = signal('');
-  recherche    = '';
 
+  meta = signal<ApiMeta>({ total: 0, page: 1, limit: LIMIT_PAR_DEFAUT, totalPages: 1 });
+
+  recherche        = '';
   filtreCategorie  = '';
   filtreThematique = '';
   tri              = 'recent';
@@ -48,8 +57,10 @@ export class Liste implements OnInit {
     { id: 4, nom: 'BD' },
   ];
 
+  private rechercheTimeout: ReturnType<typeof setTimeout> | null = null;
+
   ngOnInit() {
-    this.charger();
+    this.charger(1);
     this.thematiquesSvc.lister().subscribe({
       next: r => {
         const seen = new Set<string>();
@@ -64,13 +75,29 @@ export class Liste implements OnInit {
     });
   }
 
-  charger() {
+  ngOnDestroy() {
+    if (this.rechercheTimeout) clearTimeout(this.rechercheTimeout);
+  }
+
+  charger(page: number = this.meta().page) {
     this.loading.set(true);
-    this.service.lister().subscribe({
-      next:  r => {
+    const categorieId  = this.filtreCategorie ? +this.filtreCategorie : undefined;
+    const thematiqueId = this.filtreThematique
+      ? this.thematiques().find(t => t.nom === this.filtreThematique)?.id
+      : undefined;
+
+    this.service.lister({
+      categorie_id:  categorieId,
+      thematique_id: thematiqueId,
+      page,
+      limit: this.meta().limit,
+      recherche: this.recherche || undefined,
+      tri: this.tri,
+    }).subscribe({
+      next: r => {
         this.publications.set(r.data);
+        if (r.meta) this.meta.set(r.meta);
         this.loading.set(false);
-        // Ouvrir le mois courant par défaut
         const moisCourant = this.getMoisKey(new Date());
         this.moisOuverts.set(new Set([moisCourant]));
       },
@@ -78,35 +105,23 @@ export class Liste implements OnInit {
     });
   }
 
-  get publicationsFiltrees(): PublicationResume[] {
-    const q = this.recherche.toLowerCase();
-    let result = this.publications().filter(p => {
-      const matchRecherche = !q ||
-        p.titre.toLowerCase().includes(q) ||
-        (p.auteur_prenom + ' ' + p.auteur_nom).toLowerCase().includes(q);
+  // Déclenché par les selects/tri : rechargement immédiat, retour à la page 1
+  onFiltreChange() {
+    this.charger(1);
+  }
 
-      const matchCategorie = !this.filtreCategorie ||
-        p.categorie_nom === this.categories.find(c => c.id === +this.filtreCategorie)?.nom;
+  // Déclenché par la recherche texte : debounce pour éviter une requête par frappe
+  onRechercheChange() {
+    if (this.rechercheTimeout) clearTimeout(this.rechercheTimeout);
+    this.rechercheTimeout = setTimeout(() => this.charger(1), DEBOUNCE_RECHERCHE_MS);
+  }
 
-      const matchThematique = !this.filtreThematique ||
-        p.thematique_nom === this.filtreThematique;
+  pagePrecedente() {
+    if (this.meta().page > 1) this.charger(this.meta().page - 1);
+  }
 
-      return matchRecherche && matchCategorie && matchThematique;
-    });
-
-    if (this.tri === 'recent') {
-      result = [...result].sort((a, b) =>
-        new Date(b.soumis_le ?? 0).getTime() - new Date(a.soumis_le ?? 0).getTime()
-      );
-    } else if (this.tri === 'ancien') {
-      result = [...result].sort((a, b) =>
-        new Date(a.soumis_le ?? 0).getTime() - new Date(b.soumis_le ?? 0).getTime()
-      );
-    } else if (this.tri === 'evaluations') {
-      result = [...result].sort((a, b) => (b.nb_evaluations ?? 0) - (a.nb_evaluations ?? 0));
-    }
-
-    return result;
+  pageSuivante() {
+    if (this.meta().page < this.meta().totalPages) this.charger(this.meta().page + 1);
   }
 
   getMoisKey(date: Date): string {
@@ -120,10 +135,12 @@ export class Liste implements OnInit {
     return label.charAt(0).toUpperCase() + label.slice(1);
   }
 
+  // Regroupement par mois : ne porte que sur la page actuellement chargée
+  // (nécessaire pour rester compatible avec la pagination côté serveur)
   get groupesParMois(): GroupeMois[] {
     const map = new Map<string, PublicationResume[]>();
 
-    for (const p of this.publicationsFiltrees) {
+    for (const p of this.publications()) {
       const dateRef = p.date_publication ?? p.soumis_le;
       if (!dateRef) continue;
       const key = this.getMoisKey(new Date(dateRef));
@@ -154,6 +171,7 @@ export class Liste implements OnInit {
     this.filtreCategorie = '';
     this.filtreThematique = '';
     this.tri = 'recent';
+    this.charger(1);
   }
 
   get filtresActifs(): boolean {

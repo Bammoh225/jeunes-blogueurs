@@ -317,3 +317,30 @@
   color: var(--text-muted);
   flex-shrink: 0;
 }
+.pagination-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 20px;
+  padding: 12px 0;
+}
+
+.btn-page {
+  padding: 8px 16px;
+  border: 1px solid var(--border, #e0e0e0);
+  border-radius: 6px;
+  background: var(--bg-card, #fff);
+  color: var(--text-primary);
+  cursor: pointer;
+  font-size: 13px;
+  transition: background 0.12s;
+
+  &:hover:not(:disabled) { background: var(--bg); }
+  &:disabled { opacity: 0.4; cursor: not-allowed; }
+}
+
+.pagination-info {
+  font-size: 13px;
+  color: var(--text-muted);
+}
