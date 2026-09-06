@@ -161,6 +161,47 @@ export class Detail implements OnInit {
     });
   }
 
+  async exporterParticipantsPDF() {
+    try {
+      const { jsPDF } = await import('jspdf');
+      const autoTable = (await import('jspdf-autotable')).default;
+
+      const doc = new jsPDF();
+      const a = this.activite();
+      if (!a) return;
+
+      doc.setFontSize(18);
+      doc.text(`Liste d'émargement : ${a.titre}`, 14, 22);
+      doc.setFontSize(11);
+      doc.setTextColor(100);
+      doc.text(`Date : ${new Date(a.date_debut).toLocaleDateString()} | Lieu : ${a.lieu || a.ville_nom || 'N/A'}`, 14, 30);
+
+      const tableData = this.participants().map((p, index) => [
+        (index + 1).toString(),
+        p.prenom,
+        p.nom,
+        p.email,
+        p.present ? 'Oui' : 'Non',
+        '' // Signature column
+      ]);
+
+      autoTable(doc, {
+        startY: 40,
+        head: [['N°', 'Prénom', 'Nom', 'Email', 'Présent (App)', 'Signature (Physique)']],
+        body: tableData,
+        theme: 'striped',
+        headStyles: { fillColor: [14, 165, 233] },
+        styles: { fontSize: 10, cellPadding: 4 },
+        columnStyles: { 5: { cellWidth: 40 } } // Extra space for signature
+      });
+
+      doc.save(`Emargement_${a.titre.replace(/[^a-zA-Z0-9]/g, '_')}.pdf`);
+    } catch (e) {
+      console.error('Erreur lors de la génération du PDF', e);
+      this.erreur.set("Erreur lors de la création du PDF. L'export n'est peut-être pas installé.");
+    }
+  }
+
   sauvegarder() {
     const a = this.activite();
     if (!a) return;

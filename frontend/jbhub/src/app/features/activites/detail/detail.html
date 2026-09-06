@@ -191,9 +191,16 @@
       @if (showParticipants() && isStaff) {
         <div class="section">
 
-          <h3>
-            Liste des participants ({{ participants().length }})
-          </h3>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+            <h3 style="margin: 0;">
+              Liste des participants ({{ participants().length }})
+            </h3>
+            @if (participants().length > 0) {
+              <button class="btn-primary" (click)="exporterParticipantsPDF()" style="font-size: 13px; padding: 6px 12px;">
+                📄 Exporter (PDF)
+              </button>
+            }
+          </div>
 
           @if (participants().length === 0) {
 

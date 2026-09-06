@@ -17,6 +17,7 @@ import notificationsRoutes from './routes/notifications.routes';
 import villesRoutes        from './routes/villes.routes';
 import thematiquesRoutes   from './routes/thematiques.routes';
 import distributionsRoutes from './routes/distributions.routes';
+import statsRoutes         from './routes/stats.routes';
 
 const app = express();
 
@@ -79,6 +80,7 @@ app.use('/api/notifications', notificationsRoutes);
 app.use('/api/villes',        villesRoutes);
 app.use('/api/thematiques',   thematiquesRoutes);
 app.use('/api/distributions', distributionsRoutes);
+app.use('/api/stats',         statsRoutes);
 
 // Route 404
 app.use((_req, res) => {
