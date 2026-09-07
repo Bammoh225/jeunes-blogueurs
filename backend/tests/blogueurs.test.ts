@@ -27,6 +27,7 @@ describe('BLOGUEURS', () => {
         nom: 'Blogueur',
         email,
         mot_de_passe: 'Password123',
+        numero_urgence: '+2250700000000',
         date_naissance: '2005-01-01',
         sexe: 'M',
         langue_ecriture: 'Français',

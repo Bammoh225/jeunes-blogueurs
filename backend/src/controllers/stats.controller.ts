@@ -4,17 +4,29 @@ import { statsRepository } from '../repositories/stats.repository';
 import { sendSuccess, sendError } from '../utils/response';
 
 export const statsController = {
-  async getDashboardCharts(req: AuthRequest, res: Response): Promise<void> {
+
+  async getDashboardCharts(
+    _req: AuthRequest,
+    res: Response
+  ): Promise<void> {
     try {
-      const publications = await statsRepository.getPublicationsParMois();
-      const blogueurs = await statsRepository.getBlogueursParVille();
-      
+      const [publications, blogueurs] = await Promise.all([
+        statsRepository.getPublicationsParMois(),
+        statsRepository.getBlogueursParVille()
+      ]);
+
       sendSuccess(res, {
         publicationsParMois: publications,
         blogueursParVille: blogueurs
       });
-    } catch (err: any) {
-      sendError(res, err.message);
+    } catch (err) {
+      console.error('[STATS] Erreur récupération statistiques:', err);
+
+      sendError(
+        res,
+        'Impossible de récupérer les statistiques'
+      );
     }
   }
+
 };

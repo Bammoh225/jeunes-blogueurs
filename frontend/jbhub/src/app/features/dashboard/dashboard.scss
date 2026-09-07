@@ -301,3 +301,44 @@
   gap: 24px;
 }
 
+.chart-skeleton {
+  height: 300px;
+  width: 100%;
+  border-radius: var(--radius-xl, 16px);
+}
+
+.charts-error {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl, 16px);
+  padding: 40px 24px;
+  text-align: center;
+  color: var(--text-muted);
+
+  p {
+    margin: 0 0 16px;
+    font-size: 14px;
+  }
+
+  button {
+    border: 0;
+    border-radius: var(--radius-sm);
+    padding: 8px 16px;
+    background: #0ea5e9;
+    color: white;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s;
+
+    &:hover {
+      background: #0284c7;
+    }
+  }
+}
+
+.stat-skeleton {
+  display: block;
+  width: 48px;
+  height: 32px;
+}

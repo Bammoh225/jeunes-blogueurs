@@ -20,7 +20,7 @@
           </svg>
         </div>
         <div class="stat-value">
-          @if (loading()) { <span class="skeleton" style="width:48px;height:32px;display:block"></span> }
+          @if (loading()) { <span class="skeleton stat-skeleton"></span> }
           @else { {{ stats().blogueurs }} }
         </div>
       </a>
@@ -32,7 +32,7 @@
           </svg>
         </div>
         <div class="stat-value">
-          @if (loading()) { <span class="skeleton" style="width:48px;height:32px;display:block"></span> }
+          @if (loading()) { <span class="skeleton stat-skeleton"></span> }
           @else { {{ stats().publications }} }
         </div>
       </a>
@@ -44,7 +44,7 @@
           </svg>
         </div>
         <div class="stat-value">
-          @if (loading()) { <span class="skeleton" style="width:48px;height:32px;display:block"></span> }
+          @if (loading()) { <span class="skeleton stat-skeleton"></span> }
           @else { {{ stats().activites }} }
         </div>
       </a>
@@ -56,7 +56,7 @@
           </svg>
         </div>
         <div class="stat-value">
-          @if (loading()) { <span class="skeleton" style="width:48px;height:32px;display:block"></span> }
+          @if (loading()) { <span class="skeleton stat-skeleton"></span> }
           @else { {{ stats().notifications }} }
         </div>
       </a>
@@ -106,25 +106,35 @@
         <div class="charts-grid">
           <div class="chart-container">
             <h3>Publications (6 derniers mois)</h3>
-            <canvas baseChart
+            <canvas
+              baseChart
               [data]="pubChartData"
-              [options]="barChartOptions"
-              [type]="barChartType">
+              [options]="chartOptions"
+              [type]="pubChartType">
             </canvas>
           </div>
+
           <div class="chart-container">
             <h3>Répartition des Blogueurs par Ville</h3>
-            <canvas baseChart
+            <canvas
+              baseChart
               [data]="villeChartData"
-              [options]="barChartOptions"
-              [type]="barChartType">
+              [options]="chartOptions"
+              [type]="villeChartType">
             </canvas>
           </div>
         </div>
+      } @else if (chartsError()) {
+        <div class="charts-error">
+          <p>Impossible de charger les statistiques.</p>
+          <button type="button" (click)="chargerCharts()">
+            Réessayer
+          </button>
+        </div>
       } @else {
         <div class="loading-charts">
-          <div class="skeleton" style="height:300px; width:100%; border-radius:12px;"></div>
-          <div class="skeleton" style="height:300px; width:100%; border-radius:12px;"></div>
+          <div class="skeleton chart-skeleton"></div>
+          <div class="skeleton chart-skeleton"></div>
         </div>
       }
     </div>

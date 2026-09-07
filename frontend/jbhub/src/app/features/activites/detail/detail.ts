@@ -174,7 +174,7 @@ export class Detail implements OnInit {
       doc.text(`Liste d'émargement : ${a.titre}`, 14, 22);
       doc.setFontSize(11);
       doc.setTextColor(100);
-      doc.text(`Date : ${new Date(a.date_debut).toLocaleDateString()} | Lieu : ${a.lieu || a.ville_nom || 'N/A'}`, 14, 30);
+      doc.text(`Date : ${new Date(a.date_debut).toLocaleDateString('fr-FR')} | Lieu : ${a.lieu || a.ville_nom || 'N/A'}`, 14, 30);
 
       const tableData = this.participants().map((p, index) => [
         (index + 1).toString(),
@@ -195,7 +195,13 @@ export class Detail implements OnInit {
         columnStyles: { 5: { cellWidth: 40 } } // Extra space for signature
       });
 
-      doc.save(`Emargement_${a.titre.replace(/[^a-zA-Z0-9]/g, '_')}.pdf`);
+      const safeTitle = a.titre
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-zA-Z0-9]+/g, '_')
+        .replace(/^_+|_+$/g, '');
+
+      doc.save(`Emargement_${safeTitle || 'activite'}.pdf`);
     } catch (e) {
       console.error('Erreur lors de la génération du PDF', e);
       this.erreur.set("Erreur lors de la création du PDF. L'export n'est peut-être pas installé.");

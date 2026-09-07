@@ -8,6 +8,7 @@ module.exports = {
     ...tsJestTransformCfg,
   },
   testMatch: ["**/tests/**/*.test.ts"],
+  setupFilesAfterEnv: ["<rootDir>/tests/setup.ts"],
   forceExit: true,
   clearMocks: true,
 };
