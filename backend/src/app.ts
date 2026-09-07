@@ -21,6 +21,10 @@ import statsRoutes         from './routes/stats.routes';
 
 const app = express();
 
+// Render est un reverse proxy : on fait confiance au premier proxy
+// afin que req.ip corresponde à l'IP client transmise par le proxy.
+app.set('trust proxy', 1);
+
 // Middlewares de sécurité et réseau (exécutés AVANT les routes)
 app.use(helmet());
 app.use(compression());
@@ -39,9 +43,13 @@ app.use(cors({
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: env.NODE_ENV === 'development' ? 2000 : 100, // Plus permissif en dev
+  max: env.NODE_ENV === 'development' ? 2000 : 1000,
   standardHeaders: true,
   legacyHeaders: false,
+  message: {
+    success: false,
+    message: 'Trop de requêtes, réessayez plus tard.'
+  }
 });
 app.use(limiter);
 

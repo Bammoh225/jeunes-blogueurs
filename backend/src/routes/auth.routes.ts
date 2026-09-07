@@ -13,13 +13,33 @@ import {
 
 const router = Router();
 
-const forgotPasswordLimiter = rateLimit({
+const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 min
-  max: process.env.NODE_ENV === 'production' ? 5 : 30, // 30 tentatives en dev, 5 en prod
-  message: { success: false, message: 'Trop de tentatives, réessayez plus tard.' }
+  max: process.env.NODE_ENV === 'production' ? 10 : 100,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    success: false,
+    message: 'Trop de tentatives de connexion, réessayez plus tard.'
+  }
 });
 
-router.post('/login', validateBody(loginSchema), authController.login);
+const forgotPasswordLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 min
+  max: process.env.NODE_ENV === 'production' ? 5 : 30,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    success: false,
+    message: 'Trop de tentatives, réessayez plus tard.'
+  }
+});
+
+router.post('/login',
+  loginLimiter,
+  validateBody(loginSchema),
+  authController.login
+);
 router.post('/mot-de-passe-oublie',
   forgotPasswordLimiter,
   validateBody(motDePasseOublieSchema),
