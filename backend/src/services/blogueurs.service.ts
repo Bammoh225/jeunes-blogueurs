@@ -4,6 +4,7 @@ import { StatutBlogueur } from '../types';
 import { hashPassword } from '../utils/bcrypt';
 import { notificationsService } from './notifications.service';
 import { utilisateursRepository } from '../repositories/utilisateurs.repository';
+import { gamificationService } from './gamification.service';
 
 export const blogueursService = {
 
@@ -14,7 +15,8 @@ export const blogueursService = {
   async trouver(id: number) {
     const b = await blogueursRepository.findById(id);
     if (!b) throw new Error('Blogueur introuvable');
-    return b;
+    const badges = await gamificationService.getBadgesForBlogueur(id);
+    return { ...b, badges };
   },
 
   async inscrire(dto: CreateBlogueurDto) {

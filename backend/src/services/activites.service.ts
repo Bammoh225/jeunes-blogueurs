@@ -2,6 +2,7 @@ import { activitesRepository } from '../repositories/activites.repository';
 import { CreateActiviteDto, UpdateActiviteDto } from '../models/activite.model';
 import { notificationsService } from './notifications.service';
 import { blogueursRepository } from '../repositories/blogueurs.repository';
+import { gamificationService } from './gamification.service';
 
 export const activitesService = {
 
@@ -82,6 +83,9 @@ export const activitesService = {
 
   async marquerPresence(activiteId: number, userId: number, present: boolean) {
     await activitesRepository.marquerPresence(activiteId, userId, present);
+    if (present) {
+      await gamificationService.checkAndAssignBadges(userId);
+    }
   },
 
 };

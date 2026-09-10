@@ -56,7 +56,8 @@ export interface Blogueur {
   presentation?: string;
 
   date_inscription?: Date;
-
+  
+  created_at?: Date;
 
   // =========================================================
   // Jointures
@@ -96,6 +97,8 @@ export interface BlogueurResume {
   categorie_nom?: string | null;
 
   thematiques?: string[];
+
+  badges?: any[];
 
   created_at?: Date;
 

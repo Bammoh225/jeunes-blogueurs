@@ -3,6 +3,7 @@ import { CreatePublicationDto, UpdatePublicationDto } from '../models/publicatio
 import { blogueursRepository } from '../repositories/blogueurs.repository';
 import { utilisateursRepository } from '../repositories/utilisateurs.repository';
 import { notificationsService } from './notifications.service';
+import { gamificationService } from './gamification.service';
 import { JwtPayload } from '../types';
 
 export const publicationsService = {
@@ -27,6 +28,9 @@ export const publicationsService = {
 
     // Incrémenter le compteur du blogueur
     await blogueursRepository.incrementPublications(auteur.id);
+    
+    // Vérifier les badges
+    await gamificationService.checkAndAssignBadges(auteur.id);
 
     // Notifier le responsable de la catégorie et l'équipe com
     const staff = await utilisateursRepository.findAll();

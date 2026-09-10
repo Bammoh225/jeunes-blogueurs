@@ -55,10 +55,15 @@ export const blogueursRepository = {
         c.nom AS categorie_nom,
 
         GROUP_CONCAT(
-          t.nom
+          DISTINCT t.nom
           ORDER BY t.nom
           SEPARATOR ','
-        ) AS thematiques_str
+        ) AS thematiques_str,
+
+        GROUP_CONCAT(
+          DISTINCT b.icone_url
+          SEPARATOR ','
+        ) AS badges_icones
 
       FROM utilisateurs u
 
@@ -76,6 +81,12 @@ export const blogueursRepository = {
 
       LEFT JOIN thematiques t
         ON t.id = bt.thematique_id
+        
+      LEFT JOIN blogueur_badges bb
+        ON bb.blogueur_id = u.id
+        
+      LEFT JOIN badges b
+        ON b.id = bb.badge_id
 
       ${where}
 
@@ -88,6 +99,9 @@ export const blogueursRepository = {
       ...r,
       thematiques: r.thematiques_str
         ? r.thematiques_str.split(',')
+        : [],
+      badges: r.badges_icones
+        ? r.badges_icones.split(',').map((url: string) => ({ icone_url: url }))
         : [],
     })) as BlogueurResume[];
   },
