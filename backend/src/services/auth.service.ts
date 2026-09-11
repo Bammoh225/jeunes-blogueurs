@@ -59,6 +59,14 @@ export const authService = {
       if (utilisateur.role === 'jeune_blogueur') {
         const { gamificationService } = await import('./gamification.service');
         reste.badges = await gamificationService.getBadgesForBlogueur(id);
+
+        const { pool } = await import('../config/database');
+        const [actRows] = await pool.execute<any[]>(
+          'SELECT COUNT(*) as count FROM participants_activites WHERE utilisateur_id = ? AND present = TRUE',
+          [id]
+        );
+        reste.nb_activites = actRows[0]?.count || 0;
+        reste.nb_publications = blogueur?.nb_publications || 0;
       }
     }
 

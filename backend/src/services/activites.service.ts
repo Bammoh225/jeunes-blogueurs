@@ -3,6 +3,7 @@ import { CreateActiviteDto, UpdateActiviteDto } from '../models/activite.model';
 import { notificationsService } from './notifications.service';
 import { blogueursRepository } from '../repositories/blogueurs.repository';
 import { gamificationService } from './gamification.service';
+import { authRepository } from '../repositories/auth.repository';
 
 export const activitesService = {
 
@@ -60,6 +61,18 @@ export const activitesService = {
   async ajouterParticipant(activiteId: number, userId: number) {
     await this.verifierCapacite(activiteId);
     await activitesRepository.addParticipant(activiteId, userId);
+
+    const activite = await activitesRepository.findById(activiteId);
+    const user = await authRepository.findById(userId);
+    if (activite && user) {
+      await notificationsService.creer({
+        destinataire_id: activite.organisateur_id,
+        type: 'nouvelle_inscription',
+        message: `Le blogueur ${user.prenom} ${user.nom || ''} a été ajouté à votre activité "${activite.titre}".`,
+        lien: `/activites/${activite.id}`,
+        activite_id: activite.id
+      });
+    }
   },
 
   async inscrireViaLien(token: string, userId: number) {
@@ -67,6 +80,18 @@ export const activitesService = {
     if (!activite) throw new Error('Lien invalide ou activité introuvable');
     await this.verifierCapacite(activite.id);
     await activitesRepository.addParticipant(activite.id, userId);
+
+    const user = await authRepository.findById(userId);
+    if (user) {
+      await notificationsService.creer({
+        destinataire_id: activite.organisateur_id,
+        type: 'nouvelle_inscription',
+        message: `Le blogueur ${user.prenom} ${user.nom || ''} s'est inscrit à votre activité "${activite.titre}".`,
+        lien: `/activites/${activite.id}`,
+        activite_id: activite.id
+      });
+    }
+
     return activitesRepository.findById(activite.id);
   },
 
