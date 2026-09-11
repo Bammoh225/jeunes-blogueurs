@@ -1,70 +1,67 @@
 import { Injectable } from '@angular/core';
+import { jsPDF } from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 @Injectable({ providedIn: 'root' })
 export class ExportService {
 
   exportPDF(titre: string, colonnes: string[], lignes: any[][], nomFichier: string) {
-    import('jspdf').then(({ jsPDF }) => {
-      import('jspdf-autotable').then((autoTableModule) => {
-        const doc = new jsPDF({ orientation: 'landscape' });
+    const doc = new jsPDF({ orientation: 'landscape' });
 
-        const now = new Date().toLocaleDateString('fr-FR', {
-          day: '2-digit', month: 'long', year: 'numeric'
-        });
-
-        // En-tête
-        doc.setFillColor(14, 165, 233);
-        doc.rect(0, 0, doc.internal.pageSize.width, 30, 'F');
-        doc.setTextColor(255, 255, 255);
-        doc.setFontSize(16);
-        doc.setFont('helvetica', 'bold');
-        doc.text('Jeunes Blogueurs — UNICEF Côte d\'Ivoire', 14, 12);
-        doc.setFontSize(11);
-        doc.setFont('helvetica', 'normal');
-        doc.text(titre, 14, 22);
-
-        // Date
-        doc.setFontSize(9);
-        doc.text(`Généré le ${now}`, doc.internal.pageSize.width - 14, 22, { align: 'right' });
-
-        // Tableau
-        const autoTable: any = autoTableModule.default || autoTableModule;
-        autoTable(doc, {
-          head: [colonnes],
-          body: lignes,
-          startY: 36,
-          styles: {
-            fontSize: 9,
-            cellPadding: 4,
-          },
-          headStyles: {
-            fillColor: [14, 165, 233],
-            textColor: 255,
-            fontStyle: 'bold',
-          },
-          alternateRowStyles: {
-            fillColor: [240, 249, 255],
-          },
-          margin: { left: 14, right: 14 },
-        });
-
-        // Pied de page
-        const totalPages = (doc as any).internal.getNumberOfPages();
-        for (let i = 1; i <= totalPages; i++) {
-          doc.setPage(i);
-          doc.setFontSize(8);
-          doc.setTextColor(150);
-          doc.text(
-            `Page ${i} / ${totalPages}`,
-            doc.internal.pageSize.width / 2,
-            doc.internal.pageSize.height - 8,
-            { align: 'center' }
-          );
-        }
-
-        doc.save(`${nomFichier}.pdf`);
-      });
+    const now = new Date().toLocaleDateString('fr-FR', {
+      day: '2-digit', month: 'long', year: 'numeric'
     });
+
+    // En-tête
+    doc.setFillColor(14, 165, 233);
+    doc.rect(0, 0, doc.internal.pageSize.width, 30, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(16);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Jeunes Blogueurs — UNICEF Côte d\'Ivoire', 14, 12);
+    doc.setFontSize(11);
+    doc.setFont('helvetica', 'normal');
+    doc.text(titre, 14, 22);
+
+    // Date
+    doc.setFontSize(9);
+    doc.text(`Généré le ${now}`, doc.internal.pageSize.width - 14, 22, { align: 'right' });
+
+    // Tableau
+    autoTable(doc, {
+      head: [colonnes],
+      body: lignes,
+      startY: 36,
+      styles: {
+        fontSize: 9,
+        cellPadding: 4,
+      },
+      headStyles: {
+        fillColor: [14, 165, 233],
+        textColor: 255,
+        fontStyle: 'bold',
+      },
+      alternateRowStyles: {
+        fillColor: [240, 249, 255],
+      },
+      margin: { left: 14, right: 14 },
+    });
+
+    // Pied de page
+    const totalPages = (doc as any).internal.getNumberOfPages();
+    for (let i = 1; i <= totalPages; i++) {
+      doc.setPage(i);
+      doc.setFontSize(8);
+      doc.setTextColor(150);
+      doc.text(
+        `Page ${i} / ${totalPages}`,
+        doc.internal.pageSize.width / 2,
+        doc.internal.pageSize.height - 8,
+        { align: 'center' }
+      );
+    }
+
+    doc.save(`${nomFichier}.pdf`);
   }
 
   exportExcel(colonnes: string[], lignes: any[][], nomFichier: string) {
