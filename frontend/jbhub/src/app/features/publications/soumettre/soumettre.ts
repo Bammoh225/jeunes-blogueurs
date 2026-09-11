@@ -92,7 +92,7 @@ export class Soumettre implements OnInit {
       categorie_id:     +val.categorie_id!,
       thematique_id:    +val.thematique_id!,
       titre:            val.titre,
-      lien:             val.lien,
+      lien:             (val.lien && !/^https?:\/\//i.test(val.lien)) ? `https://${val.lien}` : val.lien,
       description:      val.description || null,
       date_publication: val.date_publication,
     };
@@ -115,7 +115,11 @@ export class Soumettre implements OnInit {
 
     this.service.soumettre(dto).subscribe({
       next:  () => this.router.navigate(['/publications']),
-      error: e  => { this.erreur.set(e.error?.message ?? 'Erreur'); this.loading.set(false); }
+      error: e  => { 
+        const msg = (e.error?.errors?.length) ? e.error.errors.join('\n') : (e.error?.message ?? 'Erreur');
+        this.erreur.set(msg); 
+        this.loading.set(false); 
+      }
     });
   }
 }

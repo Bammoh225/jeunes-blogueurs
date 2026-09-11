@@ -142,6 +142,24 @@
           </div>
         </div>
 
+        <!-- Badges -->
+        @if (blogueur()!.badges?.length) {
+          <div class="info-card badges-card">
+            <h3>Badges Obtenus</h3>
+            <div class="badges-grid">
+              @for (b of blogueur()!.badges; track b.id) {
+                <div class="badge-item">
+                  <img [src]="b.icone_url" [alt]="b.nom" class="badge-icon" />
+                  <div class="badge-info">
+                    <h4>{{ b.nom }}</h4>
+                    <p>{{ b.description }}</p>
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+        }
+
       </div>
     </div>
   }

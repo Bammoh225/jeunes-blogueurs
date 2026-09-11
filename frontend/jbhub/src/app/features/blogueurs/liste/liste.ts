@@ -10,6 +10,7 @@ import { ExportService } from '../../../core/services/export.service';
 
 interface BlogueurAvecStatut extends BlogueurResume {
   aPublieMois: boolean;
+  badges?: any[];
 }
 
 @Component({

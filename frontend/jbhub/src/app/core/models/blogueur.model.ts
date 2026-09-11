@@ -29,4 +29,5 @@ export interface Blogueur extends BlogueurResume {
   langue_ecriture?: string;
   motivation?:     string;
   lien_portfolio?: string;
+  badges?:         any[];
 }

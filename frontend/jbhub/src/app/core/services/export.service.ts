@@ -5,7 +5,7 @@ export class ExportService {
 
   exportPDF(titre: string, colonnes: string[], lignes: any[][], nomFichier: string) {
     import('jspdf').then(({ jsPDF }) => {
-      import('jspdf-autotable').then(() => {
+      import('jspdf-autotable').then((autoTableModule) => {
         const doc = new jsPDF({ orientation: 'landscape' });
 
         const now = new Date().toLocaleDateString('fr-FR', {
@@ -28,7 +28,8 @@ export class ExportService {
         doc.text(`Généré le ${now}`, doc.internal.pageSize.width - 14, 22, { align: 'right' });
 
         // Tableau
-        (doc as any).autoTable({
+        const autoTable: any = autoTableModule.default || autoTableModule;
+        autoTable(doc, {
           head: [colonnes],
           body: lignes,
           startY: 36,

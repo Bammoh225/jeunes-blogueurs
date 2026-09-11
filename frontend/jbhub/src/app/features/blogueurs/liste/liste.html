@@ -94,6 +94,16 @@
                   </span>
                 }
               </div>
+              @if (b.badges?.length) {
+                <div class="mini-badges">
+                  @for (bdg of b.badges!.slice(0,3); track bdg.icone_url) {
+                    <img [src]="bdg.icone_url" class="mini-badge-icon" alt="Badge" title="Badge" />
+                  }
+                  @if (b.badges!.length > 3) {
+                    <span class="mini-badge-more">+{{ b.badges!.length - 3 }}</span>
+                  }
+                </div>
+              }
             </div>
             <div class="card-body">
               <h3>{{ b.prenom }} {{ b.nom }}</h3>
