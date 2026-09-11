@@ -15,7 +15,7 @@ export const gamificationService = {
 
     // Get number of activities participated in
     const [actRows] = await pool.execute<RowDataPacket[]>(
-      'SELECT COUNT(*) as count FROM activite_participants WHERE participant_id = ? AND present = TRUE',
+      'SELECT COUNT(*) as count FROM participants_activites WHERE utilisateur_id = ? AND present = TRUE',
       [blogueurId]
     );
     const nbActivites = actRows[0]?.count || 0;
