@@ -48,12 +48,17 @@ export const authService = {
   async profil(id: number) {
     const utilisateur = await authRepository.findById(id);
     if (!utilisateur) throw new Error('Utilisateur introuvable');
-    const { mot_de_passe: _, ...reste } = utilisateur;
+    const { mot_de_passe: _, ...reste } = utilisateur as any;
 
     if (utilisateur.role !== 'responsable_unicef') {
       const blogueur = await blogueursRepository.findById(id);
       if (blogueur?.numero_urgence) {
         reste.numero_urgence = blogueur.numero_urgence;
+      }
+      
+      if (utilisateur.role === 'jeune_blogueur') {
+        const { gamificationService } = await import('./gamification.service');
+        reste.badges = await gamificationService.getBadgesForBlogueur(id);
       }
     }
 

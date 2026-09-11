@@ -20,6 +20,22 @@
             <span class="urgence-num">{{ profilData()?.numero_urgence }}</span>
           </div>
         }
+
+        <!-- Badges -->
+        @if (profilData()?.badges?.length) {
+          <div class="badges-section" style="margin-top: 1.5rem; text-align: center;">
+            <h3 style="font-size: 1rem; color: #475569; margin-bottom: 1rem;">Mes Badges</h3>
+            <div class="badges-list" style="display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center;">
+              @for (badge of profilData()?.badges; track badge.id) {
+                <div class="badge-item" [title]="badge.description" 
+                     style="display: flex; align-items: center; gap: 0.5rem; padding: 0.4rem 0.75rem; background: #f1f5f9; border-radius: 9999px; font-size: 0.85rem; font-weight: 500; color: #334155; border: 1px solid #e2e8f0;">
+                  <span>{{ badge.icone }}</span>
+                  <span>{{ badge.nom }}</span>
+                </div>
+              }
+            </div>
+          </div>
+        }
       </div>
     </div>
 
