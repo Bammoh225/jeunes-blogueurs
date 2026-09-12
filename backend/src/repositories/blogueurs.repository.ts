@@ -121,7 +121,7 @@ export const blogueursRepository = {
       FROM utilisateurs u
       LEFT JOIN profils_blogueurs pb ON pb.utilisateur_id = u.id
       LEFT JOIN villes v ON v.id = u.ville_id
-      LEFT JOIN blogueur_badges bb ON bb.utilisateur_id = u.id
+      LEFT JOIN blogueur_badges bb ON bb.blogueur_id = u.id
       LEFT JOIN badges b ON b.id = bb.badge_id
       WHERE u.role = 'jeune_blogueur' AND pb.statut = 'actif'
       GROUP BY u.id
