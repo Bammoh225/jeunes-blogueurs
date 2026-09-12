@@ -10,6 +10,7 @@ export interface BlogueurResume {
   photo_url?:      string | null;
   statut:          StatutBlogueur;
   nb_publications?: number;
+  nb_activites?:   number;
   ville_nom?:      string | null;
   categorie_nom?:  string | null;
   thematiques?:    string[];

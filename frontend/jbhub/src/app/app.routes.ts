@@ -102,6 +102,20 @@ export const routes: Routes = [
         canActivate: [roleGuard],
         data: { roles: ['responsable_unicef', 'responsable_technique'] },
         loadComponent: () => import('./features/utilisateurs/liste/liste').then(m => m.Liste)
+      },
+      {
+        path: 'classement',
+        loadComponent: () => import('./features/classement/classement').then(m => m.Classement)
+      },
+      {
+        path: 'ressources',
+        loadComponent: () => import('./features/ressources/liste/liste').then(m => m.Liste)
+      },
+      {
+        path: 'ressources/ajouter',
+        canActivate: [roleGuard],
+        data: { roles: ['responsable_unicef', 'responsable_technique'] },
+        loadComponent: () => import('./features/ressources/form/form').then(m => m.Form)
       }
     ]
   },

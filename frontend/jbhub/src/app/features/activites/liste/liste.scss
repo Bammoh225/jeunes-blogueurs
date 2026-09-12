@@ -7,6 +7,24 @@
   h1 { font-size: 20px; font-weight: 600; color: var(--text-primary); margin: 0 0 2px; letter-spacing: -0.02em; }
   p  { font-size: 13px; color: var(--text-muted); margin: 0; }
 }
+.header-actions {
+  display: flex;
+  gap: 8px;
+}
+.btn-secondary {
+  height: 36px;
+  padding: 0 14px;
+  background: var(--surface);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s;
+  &:hover { background: var(--border-light); }
+}
 .btn-primary {
   height: 36px;
   padding: 0 14px;

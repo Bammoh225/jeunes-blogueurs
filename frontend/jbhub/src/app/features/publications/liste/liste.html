@@ -7,6 +7,12 @@
     </div>
     <div class="header-actions">
       @if (isStaff) {
+        <button class="btn-secondary" (click)="exporterPDF()">
+          📄 Exporter PDF
+        </button>
+        <button class="btn-secondary" (click)="exporterExcel()">
+          📊 Exporter Excel
+        </button>
         <button class="btn-toggle-vue" (click)="vueMois.set(!vueMois())">
           {{ vueMois() ? 'Vue liste' : 'Vue par mois' }}
         </button>

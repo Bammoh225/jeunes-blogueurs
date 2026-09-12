@@ -4,23 +4,7 @@ import { RouterLink } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../core/services/auth.service';
 import { environment } from '../../../environments/environment';
-import { BaseChartDirective } from 'ng2-charts';
-import { ChartConfiguration, ChartData, ChartType } from 'chart.js';
 
-interface PublicationStat {
-  mois: string;
-  total: number;
-}
-
-interface BlogueurVilleStat {
-  ville: string;
-  total: number;
-}
-
-interface DashboardChartsResponse {
-  publicationsParMois: PublicationStat[];
-  blogueursParVille: BlogueurVilleStat[];
-}
 
 interface ApiResponse<T> {
   data?: T;
@@ -29,7 +13,7 @@ interface ApiResponse<T> {
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterLink, BaseChartDirective],
+  imports: [CommonModule, RouterLink],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss'
 })
@@ -46,41 +30,6 @@ export class Dashboard implements OnInit {
   // Stats staff
   stats = signal({ blogueurs: 0, publications: 0, activites: 0, notifications: 0 });
   
-  // Charts Staff
-  public chartOptions: ChartConfiguration['options'] = {
-    responsive: true,
-    scales: {
-      x: {},
-      y: {
-        min: 0,
-        ticks: {
-          precision: 0
-        }
-      }
-    },
-    plugins: {
-      legend: {
-        display: true,
-        position: 'bottom'
-      }
-    }
-  };
-
-  public pubChartType: ChartType = 'line';
-  public villeChartType: ChartType = 'bar';
-
-  public pubChartData: ChartData<'line'> = {
-    labels: [],
-    datasets: []
-  };
-
-  public villeChartData: ChartData<'bar'> = {
-    labels: [],
-    datasets: []
-  };
-
-  showCharts = signal(false);
-  chartsError = signal(false);
 
   // Stats blogueur
   mesPublications = signal<any[]>([]);
@@ -91,7 +40,6 @@ export class Dashboard implements OnInit {
       this.chargerBlogueur();
     } else {
       this.chargerStaff();
-      this.chargerCharts();
     }
   }
 
@@ -118,61 +66,7 @@ export class Dashboard implements OnInit {
     });
   }
 
-  chargerCharts() {
-    this.chartsError.set(false);
 
-    this.http
-      .get<ApiResponse<DashboardChartsResponse>>(
-        `${environment.apiUrl}/stats/charts`
-      )
-      .subscribe({
-        next: response => {
-          const data = response.data;
-
-          if (!data) {
-            this.chartsError.set(true);
-            return;
-          }
-
-          const pubLabels = data.publicationsParMois.map(stat => stat.mois);
-          const pubTotals = data.publicationsParMois.map(stat => stat.total);
-
-          this.pubChartData = {
-            labels: pubLabels,
-            datasets: [
-              {
-                data: pubTotals,
-                label: 'Publications',
-                tension: 0.3,
-                fill: false
-              }
-            ]
-          };
-
-          const villeLabels = data.blogueursParVille.map(stat => stat.ville);
-          const villeTotals = data.blogueursParVille.map(stat => stat.total);
-
-          this.villeChartData = {
-            labels: villeLabels,
-            datasets: [
-              {
-                data: villeTotals,
-                label: 'Blogueurs par Ville'
-              }
-            ]
-          };
-
-          this.showCharts.set(true);
-        },
-        error: err => {
-          console.error(
-            '[DASHBOARD] Erreur récupération statistiques:',
-            err
-          );
-          this.chartsError.set(true);
-        }
-      });
-  }
 
   chargerBlogueur() {
     const api = environment.apiUrl;

@@ -16,6 +16,7 @@ router.post('/', validateBody(inscrireBlogueurSchema), blogueursController.inscr
 
 // Routes protégées
 router.get('/',          authMiddleware, allStaff,         blogueursController.lister);
+router.get('/classement', authMiddleware, blogueursController.getLeaderboard);
 router.get('/:id',       authMiddleware, allStaff,         blogueursController.trouver);
 router.patch('/:id',     authMiddleware, requireRoles(
   'responsable_unicef', 'responsable_technique',

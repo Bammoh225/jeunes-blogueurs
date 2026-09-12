@@ -12,6 +12,10 @@ export const blogueursService = {
     return blogueursRepository.findAll(filtres);
   },
 
+  async getLeaderboard() {
+    return blogueursRepository.getLeaderboard();
+  },
+
   async trouver(id: number) {
     const b = await blogueursRepository.findById(id);
     if (!b) throw new Error('Blogueur introuvable');

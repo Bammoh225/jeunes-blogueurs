@@ -7,6 +7,7 @@ import { Activite, CreateActiviteDto, TypeActivite, VisibiliteActivite } from '.
 import { AuthService } from '../../../core/services/auth.service';
 import { VillesService, Ville } from '../../../core/services/villes.service';
 import { BlogueursService } from '../../../core/services/blogueurs.service';
+import { ExportService } from '../../../core/services/export.service';
 
 @Component({
   selector: 'app-liste',
@@ -20,6 +21,7 @@ export class Liste implements OnInit {
   private auth          = inject(AuthService);
   private villesSvc     = inject(VillesService);
   private blogueursSvc  = inject(BlogueursService);
+  private exportSvc     = inject(ExportService);
   private fb            = inject(FormBuilder);
 
   activites   = signal<Activite[]>([]);
@@ -184,5 +186,43 @@ export class Liste implements OnInit {
       'terminee': 'Terminée',   'annulee':  'Annulée',
     };
     return map[statut] ?? statut;
+  }
+
+  exporterPDF() {
+    const mois = new Date().toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
+    const colonnes = ['Titre', 'Type', 'Ville', 'Date de Début', 'Date de Fin', 'Lieu', 'Statut', 'Visibilité', 'Participants Actuels / Max'];
+    const lignes = this.activitesFiltrees.map(a => [
+      a.titre,
+      this.typeIcon(a.type) + ' ' + (a.type.charAt(0).toUpperCase() + a.type.slice(1)),
+      a.ville_nom ?? '-',
+      new Date(a.date_debut).toLocaleDateString('fr-FR'),
+      a.date_fin ? new Date(a.date_fin).toLocaleDateString('fr-FR') : '-',
+      a.lieu ?? '-',
+      this.statutLabel(a.statut ?? ''),
+      a.visibilite === 'ville' ? 'Toute la ville' : 'Restreinte',
+      `${a.nb_participants ?? 0} / ${a.capacite_max ?? '∞'}`
+    ]);
+    this.exportSvc.exportPDF(
+      `Rapport Activités — ${mois}`,
+      colonnes, lignes,
+      `activites_${mois.replace(' ', '_')}`
+    );
+  }
+
+  exporterExcel() {
+    const mois = new Date().toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
+    const colonnes = ['Titre', 'Type', 'Ville', 'Date de Début', 'Date de Fin', 'Lieu', 'Statut', 'Visibilité', 'Participants Actuels / Max'];
+    const lignes = this.activitesFiltrees.map(a => [
+      a.titre,
+      this.typeIcon(a.type) + ' ' + (a.type.charAt(0).toUpperCase() + a.type.slice(1)),
+      a.ville_nom ?? '-',
+      new Date(a.date_debut).toLocaleDateString('fr-FR'),
+      a.date_fin ? new Date(a.date_fin).toLocaleDateString('fr-FR') : '-',
+      a.lieu ?? '-',
+      this.statutLabel(a.statut ?? ''),
+      a.visibilite === 'ville' ? 'Toute la ville' : 'Restreinte',
+      `${a.nb_participants ?? 0} / ${a.capacite_max ?? '∞'}`
+    ]);
+    this.exportSvc.exportExcel(colonnes, lignes, `activites_${mois.replace(' ', '_')}`);
   }
 }

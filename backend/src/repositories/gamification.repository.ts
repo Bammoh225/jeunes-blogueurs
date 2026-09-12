@@ -16,7 +16,8 @@ export const gamificationRepository = {
       `SELECT b.* FROM badges b
        JOIN blogueur_badges bb ON bb.badge_id = b.id
        WHERE bb.blogueur_id = ?
-       ORDER BY bb.obtenu_le DESC`,
+       GROUP BY b.id
+       ORDER BY MAX(bb.obtenu_le) DESC`,
       [blogueurId]
     );
     return rows as Badge[];

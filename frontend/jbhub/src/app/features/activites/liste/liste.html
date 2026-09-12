@@ -5,11 +5,19 @@
       <h1>Activités</h1>
       <p>{{ activitesFiltrees.length }} activité(s)</p>
     </div>
-    @if (peutCreer) {
-      <button class="btn-primary" (click)="showForm.set(!showForm())">
-        @if (showForm()) { ✕ Annuler } @else { + Nouvelle activité }
+    <div class="header-actions">
+      <button class="btn-secondary" (click)="exporterPDF()">
+        📄 Exporter PDF
       </button>
-    }
+      <button class="btn-secondary" (click)="exporterExcel()">
+        📊 Exporter Excel
+      </button>
+      @if (peutCreer) {
+        <button class="btn-primary" (click)="showForm.set(!showForm())">
+          @if (showForm()) { ✕ Annuler } @else { + Nouvelle activité }
+        </button>
+      }
+    </div>
   </div>
 
   @if (lienGenere()) {

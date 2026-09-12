@@ -1,0 +1,58 @@
+<div class="page-container">
+  <div class="page-header">
+    <a routerLink="/ressources" class="back-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="19" y1="12" x2="5" y2="12"/>
+        <polyline points="12 19 5 12 12 5"/>
+      </svg>
+      Retour
+    </a>
+    <h1>Ajouter une ressource</h1>
+  </div>
+
+  <div class="form-card">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="titre">Titre *</label>
+        <input type="text" id="titre" formControlName="titre" placeholder="ex: Guide de création de contenu"
+               [class.is-invalid]="form.get('titre')?.invalid && form.get('titre')?.touched">
+        @if (form.get('titre')?.invalid && form.get('titre')?.touched) {
+          <div class="error-msg">Le titre est requis</div>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="type">Type de ressource *</label>
+        <select id="type" formControlName="type">
+          <option value="document">Document (PDF, Word, etc.)</option>
+          <option value="video">Vidéo</option>
+          <option value="lien">Lien externe</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="url">URL *</label>
+        <input type="url" id="url" formControlName="url" placeholder="https://..."
+               [class.is-invalid]="form.get('url')?.invalid && form.get('url')?.touched">
+        @if (form.get('url')?.errors?.['required'] && form.get('url')?.touched) {
+          <div class="error-msg">L'URL est requise</div>
+        }
+        @if (form.get('url')?.errors?.['pattern'] && form.get('url')?.touched) {
+          <div class="error-msg">Veuillez entrer une URL valide commençant par http:// ou https://</div>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="description">Description (optionnel)</label>
+        <textarea id="description" formControlName="description" rows="3" placeholder="Brève description de la ressource..."></textarea>
+      </div>
+
+      <div class="form-actions">
+        <a routerLink="/ressources" class="btn-secondary">Annuler</a>
+        <button type="submit" class="btn-primary" [disabled]="isSubmitting">
+          {{ isSubmitting ? 'Ajout en cours...' : 'Ajouter la ressource' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

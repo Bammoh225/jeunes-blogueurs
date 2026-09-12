@@ -15,7 +15,7 @@ export const gamificationService = {
 
     // Get number of activities participated in
     const [actRows] = await pool.execute<RowDataPacket[]>(
-      'SELECT COUNT(*) as count FROM participants_activites WHERE utilisateur_id = ? AND present = TRUE',
+      'SELECT COUNT(*) as count FROM participants_activites WHERE utilisateur_id = ? AND present = 1',
       [blogueurId]
     );
     const nbActivites = actRows[0]?.count || 0;
@@ -29,7 +29,7 @@ export const gamificationService = {
         if ((blogueur.nb_publications ?? 0) >= badge.critere_valeur) {
           isEligible = true;
         }
-      } else if (badge.critere_type === 'activites') {
+      } else if (badge.critere_type === 'activites' || badge.critere_type === 'activite') {
         if (nbActivites >= badge.critere_valeur) {
           isEligible = true;
         }

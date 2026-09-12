@@ -15,6 +15,11 @@ export const blogueursController = {
       sendSuccess(res, await blogueursService.lister(filtres));
     } catch (err: any) { sendError(res, err.message); }
   },
+  async getLeaderboard(req: Request, res: Response): Promise<void> {
+    try {
+      sendSuccess(res, await blogueursService.getLeaderboard());
+    } catch (err: any) { sendError(res, err.message); }
+  },
 
   async trouver(req: Request, res: Response): Promise<void> {
     try {

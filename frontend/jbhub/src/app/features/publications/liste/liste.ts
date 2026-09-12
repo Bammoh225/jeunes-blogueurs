@@ -7,6 +7,7 @@ import { PublicationResume } from '../../../core/models/publication.model';
 import { ApiMeta } from '../../../core/models/api.model';
 import { AuthService } from '../../../core/services/auth.service';
 import { ThematiquesService, Thematique } from '../../../core/services/thematiques.service';
+import { ExportService } from '../../../core/services/export.service';
 
 interface GroupeMois {
   cle:          string;
@@ -28,6 +29,7 @@ export class Liste implements OnInit, OnDestroy {
   private service        = inject(PublicationsService);
   private auth           = inject(AuthService);
   private thematiquesSvc = inject(ThematiquesService);
+  private exportSvc      = inject(ExportService);
 
   // Publications de la PAGE COURANTE uniquement (le filtrage/tri/recherche
   // et la pagination sont faits côté backend en SQL, plus côté client sur
@@ -164,6 +166,38 @@ export class Liste implements OnInit, OnDestroy {
 
   isMoisOuvert(cle: string): boolean {
     return this.moisOuverts().has(cle);
+  }
+
+  exporterPDF() {
+    const mois = new Date().toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
+    const colonnes = ['Titre', 'Auteur', 'Catégorie', 'Thématique', 'Lien', 'Date'];
+    const lignes = this.publications().map(p => [
+      p.titre,
+      `${p.auteur_prenom} ${p.auteur_nom}`,
+      p.categorie_nom ?? '-',
+      p.thematique_nom ?? '-',
+      p.lien ?? '-',
+      p.date_publication ? new Date(p.date_publication).toLocaleDateString('fr-FR') : '-'
+    ]);
+    this.exportSvc.exportPDF(
+      `Rapport Publications — ${mois}`,
+      colonnes, lignes,
+      `publications_${mois.replace(' ', '_')}`
+    );
+  }
+
+  exporterExcel() {
+    const mois = new Date().toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
+    const colonnes = ['Titre', 'Auteur', 'Catégorie', 'Thématique', 'Lien', 'Date'];
+    const lignes = this.publications().map(p => [
+      p.titre,
+      `${p.auteur_prenom} ${p.auteur_nom}`,
+      p.categorie_nom ?? '-',
+      p.thematique_nom ?? '-',
+      p.lien ?? '-',
+      p.date_publication ? new Date(p.date_publication).toLocaleDateString('fr-FR') : '-'
+    ]);
+    this.exportSvc.exportExcel(colonnes, lignes, `publications_${mois.replace(' ', '_')}`);
   }
 
   reinitialiserFiltres() {

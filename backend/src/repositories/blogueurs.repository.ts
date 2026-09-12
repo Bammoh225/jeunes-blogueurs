@@ -107,6 +107,35 @@ export const blogueursRepository = {
   },
 
 
+  async getLeaderboard(): Promise<any[]> {
+    const [rows] = await pool.execute<RowDataPacket[]>(`
+      SELECT
+        u.id,
+        u.prenom,
+        u.nom,
+        u.photo_url,
+        COALESCE(pb.nb_publications, 0) AS nb_publications,
+        (SELECT COUNT(*) FROM participants_activites pa WHERE pa.utilisateur_id = u.id AND pa.present = 1) AS nb_activites,
+        v.nom AS ville_nom,
+        GROUP_CONCAT(DISTINCT b.icone_url ORDER BY b.id SEPARATOR ',') AS badges_icones
+      FROM utilisateurs u
+      LEFT JOIN profils_blogueurs pb ON pb.utilisateur_id = u.id
+      LEFT JOIN villes v ON v.id = u.ville_id
+      LEFT JOIN blogueur_badges bb ON bb.utilisateur_id = u.id
+      LEFT JOIN badges b ON b.id = bb.badge_id
+      WHERE u.role = 'jeune_blogueur' AND pb.statut = 'actif'
+      GROUP BY u.id
+      ORDER BY (COALESCE(pb.nb_publications, 0) * 10 + (SELECT COUNT(*) FROM participants_activites pa WHERE pa.utilisateur_id = u.id AND pa.present = 1) * 5) DESC
+      LIMIT 20
+    `);
+
+    return rows.map(r => ({
+      ...r,
+      score: (r.nb_publications * 10) + (r.nb_activites * 5),
+      badges: r.badges_icones ? r.badges_icones.split(',').map((url: string) => ({ icone_url: url })) : []
+    }));
+  },
+
   async findById(id: number): Promise<Blogueur | null> {
 
     const [rows] = await pool.execute<RowDataPacket[]>(`
@@ -133,6 +162,7 @@ export const blogueursRepository = {
         COALESCE(pb.numero_urgence, u.numero_urgence) AS numero_urgence,
         COALESCE(pb.statut, 'actif') AS statut,
         COALESCE(pb.nb_publications, 0) AS nb_publications,
+        (SELECT COUNT(*) FROM participants_activites pa WHERE pa.utilisateur_id = u.id AND pa.present = 1) AS nb_activites,
 
         v.nom AS ville_nom,
         c.nom AS categorie_nom,

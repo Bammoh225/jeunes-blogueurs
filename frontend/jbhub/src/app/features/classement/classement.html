@@ -1,0 +1,91 @@
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <h1>Classement des Jeunes Blogueurs</h1>
+      <p>Les blogueurs les plus actifs du mois</p>
+    </div>
+    <div class="header-actions">
+      @if (isStaff) {
+        <button class="btn-secondary" (click)="exporterPDF()">
+          📄 Exporter PDF
+        </button>
+        <button class="btn-secondary" (click)="exporterExcel()">
+          📊 Exporter Excel
+        </button>
+      }
+    </div>
+  </div>
+
+  @if (loading()) {
+    <div class="skeleton-container">
+      @for (i of [1,2,3,4,5]; track i) {
+        <div class="skeleton-row"></div>
+      }
+    </div>
+  } @else if (error()) {
+    <div class="error-msg">{{ error() }}</div>
+  } @else {
+    <div class="leaderboard-grid">
+      <!-- Podium -->
+      <div class="podium">
+        @if (classement().length >= 2) {
+          <div class="podium-step step-2">
+            <div class="rank">2</div>
+            <img [src]="classement()[1].photo_url || 'assets/default-avatar.png'" alt="avatar">
+            <div class="name">{{ classement()[1].prenom }} {{ classement()[1].nom }}</div>
+            <div class="score">{{ classement()[1].score }} pts</div>
+          </div>
+        }
+
+        @if (classement().length >= 1) {
+          <div class="podium-step step-1">
+            <div class="rank">1</div>
+            <img [src]="classement()[0].photo_url || 'assets/default-avatar.png'" alt="avatar">
+            <div class="name">{{ classement()[0].prenom }} {{ classement()[0].nom }}</div>
+            <div class="score">{{ classement()[0].score }} pts</div>
+          </div>
+        }
+
+        @if (classement().length >= 3) {
+          <div class="podium-step step-3">
+            <div class="rank">3</div>
+            <img [src]="classement()[2].photo_url || 'assets/default-avatar.png'" alt="avatar">
+            <div class="name">{{ classement()[2].prenom }} {{ classement()[2].nom }}</div>
+            <div class="score">{{ classement()[2].score }} pts</div>
+          </div>
+        }
+      </div>
+
+      <!-- Liste complète -->
+      <div class="ranking-list">
+        @for (b of classement(); track b.id; let i = $index) {
+          @if (i > 2) {
+            <div class="ranking-row">
+              <div class="rank-number">{{ i + 1 }}</div>
+              <img [src]="b.photo_url || 'assets/default-avatar.png'" alt="avatar" class="avatar-small">
+              <div class="info">
+                <div class="name">{{ b.prenom }} {{ b.nom }}</div>
+                <div class="ville">{{ b.ville_nom }}</div>
+              </div>
+              
+              <div class="stats">
+                <span class="stat-badge"><i class="icon-file"></i> {{ b.nb_publications }} Pubs</span>
+                <span class="stat-badge"><i class="icon-users"></i> {{ b.nb_activites }} Acts</span>
+              </div>
+              
+              <div class="badges">
+                @for (badge of b.badges; track badge.icone_url) {
+                  <img [src]="badge.icone_url" alt="badge" class="badge-icon">
+                }
+              </div>
+
+              <div class="score-pill">
+                {{ b.score }} pts
+              </div>
+            </div>
+          }
+        }
+      </div>
+    </div>
+  }
+</div>

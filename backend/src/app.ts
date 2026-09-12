@@ -77,6 +77,8 @@ app.get('/api/health', async (_req, res) => {
   }
 });
 
+import ressourcesRoutes    from './routes/ressources.routes';
+
 // Enregistrement des routes API
 app.use('/api/auth',          authRoutes);
 app.use('/api/utilisateurs',  utilisateursRoutes);
@@ -89,6 +91,7 @@ app.use('/api/villes',        villesRoutes);
 app.use('/api/thematiques',   thematiquesRoutes);
 app.use('/api/distributions', distributionsRoutes);
 app.use('/api/stats',         statsRoutes);
+app.use('/api/ressources',    ressourcesRoutes);
 
 // Route 404
 app.use((_req, res) => {
