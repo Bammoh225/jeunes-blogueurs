@@ -42,6 +42,18 @@ export class AuthService {
     });
   }
 
+  uploadPhoto(file: File) {
+    const formData = new FormData();
+    formData.append('photo', file);
+    return this.http.post<ApiResponse<any>>(`${this.apiUrl}/photo`, formData).pipe(
+      tap(res => {
+        const updatedUser = { ...this.currentUser()!, ...res.data };
+        this.storage.setUser(updatedUser);
+        this.currentUser.set(updatedUser);
+      })
+    );
+  }
+
   logout(): void {
     this.storage.clear();
     this.currentUser.set(null);

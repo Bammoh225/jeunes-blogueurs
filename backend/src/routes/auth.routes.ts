@@ -61,4 +61,11 @@ router.patch('/mot-de-passe',
   authController.changerMotDePasse
 );
 
+import { upload } from '../middlewares/upload.middleware';
+router.post('/photo',
+  authMiddleware,
+  upload.single('photo'),
+  authController.uploadPhoto
+);
+
 export default router;

@@ -9,7 +9,17 @@
 
     <div class="left-col">
       <div class="card identity-card">
-        <div class="avatar-xl">{{ initiales() }}</div>
+        <div class="avatar-container" (click)="fileInput.click()">
+          @if (getAvatarUrl()) {
+            <img [src]="getAvatarUrl()" alt="Avatar" class="avatar-image">
+          } @else {
+            <div class="avatar-xl">{{ initiales() }}</div>
+          }
+          <div class="avatar-overlay">
+            <span>Modifier</span>
+          </div>
+        </div>
+        <input type="file" #fileInput hidden accept="image/jpeg,image/png,image/webp" (change)="onPhotoSelected($event)">
         <h2>{{ user()?.prenom }} {{ user()?.nom }}</h2>
         <p class="email">{{ user()?.email }}</p>
         <span class="role-badge">{{ getRoleLabel() }}</span>

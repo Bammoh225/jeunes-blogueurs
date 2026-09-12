@@ -11,6 +11,7 @@ export interface JwtPayload {
   role: Role;
   ville_id?: number | null;
   categorie_id?: number | null;
+  photo_url?: string | null;
 }
 
 export interface AuthResponse {

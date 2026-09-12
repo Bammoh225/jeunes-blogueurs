@@ -84,6 +84,11 @@ export const authService = {
     return authService.profil(id);
   },
 
+  async uploadPhoto(id: number, photoUrl: string) {
+    await authRepository.updatePhotoUrl(id, photoUrl);
+    return authService.profil(id);
+  },
+
   async changerMotDePasse(id: number, ancienMdp: string, nouveauMdp: string) {
     const utilisateur = await authRepository.findById(id);
     if (!utilisateur) throw new Error('Utilisateur introuvable');

@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import path from 'path';
 import { env } from './config/env';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
@@ -20,6 +21,8 @@ import distributionsRoutes from './routes/distributions.routes';
 import statsRoutes         from './routes/stats.routes';
 
 const app = express();
+
+app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 
 // Render est un reverse proxy : on fait confiance au premier proxy
 // afin que req.ip corresponde à l'IP client transmise par le proxy.

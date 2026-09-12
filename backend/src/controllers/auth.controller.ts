@@ -33,6 +33,22 @@ export const authController = {
     }
   },
 
+  async uploadPhoto(req: AuthRequest, res: Response): Promise<void> {
+    try {
+      if (!req.file) {
+        sendError(res, 'Aucun fichier sélectionné', 400);
+        return;
+      }
+      
+      const photoUrl = `/uploads/${req.file.filename}`;
+      const data = await authService.uploadPhoto(req.user!.id, photoUrl);
+      
+      sendSuccess(res, data, 'Photo de profil mise à jour');
+    } catch (err: any) {
+      sendError(res, err.message);
+    }
+  },
+
   async changerMotDePasse(req: AuthRequest, res: Response): Promise<void> {
     try {
       const { ancien_mot_de_passe, nouveau_mot_de_passe } = req.body;

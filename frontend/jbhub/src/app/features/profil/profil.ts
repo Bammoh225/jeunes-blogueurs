@@ -57,6 +57,27 @@ export class Profil implements OnInit {
     });
   }
 
+  onPhotoSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.saving.set(true);
+      this.erreur.set('');
+      this.succes.set('');
+      
+      this.auth.uploadPhoto(file).subscribe({
+        next: (r) => {
+          this.succes.set('Photo de profil mise à jour');
+          this.profilData.set(r.data);
+          this.saving.set(false);
+        },
+        error: e => {
+          this.erreur.set(e.error?.message ?? 'Erreur lors de l\'upload');
+          this.saving.set(false);
+        }
+      });
+    }
+  }
+
   sauvegarderProfil() {
     if (this.formProfil.invalid) { this.formProfil.markAllAsTouched(); return; }
     this.saving.set(true);
@@ -118,5 +139,18 @@ export class Profil implements OnInit {
     const u = this.user();
     if (!u) return '';
     return `${u.prenom.charAt(0)}${u.nom?.charAt(0) ?? ''}`.toUpperCase();
+  }
+
+  getAvatarUrl(): string | null {
+    const photoUrl = this.user()?.photo_url;
+    if (photoUrl) {
+      // Si photoUrl est déjà absolue, la retourner
+      if (photoUrl.startsWith('http')) return photoUrl;
+      // Sinon on la concatène avec l'API URL sans le suffixe /api si possible
+      // (environment.apiUrl est "http://localhost:3000/api", on prend juste "http://localhost:3000")
+      const baseUrl = environment.apiUrl.replace('/api', '');
+      return `${baseUrl}${photoUrl}`;
+    }
+    return null;
   }
 }
