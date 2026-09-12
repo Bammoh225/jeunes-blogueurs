@@ -29,7 +29,7 @@ export const gamificationService = {
         if ((blogueur.nb_publications ?? 0) >= badge.critere_valeur) {
           isEligible = true;
         }
-      } else if (badge.critere_type === 'activites' || badge.critere_type === 'activite') {
+      } else if (badge.critere_type === 'activites') {
         if (nbActivites >= badge.critere_valeur) {
           isEligible = true;
         }
