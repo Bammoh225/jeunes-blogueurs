@@ -37,6 +37,7 @@ export const authService = {
       prenom:       utilisateur.prenom,
       nom:          utilisateur.nom,
       role:         utilisateur.role,
+      photo_url:    utilisateur.photo_url,
       ville_id:     utilisateur.ville_id,
       categorie_id: utilisateur.categorie_id,
     };

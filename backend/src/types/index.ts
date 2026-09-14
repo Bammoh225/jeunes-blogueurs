@@ -24,6 +24,7 @@ export interface JwtPayload {
   prenom:        string;
   nom:           string;
   role:          Role;
+  photo_url?:    string | null;
   ville_id?:     number | null;
   categorie_id?: number | null;
 }
