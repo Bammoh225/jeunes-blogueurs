@@ -377,32 +377,6 @@ $topbar-h: 52px;
   }
 }
 
-// ============ MOBILE ============
-
-.mobile-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.4);
-  z-index: 90;
-}
-
-.close-mobile {
-  margin-left: auto;
-  width: 28px;
-  height: 28px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: none;
-  border: none;
-  color: rgba(255,255,255,0.6);
-  cursor: pointer;
-  border-radius: var(--radius-sm);
-
-  &:hover { background: rgba(255,255,255,0.1); color: white; }
-  svg { width: 16px; height: 16px; }
-}
-
 @media (max-width: 767px) {
   .sidebar {
     width: 260px;
@@ -435,22 +409,23 @@ $topbar-h: 52px;
   .content {
     padding: 16px;
   }
-}
 
-@media (max-width: 480px) {
-  .stats-grid, .actions-grid, .blogueur-grid {
+  // Layouts
+  .profil-layout, .detail-layout {
     grid-template-columns: 1fr !important;
+  }
+  
+  .left-col {
+    position: static !important;
   }
 
   .form-grid {
     grid-template-columns: 1fr !important;
   }
+}
 
-  .profil-layout {
-    grid-template-columns: 1fr !important;
-  }
-
-  .detail-layout {
+@media (max-width: 480px) {
+  .stats-grid, .actions-grid, .blogueur-grid {
     grid-template-columns: 1fr !important;
   }
 

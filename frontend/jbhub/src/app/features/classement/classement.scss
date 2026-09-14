@@ -211,3 +211,60 @@
     font-size: 0.95rem;
   }
 }
+
+@media (max-width: 768px) {
+  .podium {
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding: 1rem 0;
+    
+    .podium-step {
+      img {
+        width: 60px;
+        height: 60px;
+      }
+      &.step-1 img {
+        width: 80px;
+        height: 80px;
+      }
+      .name { font-size: 0.9rem; }
+      &.step-1 .name { font-size: 1.05rem; }
+    }
+  }
+
+  .ranking-row {
+    flex-wrap: wrap;
+    padding: 1rem;
+    gap: 0.75rem;
+
+    .rank-number { width: 30px; font-size: 1rem; }
+    
+    .avatar-small {
+      margin-right: 0.5rem;
+      width: 40px;
+      height: 40px;
+    }
+    
+    .info {
+      flex: 1 1 100%; // Force wrap
+      order: 3;
+    }
+    
+    .stats {
+      margin-right: auto;
+      order: 4;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    
+    .badges {
+      margin-right: 0;
+      order: 5;
+    }
+
+    .score-pill {
+      order: 2;
+      margin-left: auto;
+    }
+  }
+}
