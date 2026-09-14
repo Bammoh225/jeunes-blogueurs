@@ -214,3 +214,75 @@ select.input { cursor: pointer; }
   border-radius: 50%;
   display: block;
 }
+
+/* ==========================================
+   GAMIFICATION BADGES (Decorations)
+   ========================================== */
+
+/* Animation de flottement pour les icônes de badges */
+@keyframes badge-float {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-5px) scale(1.05); }
+}
+
+/* Effet d'éclat (glow) */
+@keyframes badge-glow {
+  0%, 100% { filter: drop-shadow(0 0 4px rgba(234, 179, 8, 0.4)); }
+  50% { filter: drop-shadow(0 0 12px rgba(234, 179, 8, 0.8)); }
+}
+
+.badge-item {
+  position: relative;
+  transition: all 0.3s ease;
+  border-radius: var(--radius);
+  background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0));
+  border: 1px solid rgba(234, 179, 8, 0.2);
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(234, 179, 8, 0.15), 0 4px 6px -2px rgba(234, 179, 8, 0.1);
+    border-color: rgba(234, 179, 8, 0.5);
+    background: rgba(234, 179, 8, 0.03);
+  }
+}
+
+.badge-icon {
+  animation: badge-float 4s ease-in-out infinite, badge-glow 3s ease-in-out infinite;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.badge-item:hover .badge-icon {
+  transform: scale(1.2) rotate(5deg);
+  animation: none; /* Stop float on hover to let the transition take over */
+  filter: drop-shadow(0 0 15px rgba(234, 179, 8, 1));
+}
+
+.mini-badge-icon {
+  animation: badge-float 4s ease-in-out infinite;
+  animation-delay: calc(var(--badge-index, 0) * 0.5s);
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px white, 0 0 0 3px rgba(234, 179, 8, 0.4);
+  transition: all 0.2s;
+  
+  &:hover {
+    transform: scale(1.3);
+    z-index: 10;
+    box-shadow: 0 0 0 2px white, 0 0 10px rgba(234, 179, 8, 0.8);
+  }
+}
+
+/* Ajout d'étoiles / confettis via pseudo-elements pour les cartes de badges (Optionnel) */
+.badges-card {
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '✨';
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 24px;
+    opacity: 0.5;
+    animation: badge-float 3s infinite reverse;
+  }
+}
