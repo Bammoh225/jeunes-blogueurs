@@ -44,24 +44,32 @@
           </div>
         }
 
-        <!-- Badges -->
-        @if (profilData()?.badges?.length) {
-          <div class="badges-section" style="margin-top: 1.5rem; text-align: center;">
-            <h3 style="font-size: 1rem; color: #475569; margin-bottom: 1rem;">Mes Badges</h3>
-            <div class="badges-list" style="display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center;">
-              @for (badge of profilData()?.badges; track badge.id) {
-                <div class="badge-item" [title]="badge.description" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem;">
-                  <img [src]="badge.icone_url" alt="Badge" class="badge-icon" style="width: 24px; height: 24px;">
-                  <span style="font-weight: 600; color: #1e293b;">{{ badge.nom }}</span>
-                </div>
-              }
-            </div>
-          </div>
-        }
+
       </div>
     </div>
 
     <div class="right-col">
+      
+      <!-- Section Gratifications (Badges) -->
+      @if (profilData()?.badges?.length) {
+        <div class="card form-card" style="overflow: visible;">
+          <h3>Mes Gratifications</h3>
+          <div class="gratifications-grid">
+            @for (badge of profilData()?.badges; track badge.id) {
+              <div class="gratification-card">
+                <div class="gratification-bg"></div>
+                <div class="gratification-icon-wrapper">
+                  <img [src]="badge.icone_url" alt="Badge" class="gratification-icon">
+                </div>
+                <div class="gratification-content">
+                  <h4 class="gratification-title">{{ badge.nom }}</h4>
+                  <p class="gratification-desc">{{ badge.description }}</p>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      }
 
       <div class="card form-card">
         <h3>Informations personnelles</h3>
