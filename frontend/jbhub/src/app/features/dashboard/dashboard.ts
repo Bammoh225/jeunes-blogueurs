@@ -49,15 +49,15 @@ export class Dashboard implements OnInit {
     const done = () => { loaded++; if (loaded === 4) this.loading.set(false); };
 
     this.http.get<any>(`${api}/blogueurs`).subscribe({
-      next: r => { this.stats.update(s => ({ ...s, blogueurs: r.data?.length ?? 0 })); done(); },
+      next: r => { this.stats.update(s => ({ ...s, blogueurs: r.meta?.total ?? r.data?.length ?? 0 })); done(); },
       error: () => done()
     });
     this.http.get<any>(`${api}/publications`).subscribe({
-      next: r => { this.stats.update(s => ({ ...s, publications: r.data?.length ?? 0 })); done(); },
+      next: r => { this.stats.update(s => ({ ...s, publications: r.meta?.total ?? r.data?.length ?? 0 })); done(); },
       error: () => done()
     });
     this.http.get<any>(`${api}/activites`).subscribe({
-      next: r => { this.stats.update(s => ({ ...s, activites: r.data?.length ?? 0 })); done(); },
+      next: r => { this.stats.update(s => ({ ...s, activites: r.meta?.total ?? r.data?.length ?? 0 })); done(); },
       error: () => done()
     });
     this.http.get<any>(`${api}/notifications/non-lus`).subscribe({

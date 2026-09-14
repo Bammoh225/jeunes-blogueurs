@@ -43,7 +43,11 @@ export const publicationsController = {
 
   async trouver(req: AuthRequest, res: Response): Promise<void> {
     try {
-      sendSuccess(res, await publicationsService.trouver(+req.params.id));
+      const pub = await publicationsService.trouver(+req.params.id);
+      if (!isAdmin(req.user!.role) && pub.auteur_id !== req.user!.id) {
+        throw new Error('Accès refusé');
+      }
+      sendSuccess(res, pub);
     } catch (err: any) { sendError(res, err.message, 404); }
   },
 

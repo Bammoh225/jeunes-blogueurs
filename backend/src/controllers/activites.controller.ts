@@ -20,7 +20,22 @@ export const activitesController = {
 
   async trouver(req: AuthRequest, res: Response): Promise<void> {
     try {
-      sendSuccess(res, await activitesService.trouver(+req.params.id));
+      const act = await activitesService.trouver(+req.params.id);
+      const role = req.user!.role;
+      
+      if (role === 'jeune_blogueur') {
+        if (act.visibilite === 'ville' && act.ville_id !== req.user!.ville_id) {
+          throw new Error('Accès refusé : Cette activité n\'est pas dans votre ville');
+        }
+        if (act.visibilite === 'designee') {
+          const isInscrit = await activitesRepository.isInscrit(act.id, req.user!.id);
+          if (!isInscrit) throw new Error('Accès refusé : Vous n\'êtes pas invité à cette activité');
+        }
+      } else if (role === 'responsable_zone' && act.ville_id !== req.user!.ville_id) {
+        throw new Error('Accès refusé : Cette activité n\'est pas dans votre zone');
+      }
+
+      sendSuccess(res, act);
     } catch (err: any) { sendError(res, err.message, 404); }
   },
 

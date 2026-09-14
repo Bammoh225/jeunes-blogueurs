@@ -17,7 +17,7 @@ router.get('/publication/:publicationId', allStaff, evaluationsController.parPub
 
 // Évaluer une publication (équipe com uniquement)
 router.post('/', requireRoles(
-  'equipe_com', 'responsable_unicef', 'responsable_technique'
+  'equipe_com', 'responsable_unicef', 'responsable_technique', 'responsable_national'
 ), validateBody(evaluerSchema), evaluationsController.evaluer);
 
 export default router;

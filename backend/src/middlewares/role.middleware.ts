@@ -23,7 +23,7 @@ export function requireRoles(...roles: Role[]) {
 }
 
 // Raccourcis utiles
-export const adminOnly = requireRoles('responsable_unicef', 'responsable_technique');
+export const adminOnly = requireRoles('responsable_unicef', 'responsable_technique', 'responsable_national');
 
 export const managementRoles = requireRoles(
   'responsable_unicef',

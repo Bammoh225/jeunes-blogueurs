@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { AuthRequest } from '../middlewares/auth.middleware';
 import { blogueursService } from '../services/blogueurs.service';
 import { sendSuccess, sendError } from '../utils/response';
 
@@ -33,9 +34,13 @@ export const blogueursController = {
     } catch (err: any) { sendError(res, err.message); }
   },
 
-  async modifier(req: Request, res: Response): Promise<void> {
+  async modifier(req: AuthRequest, res: Response): Promise<void> {
     try {
-      sendSuccess(res, await blogueursService.modifier(+req.params.id, req.body));
+      const id = +req.params.id;
+      if (req.user!.role === 'jeune_blogueur' && req.user!.id !== id) {
+        throw new Error('Accès refusé : Vous ne pouvez modifier que votre propre profil');
+      }
+      sendSuccess(res, await blogueursService.modifier(id, req.body));
     } catch (err: any) { sendError(res, err.message); }
   },
 

@@ -39,8 +39,9 @@ export const authController = {
         sendError(res, 'Aucun fichier sélectionné', 400);
         return;
       }
-      
-      const photoUrl = `/uploads/${req.file.filename}`;
+
+      const file = req.file as any;
+      const photoUrl = file.location ? file.location : `/uploads/${file.filename}`;
       const data = await authService.uploadPhoto(req.user!.id, photoUrl);
       
       sendSuccess(res, data, 'Photo de profil mise à jour');
