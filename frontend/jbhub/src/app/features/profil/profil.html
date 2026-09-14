@@ -149,3 +149,30 @@
   </div>
 
 </div>
+
+<!-- Modal de Rognage -->
+@if (isCropping()) {
+<div class="cropper-modal-overlay">
+  <div class="cropper-modal">
+    <div class="cropper-header">
+      <h3>Recadrer la photo</h3>
+      <button class="close-btn" (click)="annulerRognage()">&times;</button>
+    </div>
+    
+    <div class="cropper-body">
+      <image-cropper
+        [imageChangedEvent]="imageChangedEvent"
+        [maintainAspectRatio]="true"
+        [aspectRatio]="1 / 1"
+        format="png"
+        (imageCropped)="imageCropped($event)"
+      ></image-cropper>
+    </div>
+    
+    <div class="cropper-footer">
+      <button class="btn-cancel" (click)="annulerRognage()">Annuler</button>
+      <button class="btn-save" (click)="validerRognage()">Valider et Sauvegarder</button>
+    </div>
+  </div>
+</div>
+}

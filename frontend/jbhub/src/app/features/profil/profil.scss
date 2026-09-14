@@ -245,3 +245,102 @@
     font-size: 18px;
   }
 }
+.cropper-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+
+.cropper-modal {
+  background: white;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 500px;
+  overflow: hidden;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.cropper-header {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  h3 {
+    margin: 0;
+    font-size: 1.25rem;
+    color: #1e293b;
+  }
+
+  .close-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #64748b;
+    transition: color 0.2s;
+
+    &:hover {
+      color: #ef4444;
+    }
+  }
+}
+
+.cropper-body {
+  padding: 1.5rem;
+  max-height: 60vh;
+  overflow-y: auto;
+  
+  ::ng-deep image-cropper {
+    max-height: 400px;
+  }
+}
+
+.cropper-footer {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  background: #f8fafc;
+
+  .btn-cancel {
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    border: 1px solid #cbd5e1;
+    background: white;
+    color: #475569;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover {
+      background: #f1f5f9;
+      color: #1e293b;
+    }
+  }
+
+  .btn-save {
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    border: none;
+    background: #0ea5e9;
+    color: white;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+
+    &:hover {
+      background: #0284c7;
+    }
+  }
+}

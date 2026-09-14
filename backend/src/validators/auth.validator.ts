@@ -11,8 +11,8 @@ export const loginSchema = z.object({
 export const modifierProfilSchema = z.object({
   prenom: z.string().trim().min(1).max(100).optional(),
   nom: z.string().trim().min(1).max(100).optional(),
-  telephone: z.string().trim().regex(telephoneRegex, 'Numéro de téléphone invalide').optional(),
-  numero_urgence: z.string().trim().regex(telephoneRegex, "Numéro d'urgence invalide").optional(),
+  telephone: z.string().trim().regex(telephoneRegex, 'Numéro de téléphone invalide').or(z.literal('')).optional(),
+  numero_urgence: z.string().trim().regex(telephoneRegex, "Numéro d'urgence invalide").or(z.literal('')).optional(),
 }).refine(
   (dto) => Object.keys(dto).length > 0,
   { message: 'Aucun champ à mettre à jour' }

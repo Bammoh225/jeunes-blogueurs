@@ -17,6 +17,7 @@ export const inscrireBlogueurSchema = z.object({
     .string()
     .trim()
     .regex(telephoneRegex, 'Numéro de téléphone invalide')
+    .or(z.literal(''))
     .optional(),
 
   // Obligatoire — correspond à profils_blogueurs.numero_urgence
@@ -59,7 +60,7 @@ export const modifierBlogueurSchema = z.object({
   nom: z.string().trim().min(1).max(100).optional(),
   email: z.string().trim().email().max(255).toLowerCase().optional(),
   mot_de_passe: z.string().min(8).max(100).optional(),
-  telephone: z.string().trim().regex(telephoneRegex).optional(),
+  telephone: z.string().trim().regex(telephoneRegex).or(z.literal('')).optional(),
   photo_url: z.string().trim().url().max(500).nullable().optional(),
   ville_id: z.coerce.number().int().positive().nullable().optional(),
   categorie_id: z.coerce.number().int().positive().nullable().optional(),
@@ -73,7 +74,7 @@ export const modifierBlogueurSchema = z.object({
   experience: z.string().trim().max(2000).optional(),
   langue_ecriture: z.string().trim().min(1).max(50).optional(),
   motivation: z.string().trim().max(2000).optional(),
-  numero_urgence: z.string().trim().regex(telephoneRegex).optional(),
+  numero_urgence: z.string().trim().regex(telephoneRegex).or(z.literal('')).optional(),
   lien_portfolio: z.string().trim().url().max(500).optional(),
   presentation: z.string().trim().max(2000).optional(),
 
