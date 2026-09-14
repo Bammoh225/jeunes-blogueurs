@@ -8,6 +8,7 @@ import { SearchService, SearchResult } from '../../core/services/search.service'
 import { ROLES_ADMIN, ROLES_STAFF } from '../../core/models/auth.model';
 import { filter, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { Subject, of } from 'rxjs';
+import { AvatarUrlPipe } from '../../shared/pipes/avatar-url.pipe';
 
 interface NavItem {
   label:  string;
@@ -20,7 +21,7 @@ interface NavItem {
 @Component({
   selector: 'app-main-layout',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, CommonModule, FormsModule],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, CommonModule, FormsModule, AvatarUrlPipe],
   templateUrl: './main-layout.html',
   styleUrl: './main-layout.scss'
 })

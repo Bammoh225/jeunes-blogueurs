@@ -83,7 +83,11 @@
         @for (b of blogueursFiltres; track b.id) {
           <a [routerLink]="['/blogueurs', b.id]" class="blogueur-card">
             <div class="card-header">
-              <div class="avatar">{{ initiales(b) }}</div>
+              @if (b.photo_url) {
+                <img [src]="b.photo_url | avatarUrl" class="avatar avatar-img" alt="Avatar">
+              } @else {
+                <div class="avatar">{{ initiales(b) }}</div>
+              }
               <div class="header-badges">
                 <span [class]="'badge ' + statutClass(b.statut)">
                   {{ statutLabel(b.statut) }}

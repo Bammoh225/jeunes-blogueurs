@@ -10,6 +10,7 @@ export interface Participant {
   nom:        string;
   email:      string;
   telephone?: string;
+  photo_url?: string;
   present:    boolean;
 }
 

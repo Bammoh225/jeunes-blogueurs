@@ -20,7 +20,11 @@
       <!-- Colonne gauche -->
       <div class="left-col">
         <div class="profile-card">
-          <div class="avatar-lg">{{ initiales(blogueur()!) }}</div>
+          @if (blogueur()!.photo_url) {
+            <img [src]="blogueur()!.photo_url | avatarUrl" class="avatar-lg avatar-img" alt="Avatar">
+          } @else {
+            <div class="avatar-lg">{{ initiales(blogueur()!) }}</div>
+          }
           <h2>{{ blogueur()!.prenom }} {{ blogueur()!.nom }}</h2>
           <p class="email">{{ blogueur()!.email }}</p>
           <span [class]="'badge ' + statutClass(blogueur()!.statut)">

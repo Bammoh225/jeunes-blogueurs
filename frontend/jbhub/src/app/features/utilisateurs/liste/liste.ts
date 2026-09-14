@@ -2,12 +2,13 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { UtilisateursService } from '../../../core/services/utilisateurs.service';
+import { AvatarUrlPipe } from '../../../shared/pipes/avatar-url.pipe';
 import { Utilisateur, CreateUtilisateurDto, Role } from '../../../core/models/utilisateur.model';
 
 @Component({
   selector: 'app-liste',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, AvatarUrlPipe],
   templateUrl: './liste.html',
   styleUrl: './liste.scss'
 })

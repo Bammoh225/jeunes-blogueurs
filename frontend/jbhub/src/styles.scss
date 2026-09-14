@@ -208,3 +208,9 @@ select.input { cursor: pointer; }
     border: 1px solid #fecaca;
   }
 }
+
+.avatar-img {
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+}

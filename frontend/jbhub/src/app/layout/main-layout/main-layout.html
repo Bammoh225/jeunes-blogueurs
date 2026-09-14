@@ -107,7 +107,11 @@
           }
         </a>
         <a routerLink="/profil" class="user-pill">
-          <div class="avatar">{{ user()?.prenom?.charAt(0) }}{{ user()?.nom?.charAt(0) }}</div>
+          @if (user()?.photo_url) {
+            <img [src]="user()?.photo_url | avatarUrl" class="avatar avatar-img" alt="Avatar">
+          } @else {
+            <div class="avatar">{{ user()?.prenom?.charAt(0) }}{{ user()?.nom?.charAt(0) }}</div>
+          }
           <div class="user-info">
             <span class="user-name">{{ user()?.prenom }} {{ user()?.nom }}</span>
             <span class="user-role">{{ user()?.role }}</span>

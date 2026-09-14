@@ -25,6 +25,7 @@ export interface Beneficiaire {
   prenom: string;
   nom:    string;
   email:  string;
+  photo_url?: string;
   recu:   boolean;
 }
 

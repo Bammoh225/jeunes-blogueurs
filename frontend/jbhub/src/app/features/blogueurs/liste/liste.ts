@@ -7,6 +7,7 @@ import { PublicationsService } from '../../../core/services/publications.service
 import { BlogueurResume } from '../../../core/models/blogueur.model';
 import { VillesService, Ville } from '../../../core/services/villes.service';
 import { ExportService } from '../../../core/services/export.service';
+import { AvatarUrlPipe } from '../../../shared/pipes/avatar-url.pipe';
 
 interface BlogueurAvecStatut extends BlogueurResume {
   aPublieMois: boolean;
@@ -16,7 +17,7 @@ interface BlogueurAvecStatut extends BlogueurResume {
 @Component({
   selector: 'app-liste',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule],
+  imports: [CommonModule, RouterLink, FormsModule, AvatarUrlPipe],
   templateUrl: './liste.html',
   styleUrl: './liste.scss'
 })

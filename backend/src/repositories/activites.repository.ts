@@ -67,7 +67,7 @@ export const activitesRepository = {
 
   async findParticipants(activiteId: number): Promise<any[]> {
     const [rows] = await pool.execute<RowDataPacket[]>(`
-      SELECT u.id, u.prenom, u.nom, u.email, u.telephone, pa.present
+      SELECT u.id, u.prenom, u.nom, u.email, u.telephone, u.photo_url, pa.present
       FROM participants_activites pa
       JOIN utilisateurs u ON u.id = pa.utilisateur_id
       WHERE pa.activite_id = ?

@@ -58,7 +58,13 @@
             @for (b of beneficiaires(); track b.id) {
               <div class="benef-row">
                 <div class="benef-info">
-                  <div class="benef-avatar">{{ b.prenom.charAt(0) }}{{ b.nom.charAt(0) }}</div>
+                  <div class="benef-avatar">
+                    @if (b.photo_url) {
+                      <img [src]="b.photo_url | avatarUrl" class="avatar avatar-img" alt="Avatar">
+                    } @else {
+                      {{ b.prenom.charAt(0) }}{{ b.nom.charAt(0) }}
+                    }
+                  </div>
                   <div>
                     <div class="benef-name">{{ b.prenom }} {{ b.nom }}</div>
                     <div class="benef-email">{{ b.email }}</div>

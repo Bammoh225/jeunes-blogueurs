@@ -219,8 +219,12 @@
                   <div class="participant-info">
 
                     <div class="participant-avatar">
+                    @if (p.photo_url) {
+                      <img [src]="p.photo_url | avatarUrl" class="avatar avatar-img" alt="Avatar">
+                    } @else {
                       {{ p.prenom.charAt(0) }}{{ p.nom.charAt(0) }}
-                    </div>
+                    }
+                  </div>
 
                     <div>
                       <div class="participant-name">

@@ -1,7 +1,8 @@
 import { Component, inject, OnInit, signal, computed } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { DatePipe, CommonModule } from '@angular/common';
+import { AvatarUrlPipe } from '../../../shared/pipes/avatar-url.pipe';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule, FormBuilder } from '@angular/forms';
 import { ActivitesService, Participant, MonStatut } from '../../../core/services/activites.service';
 import { Activite, StatutActivite, UpdateActiviteDto } from '../../../core/models/activite.model';
 import { AuthService } from '../../../core/services/auth.service';
@@ -9,7 +10,13 @@ import { AuthService } from '../../../core/services/auth.service';
 @Component({
   selector: 'app-detail',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    DatePipe,
+    FormsModule,
+    AvatarUrlPipe
+  ],
   templateUrl: './detail.html',
   styleUrl: './detail.scss'
 })

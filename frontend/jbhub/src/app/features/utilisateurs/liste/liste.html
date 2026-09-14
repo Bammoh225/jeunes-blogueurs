@@ -105,8 +105,12 @@
               <tr>
                 <td>
                   <div class="user-cell">
-                    <div class="avatar">{{ initiales(u) }}</div>
-                    <div>
+                    @if (u.photo_url) {
+                      <img [src]="u.photo_url | avatarUrl" class="avatar avatar-img" alt="Avatar">
+                    } @else {
+                      <div class="avatar">{{ initiales(u) }}</div>
+                    }
+                    <div class="name-info">
                       <div class="user-name">{{ u.prenom }} {{ u.nom }}</div>
                       <div class="user-email">{{ u.email }}</div>
                     </div>

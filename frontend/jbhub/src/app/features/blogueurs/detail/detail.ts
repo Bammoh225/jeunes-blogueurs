@@ -6,11 +6,12 @@ import { BlogueursService } from '../../../core/services/blogueurs.service';
 import { Blogueur, StatutBlogueur } from '../../../core/models/blogueur.model';
 import { AuthService } from '../../../core/services/auth.service';
 import { ROLES_ADMIN } from '../../../core/models/auth.model';
+import { AvatarUrlPipe } from '../../../shared/pipes/avatar-url.pipe';
 
 @Component({
   selector: 'app-detail',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, AvatarUrlPipe],
   templateUrl: './detail.html',
   styleUrl: './detail.scss'
 })

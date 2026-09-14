@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DistributionsService, Distribution, Beneficiaire } from '../../../core/services/distributions.service';
 import { AuthService } from '../../../core/services/auth.service';
+import { AvatarUrlPipe } from '../../../shared/pipes/avatar-url.pipe';
 
 @Component({
   selector: 'app-detail',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, AvatarUrlPipe],
   templateUrl: './detail.html',
   styleUrl: './detail.scss'
 })
