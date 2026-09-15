@@ -89,16 +89,22 @@
     z-index: 10;
   }
 
-  img {
+  .avatar-circle {
     width: 80px;
     height: 80px;
     border-radius: 50%;
-    object-fit: cover;
     border: 4px solid white;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     margin-bottom: 1rem;
     position: relative;
     z-index: 5;
+    background: #0ea5e9;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    font-weight: 700;
   }
 
   .name {
@@ -116,16 +122,16 @@
 
   &.step-1 {
     .rank { background: #ffd700; }
-    img { width: 110px; height: 110px; border-color: #ffd700; }
+    .avatar-circle { width: 110px; height: 110px; border-color: #ffd700; font-size: 40px; }
     .name { font-size: 1.2rem; }
   }
   &.step-2 {
     .rank { background: #c0c0c0; }
-    img { border-color: #c0c0c0; }
+    .avatar-circle { border-color: #c0c0c0; background: #64748b; }
   }
   &.step-3 {
     .rank { background: #cd7f32; }
-    img { border-color: #cd7f32; }
+    .avatar-circle { border-color: #cd7f32; background: #f59e0b; }
   }
 }
 
@@ -156,12 +162,18 @@
     width: 40px;
   }
 
-  .avatar-small {
+  .avatar-mini {
     width: 48px;
     height: 48px;
     border-radius: 50%;
-    object-fit: cover;
     margin-right: 1.5rem;
+    background: #0ea5e9;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 700;
   }
 
   .info {
@@ -196,9 +208,9 @@
     margin-right: 2rem;
     min-width: 80px;
     .badge-icon {
-      width: 24px;
-      height: 24px;
-      object-fit: contain;
+      font-size: 1.5rem;
+      line-height: 1;
+      display: inline-block;
     }
   }
 
@@ -219,13 +231,15 @@
     padding: 1rem 0;
     
     .podium-step {
-      img {
+      .avatar-circle {
         width: 60px;
         height: 60px;
+        font-size: 20px;
       }
-      &.step-1 img {
+      &.step-1 .avatar-circle {
         width: 80px;
         height: 80px;
+        font-size: 28px;
       }
       .name { font-size: 0.9rem; }
       &.step-1 .name { font-size: 1.05rem; }
@@ -239,10 +253,11 @@
 
     .rank-number { width: 30px; font-size: 1rem; }
     
-    .avatar-small {
+    .avatar-mini {
       margin-right: 0.5rem;
       width: 40px;
       height: 40px;
+      font-size: 16px;
     }
     
     .info {
