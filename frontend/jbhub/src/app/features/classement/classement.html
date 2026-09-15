@@ -31,27 +31,42 @@
         @if (classement().length >= 2) {
           <div class="podium-step step-2">
             <div class="rank">2</div>
-            <img [src]="classement()[1].photo_url || 'assets/default-avatar.png'" alt="avatar">
+            <div class="avatar-circle">{{ classement()[1].prenom[0] }}{{ classement()[1].nom[0] }}</div>
             <div class="name">{{ classement()[1].prenom }} {{ classement()[1].nom }}</div>
             <div class="score">{{ classement()[1].score }} pts</div>
+            <div class="badges">
+              @for (badge of classement()[1].badges; track badge.emoji) {
+                <span class="badge-icon">{{ badge.emoji }}</span>
+              }
+            </div>
           </div>
         }
 
         @if (classement().length >= 1) {
           <div class="podium-step step-1">
             <div class="rank">1</div>
-            <img [src]="classement()[0].photo_url || 'assets/default-avatar.png'" alt="avatar">
+            <div class="avatar-circle avatar-gold">{{ classement()[0].prenom[0] }}{{ classement()[0].nom[0] }}</div>
             <div class="name">{{ classement()[0].prenom }} {{ classement()[0].nom }}</div>
             <div class="score">{{ classement()[0].score }} pts</div>
+            <div class="badges">
+              @for (badge of classement()[0].badges; track badge.emoji) {
+                <span class="badge-icon">{{ badge.emoji }}</span>
+              }
+            </div>
           </div>
         }
 
         @if (classement().length >= 3) {
           <div class="podium-step step-3">
             <div class="rank">3</div>
-            <img [src]="classement()[2].photo_url || 'assets/default-avatar.png'" alt="avatar">
+            <div class="avatar-circle">{{ classement()[2].prenom[0] }}{{ classement()[2].nom[0] }}</div>
             <div class="name">{{ classement()[2].prenom }} {{ classement()[2].nom }}</div>
             <div class="score">{{ classement()[2].score }} pts</div>
+            <div class="badges">
+              @for (badge of classement()[2].badges; track badge.emoji) {
+                <span class="badge-icon">{{ badge.emoji }}</span>
+              }
+            </div>
           </div>
         }
       </div>
@@ -62,7 +77,7 @@
           @if (i > 2) {
             <div class="ranking-row">
               <div class="rank-number">{{ i + 1 }}</div>
-              <img [src]="b.photo_url || 'assets/default-avatar.png'" alt="avatar" class="avatar-small">
+              <div class="avatar-mini">{{ b.prenom[0] }}{{ b.nom[0] }}</div>
               <div class="info">
                 <div class="name">{{ b.prenom }} {{ b.nom }}</div>
                 <div class="ville">{{ b.ville_nom }}</div>
@@ -74,8 +89,8 @@
               </div>
               
               <div class="badges">
-                @for (badge of b.badges; track badge.icone_url) {
-                  <img [src]="badge.icone_url" alt="badge" class="badge-icon">
+                @for (badge of b.badges; track badge.emoji) {
+                  <span class="badge-icon">{{ badge.emoji }}</span>
                 }
               </div>
 

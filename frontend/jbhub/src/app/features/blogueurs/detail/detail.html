@@ -157,7 +157,7 @@
             <div class="badges-grid">
               @for (b of blogueur()!.badges; track b.id) {
                 <div class="badge-item">
-                  <img [src]="b.icone_url" [alt]="b.nom" class="badge-icon" />
+                  <span class="badge-icon">{{ b.emoji }}</span>
                   <div class="badge-info">
                     <h4>{{ b.nom }}</h4>
                     <p>{{ b.description }}</p>

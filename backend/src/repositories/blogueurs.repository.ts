@@ -61,9 +61,10 @@ export const blogueursRepository = {
         ) AS thematiques_str,
 
         GROUP_CONCAT(
-          DISTINCT b.icone_url
+          DISTINCT b.emoji
+          ORDER BY b.id
           SEPARATOR ','
-        ) AS badges_icones
+        ) AS badges_emojis
 
       FROM utilisateurs u
 
@@ -100,8 +101,8 @@ export const blogueursRepository = {
       thematiques: r.thematiques_str
         ? r.thematiques_str.split(',')
         : [],
-      badges: r.badges_icones
-        ? r.badges_icones.split(',').map((url: string) => ({ icone_url: url }))
+      badges: r.badges_emojis
+        ? r.badges_emojis.split(',').map((emoji: string) => ({ emoji: emoji }))
         : [],
     })) as BlogueurResume[];
   },
@@ -116,7 +117,7 @@ export const blogueursRepository = {
         COALESCE(pb.nb_publications, 0) AS nb_publications,
         (SELECT COUNT(*) FROM participants_activites pa WHERE pa.utilisateur_id = u.id AND pa.present = 1) AS nb_activites,
         v.nom AS ville_nom,
-        GROUP_CONCAT(DISTINCT b.icone_url ORDER BY b.id SEPARATOR ',') AS badges_icones
+        GROUP_CONCAT(DISTINCT b.emoji ORDER BY b.id SEPARATOR ',') AS badges_emojis
       FROM utilisateurs u
       LEFT JOIN profils_blogueurs pb ON pb.utilisateur_id = u.id
       LEFT JOIN villes v ON v.id = u.ville_id
@@ -131,7 +132,7 @@ export const blogueursRepository = {
     return rows.map(r => ({
       ...r,
       score: (r.nb_publications * 10) + (r.nb_activites * 5),
-      badges: r.badges_icones ? r.badges_icones.split(',').map((url: string) => ({ icone_url: url })) : []
+      badges: r.badges_emojis ? r.badges_emojis.split(',').map((emoji: string) => ({ emoji: emoji })) : []
     }));
   },
 

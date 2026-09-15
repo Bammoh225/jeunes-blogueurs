@@ -5,7 +5,7 @@ export interface Badge {
   id: number;
   nom: string;
   description: string;
-  icone_url: string;
+  emoji: string;
   critere_type: 'publications' | 'activites' | 'anciennete' | 'special';
   critere_valeur: number;
 }
