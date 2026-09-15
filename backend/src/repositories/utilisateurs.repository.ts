@@ -11,7 +11,7 @@ export const utilisateursRepository = {
 
   async findAll(): Promise<UtilisateurPublic[]> {
     const [rows] = await pool.execute<RowDataPacket[]>(`
-      SELECT u.id, u.prenom, u.nom, u.email, u.telephone, u.numero_urgence, u.photo_url,
+      SELECT u.id, u.prenom, u.nom, u.email, u.telephone, u.numero_urgence,
              u.role, u.ville_id, u.categorie_id, u.actif, u.created_at, u.updated_at,
              v.nom AS ville_nom, c.nom AS categorie_nom
       FROM utilisateurs u
@@ -25,7 +25,7 @@ export const utilisateursRepository = {
 
   async findById(id: number): Promise<UtilisateurPublic | null> {
     const [rows] = await pool.execute<RowDataPacket[]>(`
-      SELECT u.id, u.prenom, u.nom, u.email, u.telephone, u.numero_urgence, u.photo_url,
+      SELECT u.id, u.prenom, u.nom, u.email, u.telephone, u.numero_urgence,
              u.role, u.ville_id, u.categorie_id, u.actif, u.created_at, u.updated_at,
              v.nom AS ville_nom, c.nom AS categorie_nom
       FROM utilisateurs u

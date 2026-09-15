@@ -141,7 +141,6 @@ export const distributionsRepository = {
         u.prenom,
         u.nom,
         u.email,
-        u.photo_url,
         db.recu
       FROM distribution_beneficiaires db
       JOIN utilisateurs u

@@ -20,7 +20,6 @@ export type UtilisateurSansMdp = Omit<Utilisateur, 'mot_de_passe'>;
 export type UtilisateurPublic = Omit<Utilisateur, 'mot_de_passe'> & {
   ville_nom?: string | null;
   categorie_nom?: string | null;
-  photo_url?: string | null;
   actif?: boolean;
 };
 

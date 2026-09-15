@@ -61,7 +61,6 @@ export const modifierBlogueurSchema = z.object({
   email: z.string().trim().email().max(255).toLowerCase().optional(),
   mot_de_passe: z.string().min(8).max(100).optional(),
   telephone: z.string().trim().regex(telephoneRegex).or(z.literal('')).optional(),
-  photo_url: z.string().trim().url().max(500).nullable().optional(),
   ville_id: z.coerce.number().int().positive().nullable().optional(),
   categorie_id: z.coerce.number().int().positive().nullable().optional(),
 

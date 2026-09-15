@@ -45,12 +45,6 @@ export const authRepository = {
     );
   },
 
-  async updatePhotoUrl(id: number, photoUrl: string) {
-    await pool.execute<ResultSetHeader>(
-      'UPDATE utilisateurs SET photo_url = ? WHERE id = ?',
-      [photoUrl, id]
-    );
-  },
 
   async createResetToken(userId: number, tokenHash: string, expiresAt: Date) {
     await pool.execute<ResultSetHeader>(

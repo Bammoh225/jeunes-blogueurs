@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { ImageCropperComponent, ImageCroppedEvent } from 'ngx-image-cropper';
+
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { AuthService } from '../../core/services/auth.service';
@@ -10,7 +10,7 @@ import { StorageService } from '../../core/services/storage.service';
 @Component({
   selector: 'app-profil',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, ImageCropperComponent],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './profil.html',
   styleUrl: './profil.scss'
 })
@@ -29,9 +29,7 @@ export class Profil implements OnInit {
   succesMdp  = signal('');
   profilData = signal<any>(null);
 
-  isCropping = signal(false);
-  imageChangedEvent: any = '';
-  croppedImageBlob: Blob | null | undefined = null;
+
 
   isAdmin = this.auth.hasRole('responsable_unicef');
 
@@ -62,48 +60,6 @@ export class Profil implements OnInit {
     });
   }
 
-  onPhotoSelected(event: any) {
-    if (event.target.files && event.target.files.length > 0) {
-      this.imageChangedEvent = event;
-      this.isCropping.set(true);
-    }
-  }
-
-  imageCropped(event: ImageCroppedEvent) {
-    this.croppedImageBlob = event.blob;
-  }
-
-  annulerRognage() {
-    this.isCropping.set(false);
-    this.imageChangedEvent = '';
-    this.croppedImageBlob = null;
-  }
-
-  validerRognage() {
-    if (!this.croppedImageBlob) return;
-    
-    this.saving.set(true);
-    this.isCropping.set(false);
-    this.erreur.set('');
-    this.succes.set('');
-    
-    const file = new File([this.croppedImageBlob], 'profile.png', { type: 'image/png' });
-    
-    this.auth.uploadPhoto(file).subscribe({
-      next: (r) => {
-        this.succes.set('Photo de profil mise à jour');
-        this.profilData.set(r.data);
-        const updated = { ...this.user()!, photo_url: r.data.photo_url };
-        this.storage.setUser(updated);
-        this.auth.currentUser.set(updated);
-        this.saving.set(false);
-      },
-      error: e => {
-        this.erreur.set(e.error?.message ?? 'Erreur lors de l\'upload');
-        this.saving.set(false);
-      }
-    });
-  }
 
   sauvegarderProfil() {
     if (this.formProfil.invalid) { this.formProfil.markAllAsTouched(); return; }

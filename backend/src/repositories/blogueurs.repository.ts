@@ -113,7 +113,6 @@ export const blogueursRepository = {
         u.id,
         u.prenom,
         u.nom,
-        u.photo_url,
         COALESCE(pb.nb_publications, 0) AS nb_publications,
         (SELECT COUNT(*) FROM participants_activites pa WHERE pa.utilisateur_id = u.id AND pa.present = 1) AS nb_activites,
         v.nom AS ville_nom,
@@ -145,7 +144,6 @@ export const blogueursRepository = {
         u.nom,
         u.email,
         u.telephone,
-        u.photo_url,
         u.ville_id,
         u.categorie_id,
         u.actif,
@@ -366,9 +364,6 @@ export const blogueursRepository = {
         userFields.telephone = dto.telephone;
       }
 
-      if (dto.photo_url !== undefined) {
-        userFields.photo_url = dto.photo_url;
-      }
 
 
       if (Object.keys(userFields).length > 0) {

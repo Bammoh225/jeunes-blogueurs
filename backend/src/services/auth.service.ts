@@ -37,7 +37,6 @@ export const authService = {
       prenom:       utilisateur.prenom,
       nom:          utilisateur.nom,
       role:         utilisateur.role,
-      photo_url:    utilisateur.photo_url,
       ville_id:     utilisateur.ville_id,
       categorie_id: utilisateur.categorie_id,
     };
@@ -82,11 +81,6 @@ export const authService = {
       await blogueursRepository.update(id, { numero_urgence: dto.numero_urgence });
     }
 
-    return authService.profil(id);
-  },
-
-  async uploadPhoto(id: number, photoUrl: string) {
-    await authRepository.updatePhotoUrl(id, photoUrl);
     return authService.profil(id);
   },
 
