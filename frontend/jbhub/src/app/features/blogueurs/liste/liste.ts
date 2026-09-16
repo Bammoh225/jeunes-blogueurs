@@ -61,8 +61,11 @@ export class Liste implements OnInit {
         this.pubService.lister().subscribe({
           next: pubs => {
             const maintenant = new Date();
-            const moisCourant = maintenant.getMonth();
-            const anneeCourante = maintenant.getFullYear();
+            let debutPeriode = new Date(maintenant.getFullYear(), maintenant.getMonth(), 15);
+            if (maintenant.getDate() < 15) {
+              debutPeriode.setMonth(debutPeriode.getMonth() - 1);
+            }
+            debutPeriode.setHours(0, 0, 0, 0);
 
             const avecStatut: BlogueurAvecStatut[] = blogueurs.data.map(b => {
               const aPublie = pubs.data.some((p: any) => {
@@ -70,7 +73,7 @@ export class Liste implements OnInit {
                 const dateRef = p.date_publication ?? p.soumis_le;
                 if (!dateRef) return false;
                 const d = new Date(dateRef);
-                return d.getMonth() === moisCourant && d.getFullYear() === anneeCourante;
+                return d >= debutPeriode;
               });
               return { ...b, aPublieMois: aPublie };
             });
@@ -136,8 +139,7 @@ export class Liste implements OnInit {
   }
 
   exporterPDF() {
-    const mois = new Date().toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
-    const colonnes = ['Prénom', 'Nom', 'Email', 'Téléphone', "N° d'Urgence", 'Ville', 'Statut', 'Publications', `Publié ce mois (${mois})`];
+    const colonnes = ['Prénom', 'Nom', 'Email', 'Téléphone', "N° d'Urgence", 'Ville', 'Statut', 'Publications', `À jour (Période en cours)`];
     const lignes = this.blogueursFiltres.map(b => [
       b.prenom,
       b.nom,
@@ -149,16 +151,16 @@ export class Liste implements OnInit {
       b.nb_publications ?? 0,
       b.statut === 'actif' ? (b.aPublieMois ? 'Oui' : 'Non') : '-',
     ]);
+    const dateStr = new Date().toISOString().split('T')[0];
     this.exportSvc.exportPDF(
-      `Rapport Blogueurs — ${mois}`,
+      `Rapport Blogueurs — ${dateStr}`,
       colonnes, lignes,
-      `blogueurs_${mois.replace(' ', '_')}`
+      `blogueurs_${dateStr}`
     );
   }
 
   exporterExcel() {
-    const mois = new Date().toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
-    const colonnes = ['Prénom', 'Nom', 'Email', 'Téléphone', "N° d'Urgence", 'Ville', 'Statut', 'Publications', `Publié ce mois`];
+    const colonnes = ['Prénom', 'Nom', 'Email', 'Téléphone', "N° d'Urgence", 'Ville', 'Statut', 'Publications', `À jour (Période en cours)`];
     const lignes = this.blogueursFiltres.map(b => [
       b.prenom,
       b.nom,
@@ -170,7 +172,8 @@ export class Liste implements OnInit {
       b.nb_publications ?? 0,
       b.statut === 'actif' ? (b.aPublieMois ? 'Oui' : 'Non') : '-',
     ]);
-    this.exportSvc.exportExcel(colonnes, lignes, `blogueurs_${mois.replace(' ', '_')}`);
+    const dateStr = new Date().toISOString().split('T')[0];
+    this.exportSvc.exportExcel(colonnes, lignes, `blogueurs_${dateStr}`);
   }
 
   reinitialiserFiltres() {
