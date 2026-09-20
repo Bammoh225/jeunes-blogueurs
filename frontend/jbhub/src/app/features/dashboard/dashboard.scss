@@ -23,6 +23,12 @@
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
   gap: 16px;
   margin-bottom: 36px;
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  }
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+  }
 }
 
 .stat-card {
@@ -129,6 +135,9 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
   gap: 20px;
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
 }
 
 .section-card {
@@ -276,6 +285,9 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 400px), 1fr));
   gap: 24px;
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
 }
 
 .chart-container {
@@ -299,6 +311,9 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 400px), 1fr));
   gap: 24px;
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
 }
 
 .chart-skeleton {

@@ -286,3 +286,12 @@ select.input { cursor: pointer; }
     animation: badge-float 3s infinite reverse;
   }
 }
+
+@media (max-width: 600px) {
+  .card {
+    padding: 16px;
+  }
+  .page-title {
+    font-size: 18px;
+  }
+}

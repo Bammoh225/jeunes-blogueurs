@@ -319,65 +319,7 @@ $topbar-h: 52px;
   svg { width: 16px; height: 16px; }
 }
 
-@media (max-width: 767px) {
-  .sidebar {
-    width: 260px;
-    transform: translateX(-100%);
-    transition: transform 0.25s ease;
-    z-index: 100;
-
-    &.mobile-open {
-      transform: translateX(0);
-    }
-  }
-
-  .is-mobile .main {
-    margin-left: 0;
-  }
-
-  .topbar {
-    padding: 0 16px;
-  }
-
-  .user-info {
-    display: none;
-  }
-
-  .user-pill {
-    padding: 4px;
-    border: none;
-  }
-
-  .content {
-    padding: 16px;
-  }
-}
-
-@media (max-width: 480px) {
-  .stats-grid, .actions-grid, .blogueur-grid {
-    grid-template-columns: 1fr !important;
-  }
-
-  .form-grid {
-    grid-template-columns: 1fr !important;
-  }
-
-  .profil-layout {
-    grid-template-columns: 1fr !important;
-  }
-
-  .detail-layout {
-    grid-template-columns: 1fr !important;
-  }
-
-  .page-header {
-    flex-direction: column;
-    align-items: flex-start !important;
-    gap: 12px;
-  }
-}
-
-@media (max-width: 767px) {
+@media (max-width: 768px) {
   .sidebar {
     width: 260px;
     transform: translateX(-100%);
@@ -410,7 +352,7 @@ $topbar-h: 52px;
     padding: 16px;
   }
 
-  // Layouts
+  // Global layout shifts for tablets/mobile
   .profil-layout, .detail-layout {
     grid-template-columns: 1fr !important;
   }
@@ -425,6 +367,10 @@ $topbar-h: 52px;
 }
 
 @media (max-width: 480px) {
+  .content {
+    padding: 12px;
+  }
+
   .stats-grid, .actions-grid, .blogueur-grid {
     grid-template-columns: 1fr !important;
   }
