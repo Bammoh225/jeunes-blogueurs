@@ -1,4 +1,7 @@
-.page { max-width: 1000px; }
+.page { 
+  max-width: 1000px;
+  margin: 0 auto;
+}
 
 .page-header {
   display: flex;
@@ -76,6 +79,11 @@
     border-color: #1a237e;
     transform: translateX(4px);
   }
+
+  @media (max-width: 600px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }
 
 .pub-left {
@@ -133,6 +141,12 @@
 
   .voir { color: #1a237e; font-weight: 700; font-size: 1rem; }
   .evals { white-space: nowrap; }
+
+  @media (max-width: 600px) {
+    width: 100%;
+    justify-content: space-between;
+    margin-top: 0.5rem;
+  }
 }
 
 .empty-state {
