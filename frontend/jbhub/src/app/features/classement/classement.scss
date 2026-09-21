@@ -9,6 +9,12 @@
   justify-content: space-between;
   align-items: flex-start;
   margin-bottom: 2rem;
+  gap: 12px;
+
+  @media (max-width: 600px) {
+    flex-direction: column;
+  }
+
   h1 {
     font-size: 1.8rem;
     font-weight: 700;
@@ -227,10 +233,17 @@
 @media (max-width: 768px) {
   .podium {
     flex-wrap: wrap;
-    gap: 1rem;
+    gap: 1.5rem;
     padding: 1rem 0;
     
     .podium-step {
+      &.step-1 {
+        order: 1;
+        width: 100%; // Force step 1 to its own row
+      }
+      &.step-2 { order: 2; }
+      &.step-3 { order: 3; }
+
       .avatar-circle {
         width: 60px;
         height: 60px;

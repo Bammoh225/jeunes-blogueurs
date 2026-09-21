@@ -7,8 +7,13 @@
 .page-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   margin-bottom: 2rem;
+  gap: 12px;
+
+  @media (max-width: 600px) {
+    flex-direction: column;
+  }
   
   h1 {
     font-size: 1.8rem;
@@ -75,7 +80,7 @@
 
 .ressources-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 1.5rem;
 }
 
